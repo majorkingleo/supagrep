@@ -1,6 +1,9 @@
 #include "tab.h"
 #include <fxkeys.h>
 #include "icon_close.h"
+#include "tools/theme.h"
+
+using namespace Tools;
 
 #define TAB_ORIENT_MASK    (TAB_TOP|TAB_LEFT|TAB_RIGHT|TAB_BOTTOM)
 #define TABBOOK_MASK       (TABBOOK_SIDEWAYS|TABBOOK_BOTTOMTABS)
@@ -45,7 +48,11 @@ Tab::Tab(FXTabBar* p,const FXString& text,FXObject *tgt_, long id_ ,FXuint opts,
   ic_close->scale( 16, 16 );
 
   label = new FXButton( this, text, NULL, this, ID_LABEL, FRAME_NONE );
-  bt_close = new FXButton( this, FXString::null, ic_close, this, ID_BUTTON, FRAME_NONE );
+  bt_close = new ThemeButton( this, FXString::null, ic_close, this, ID_BUTTON, FRAME_NONE );
+
+  shadowColor = FXRGB(123,158,189);
+  borderColor = FXRGB(123,158,189);
+  hiliteColor = FXRGB(123,158,189);
 }
 
 

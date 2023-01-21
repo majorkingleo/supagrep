@@ -1,5 +1,8 @@
 /*
  * $Log: cppdir.h,v $
+ * Revision 1.3  2008/08/06 12:24:55  wamas
+ * new g++ fixes
+ *
  * Revision 1.2  2007/02/09 17:25:35  wamas
  * GCC 2.95 port
  *
@@ -48,7 +51,7 @@ namespace Tools {
 namespace CppDir 
 {
     struct EnumFile {
-	typedef enum ETYPE ///< possible file types
+	enum ETYPE ///< possible file types
 	{
 	    FIRST__  = -1,
 	    UNKNOWN  =  0, ///< unknown file type

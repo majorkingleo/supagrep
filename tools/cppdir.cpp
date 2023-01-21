@@ -1,5 +1,8 @@
 /*
  * $Log: cppdir.cpp,v $
+ * Revision 1.5  2008/08/06 12:24:55  wamas
+ * new g++ fixes
+ *
  * Revision 1.4  2007/03/26 21:29:27  wamas
  * thread support
  *
@@ -32,6 +35,7 @@ extern "C" {
 }
 
 #include <vector>
+#include <cstdlib>
 
 using namespace Tools;
 

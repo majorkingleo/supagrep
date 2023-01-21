@@ -1,5 +1,8 @@
 /*
  * $Log: odbc_db.h,v $
+ * Revision 1.3  2007/08/27 17:22:51  wamas
+ * Updated odbc Driver
+ *
  * Revision 1.2  2006/03/17 19:53:40  wamas
  * tools_config.h serched in the upper directory
  *
@@ -37,7 +40,8 @@ class ODBCDB : public DB
     const char * error();
     bool connect( const char *hostname, const char* username, const char* password );
     bool select_db( const char *db );
-    std::vector<std::string> read( const std::string & query );
+    DBErg<DBRowList> select( const std::string & query, bool table_names );
+	DBErg<DBRowList> query( const std::string &sql );
     void close();
     int insert_id();    
 };

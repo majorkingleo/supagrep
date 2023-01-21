@@ -1,5 +1,11 @@
 /*
  * $Log: dbi.h,v $
+ * Revision 1.5  2007/12/15 18:00:23  wamas
+ * Made destructur virtual so we can use polmorphic types.
+ *
+ * Revision 1.4  2007/08/27 17:22:51  wamas
+ * Updated odbc Driver
+ *
  * Revision 1.3  2006/11/24 09:47:27  wamas
  * -Wshadow Warnings ausgebaut
  *
@@ -44,6 +50,7 @@ class DBType
       VARCHAR,
       ENUM,
 	  DOUBLE,
+	  DATETIME,
       LAST__
     };
   };
@@ -83,10 +90,11 @@ class DBBindType
   std::string table_name;
 
  private:
-  DBBindType( const DBBindType &t ) {}
+  DBBindType( const DBBindType &t );
 
  public:
   DBBindType( const std::string &table_name_ ) : table_name( table_name_ ) {}
+	virtual ~DBBindType(){}
   
   void add( DBType *db_type )
   {
@@ -105,6 +113,12 @@ class DBBindType
   DBBindType & operator=( const DBBindType & t )
     {
       // Do exactly nothing. Addresses are still the same.
+
+	  for( unsigned int i = 0; i < type_list.size(); i++ )
+		{
+		  type_list[i]->load_from_db( t.get_cell_by_name( type_list[i]->get_name() )->save_to_db() );
+		}
+
       return *this;
     }
 
@@ -113,6 +127,7 @@ class DBBindType
   const std::vector<DBType*> & get_types() const { return type_list; }
 
   DBType* get_cell_by_name( const std::string &name );
+  const DBType* get_cell_by_name( const std::string &name ) const;
 }; 
 
 
@@ -171,8 +186,10 @@ class DBTypeEnumBase : public DBType
       parent->add( this );
     }
 
-  virtual unsigned get_cases() const = 0;
-  virtual std::string get_case( int i ) const = 0;
+	virtual unsigned get_first_case() const = 0;
+	virtual unsigned get_last_case() const = 0;
+	virtual unsigned get_cases() const = 0;
+	virtual std::string get_case( int i ) const = 0;
 };
 
 template<class ETYPE> class DBTypeEnum : public DBTypeEnumBase
@@ -218,19 +235,29 @@ template<class ETYPE> class DBTypeEnum : public DBTypeEnumBase
 	return std::string();
       }
 
-    unsigned get_size() const
+    unsigned get_size()
     {
       unsigned size = 0;
 
       for( unsigned i = TYPE::FIRST__ + 1; i < TYPE::LAST__; i++ )
 	{
-	  unsigned s = strlen( data.STYPES[i] );
+	  unsigned s = data.STYPES[i].size();
 	  if( s > size )
 	    size = s;
 	}
 
       return size;
     }
+
+    unsigned get_first_case() const
+	{
+	  return TYPE::FIRST__ + 1;
+	}
+
+    unsigned get_last_case() const
+	{
+	  return TYPE::LAST__-1;
+	}
 
     unsigned get_cases() const
     {
@@ -285,6 +312,36 @@ class DBTypeVarChar : public DBType
     operator const char* () const { return data.c_str(); }
 
     DBTypeVarChar & operator=( const std::string & d ) { data = d; return *this; }
+
+    unsigned get_size() { return size; }
+};
+
+class DBTypeDateTime : public DBType
+{
+ public:
+  std::string data;
+  unsigned size;
+
+ public:
+  DBTypeDateTime( DBBindType* parent, const std::string &name_ )
+    : DBType( name_, TYPE::DATETIME ), size( 19 )
+    {
+      parent->add( this );
+    }
+
+  DBTypeDateTime( const std::string &name_ = "" )
+	: DBType( name_, TYPE::DATETIME ), size( 19 )
+	{
+	}
+
+    void load_from_db( const std::string &data_ );
+    std::string save_to_db() const;
+
+    std::string operator()() const { return data; }
+    std::string str( const std::string &fstr = "%s" ) const { return format( fstr, data ); }
+    operator const char* () const { return data.c_str(); }
+
+    DBTypeDateTime & operator=( const std::string & d ) { data = d; return *this; }
 
     unsigned get_size() { return size; }
 };

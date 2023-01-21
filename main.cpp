@@ -90,6 +90,7 @@ Main::~Main()
 
 void Main::create()
 {
+     init_theme(getApp());
 	FXMainWindow::create();
 
 	show();

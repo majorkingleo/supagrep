@@ -1,5 +1,8 @@
 /*
  * $Log: leoini.cpp,v $
+ * Revision 1.6  2008/08/06 12:24:55  wamas
+ * new g++ fixes
+ *
  * Revision 1.5  2007/02/09 17:25:35  wamas
  * GCC 2.95 port
  *
@@ -471,11 +474,11 @@ bool Leo::Ini::write( Element element )
 {
 #if __GNUC__ > 2
   if( is_open )
-    if( openmode & std::ios_base::out != std::ios_base::out )
+    if( ( openmode & std::ios_base::out ) != std::ios_base::out )
       return false; // file opened in read_only mode
 #else
   if( is_open )
-    if( openmode & std::ios::out != std::ios::out )
+    if( ( openmode & std::ios::out ) != std::ios::out )
       return false; // file opened in read_only mode
 #endif
 
@@ -548,10 +551,10 @@ bool Leo::Ini::write()
     return false;
 
 #if __GNUC__ > 2
-  if( openmode & std::ios_base::out != std::ios_base::out )
+  if( ( openmode & std::ios_base::out ) != std::ios_base::out )
     return false;
 #else
-  if( openmode & std::ios::out != std::ios::out )
+  if( ( openmode & std::ios::out ) != std::ios::out )
     return false;
 #endif
 
@@ -566,10 +569,10 @@ void Leo::Ini::flush()
     return;
 
 #if __GNUC__ > 2
-  if( openmode & std::ios_base::out != std::ios_base::out )
+  if( ( openmode & std::ios_base::out ) != std::ios_base::out )
     return;
 #else
-  if( openmode & std::ios::out != std::ios::out )
+  if( ( openmode & std::ios::out ) != std::ios::out )
     return;
 #endif
   
@@ -674,14 +677,14 @@ bool Leo::Ini::erase()
 {
   if( is_open )
 #if __GNUC__ > 2
-    if( openmode & std::ios_base::out == std::ios_base::out )
+    if( ( openmode & std::ios_base::out ) == std::ios_base::out )
       {
 	clear();
 
 	return true;
       }
 #else
-    if( openmode & std::ios::out == std::ios::out )
+    if( ( openmode & std::ios::out ) == std::ios::out )
       {
 	clear();
 
@@ -694,10 +697,10 @@ bool Leo::Ini::erase()
 bool Leo::Ini::erase( Element element )
 {
 #if __GNUC__ > 2
-  if( !is_open ||( openmode & std::ios_base::out != std::ios_base::out ) )
+  if( !is_open ||( ( openmode & std::ios_base::out ) != std::ios_base::out ) )
     return false;
 #else
-  if( !is_open ||( openmode & std::ios::out != std::ios::out ) )
+  if( !is_open ||( ( openmode & std::ios::out ) != std::ios::out ) )
     return false;
 #endif
  

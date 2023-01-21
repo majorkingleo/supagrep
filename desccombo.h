@@ -3,7 +3,11 @@
 
 #include <fx.h>
 
-class DescCombo : public FXComboBox
+#include "tools/theme.h"
+
+using namespace Tools;
+
+class DescCombo : public ThemeComboBox
 {
   FXDECLARE( DescCombo );
 

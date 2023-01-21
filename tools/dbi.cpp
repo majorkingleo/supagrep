@@ -1,5 +1,11 @@
 /*
  * $Log: dbi.cpp,v $
+ * Revision 1.4  2007/09/19 23:05:08  wamas
+ * fixed ODBC driver
+ *
+ * Revision 1.3  2007/08/27 17:22:51  wamas
+ * Updated odbc Driver
+ *
  * Revision 1.2  2006/11/22 22:46:30  wamas
  * mysql fixes
  *
@@ -15,6 +21,7 @@
 #include "format.h"
 #include "db.h"
 #include "dbi.h"
+#include "debug.h"
 
 #ifdef TOOLS_USE_DB
 
@@ -60,6 +67,16 @@ std::string DBTypeVarChar::save_to_db() const
   return data;
 }
 
+void DBTypeDateTime::load_from_db( const std::string &data_ )
+{
+  data = data_;
+}
+
+std::string DBTypeDateTime::save_to_db() const
+{
+  return data;
+}
+
 bool DBBindType::load_from_db( const DBRow &row )
 {
   bool found = false;
@@ -75,7 +92,13 @@ bool DBBindType::load_from_db( const DBRow &row )
 	      type_list[j]->load_from_db( row.values[i] );
 	      found = true;
 	      break;
-	    } 
+	    } else {
+           DEBUG( format( "%s != %s && %s != %s.%s", row.names[i], 
+                  type_list[j]->get_name(),
+                  row.names[i],
+                  table_name,
+                  type_list[j]->get_name() ) );
+        }
 	}
     }
 
@@ -95,6 +118,17 @@ std::vector<std::string> DBBindType::get_values() const
 }
 
 DBType* DBBindType::get_cell_by_name( const std::string &name )
+{
+  for( unsigned i = 0; i < type_list.size(); i++ )
+    {
+      if( name == type_list[i]->get_name() )
+	return type_list[i];
+    }
+
+  return 0;
+}
+
+const DBType* DBBindType::get_cell_by_name( const std::string &name ) const
 {
   for( unsigned i = 0; i < type_list.size(); i++ )
     {

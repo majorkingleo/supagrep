@@ -1,5 +1,8 @@
 /*
  * $Log: range.h,v $
+ * Revision 1.3  2008/06/20 14:47:41  wamas
+ * strcpy improved
+ *
  * Revision 1.2  2006/11/23 16:46:27  wamas
  * MOBERZA -Wshadow dazugeschalten und ausgebessert
  *
@@ -18,7 +21,14 @@
 
 namespace Tools {
 
-template<class EClass> class EnumRange : public EClass
+  template<class EClass> class CopyNone
+	{
+	public:
+	  void operator()( EClass & dest, const EClass & source )
+	  {}
+	};
+
+  template<class EClass, class Copy=CopyNone<EClass> > class EnumRange : public EClass
 {    
 public:
     struct Error : public std::exception {
@@ -39,6 +49,17 @@ public:
 		throw( Error( "EnumRange: Out of range!" ) );
 	}    
 
+    EnumRange(  const EnumRange<EClass>& er ) 
+	: value( er.value )
+	{
+	    if( value <= EClass::FIRST__ || value >= EClass::LAST__ )
+		throw( Error( "EnumRange: Out of range!" ) );
+
+		Copy cp;
+
+		cp(*this,er);
+	}    
+
     EnumRange() : value( INVALID__ ) {}
 
     ETYPE operator()() const {
@@ -55,15 +76,19 @@ public:
 	return value;
     }
 
-    EnumRange<EClass>& operator=( ETYPE v ) {
+    EnumRange<EClass,Copy>& operator=( ETYPE v ) {
 	if( v <= EClass::FIRST__ || v >= EClass::LAST__ )
 	    throw( Error( "EnumRange: Out of range!" ) );
 	value = v;
 	return *this;
     }
 
-    EnumRange<EClass>& operator=( const EnumRange<EClass>& er ) {
+    EnumRange<EClass,Copy>& operator=( const EnumRange<EClass>& er ) {
 	value = er.value;
+	Copy cp;
+
+	cp(*this,er);
+
 	return *this;
     }
 	

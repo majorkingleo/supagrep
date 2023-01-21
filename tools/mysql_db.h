@@ -1,5 +1,8 @@
 /*
  * $Log: mysql_db.h,v $
+ * Revision 1.3  2007/08/27 17:22:51  wamas
+ * Updated odbc Driver
+ *
  * Revision 1.2  2006/03/17 19:53:40  wamas
  * tools_config.h serched in the upper directory
  *
@@ -21,7 +24,7 @@
 #include "db.h"
 
 namespace Tools {
-
+  
 class MySqlDB : public DB
 {
  private:

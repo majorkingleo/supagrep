@@ -1,5 +1,15 @@
 /*
  * $Log: string_utils.h,v $
+ * Revision 1.4  2008/02/28 17:05:22  wamas
+ * Bugfixes in Stringutils
+ *
+ * Revision 1.3  2008/02/20 09:30:20  wamas
+ * rewrote format for porting code to gccs -fstrict-aliasing
+ * and make it on M$ compiler work
+ *
+ * Revision 1.2  2007/08/27 17:22:51  wamas
+ * Updated odbc Driver
+ *
  * Revision 1.1.1.1  2006/03/17 19:49:16  wamas
  * own tools reponsitority
  *
@@ -40,8 +50,12 @@ bool is_int( const std::string &s );
 std::vector<std::string> split_simple( std::string str, std::string seperator = " \t\n", int max = -1 );
 std::vector<std::string> split_string( std::string str, std::string seperator, int max = -1 );
 
-inline bool is_bool( const bool &b ) { return true; }
+inline bool is_bool( bool b ) { return true; }
 template<class T> bool is_bool( const T &t ) { return false; }
+inline bool get_bool( bool b, bool x ) { return b; }
+
+// dummy function
+template<class T> T get_bool( bool b, T x ) { return T(); }
 
 
 bool s2bool( const std::string &s );
@@ -51,7 +65,9 @@ template <class T> T s2x( const std::string& s )
 {
     if( is_bool( T() ) )
     {
-	return s2bool( s );
+	  bool b = s2bool( s );
+
+	  return get_bool(b, T() );
     }
 
   std::strstream str;

@@ -2,6 +2,9 @@
  * from the leohtml project (leohtml.sf.net) created in 2001 by Martin Oberzalek
  *
  * $Log: pairs.h,v $
+ * Revision 1.3  2008/08/06 12:24:55  wamas
+ * new g++ fixes
+ *
  * Revision 1.2  2006/11/29 18:13:31  wamas
  * Performance Tuning
  *
@@ -26,7 +29,7 @@ class Pairs
  private:
 
   /// structure presenting a single Pair
-  typedef struct Pair
+  struct Pair
   {
     std::string::size_type first;  ///< the first position
     std::string::size_type second; ///< the second position

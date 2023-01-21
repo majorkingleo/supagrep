@@ -1,5 +1,8 @@
 /*
  * $Log: database.h,v $
+ * Revision 1.3  2007/08/27 17:22:51  wamas
+ * Updated odbc Driver
+ *
  * Revision 1.2  2006/11/24 09:47:27  wamas
  * -Wshadow Warnings ausgebaut
  *
@@ -43,6 +46,10 @@ class Database
   static const unsigned DB_ORACLE;
 #endif
 
+#ifdef TOOLS_USE_ODBC
+  static const unsigned DB_ODBC;
+#endif
+
  public:
   Database( const std::string &host, 
 	    const std::string &user, 
@@ -69,12 +76,12 @@ class Database
 
   void rollback()
   {
-    exec( "rollback" );
+    exec( "rollback;" );
   }
 
   void commit()
   {
-    exec( "commit" );
+    exec( "commit;" );
   }
 
   std::string get_sql() const { return sql; }

@@ -5,12 +5,16 @@
 
 #include "search.h"
 
+#include "tools/theme.h"
+
+using namespace Tools;
+
 class ResultWin;
 class Main;
 class DescCombo;
 class Tab;
 
-class SearchWin : public FXHorizontalFrame
+class SearchWin : public ThemeHorizontalFrame
 {
   FXDECLARE( SearchWin );
 

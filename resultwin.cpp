@@ -12,7 +12,7 @@
 using namespace Tools;
 
 #ifdef WIN32
-# include <windows.h>
+#include <windows.h>
 # include <tchar.h>
 #endif
 
@@ -362,8 +362,8 @@ int ResultWin::do_system( const FXString & cmd )
 #ifdef WIN32    
   STARTUPINFO si;
   PROCESS_INFORMATION pi;
-  LPTSTR szCmdline=_tcsdup(TEXT(cmd.text()));
-  LPTSTR szCwd=_tcsdup(TEXT(FXSystem::getCurrentDirectory().text()));
+  LPTSTR szCmdline=(TCHAR*)_tcsdup(TEXT(cmd.text()));
+  LPTSTR szCwd=(TCHAR*)_tcsdup(TEXT(FXSystem::getCurrentDirectory().text()));
 
   ZeroMemory( &si, sizeof(si) );
   // si.wShowWindow = SW_SHOWMINNOACTIVE;

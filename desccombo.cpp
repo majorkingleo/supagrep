@@ -4,7 +4,7 @@ FXDEFMAP( DescCombo ) DescComboMap[] = {
   FXMAPFUNC( SEL_COMMAND, DescCombo::ID_LIST, DescCombo::onCommand )
 };
 
-FXIMPLEMENT( DescCombo, FXComboBox, DescComboMap, ARRAYNUMBER( DescComboMap ));
+FXIMPLEMENT( DescCombo, ThemeComboBox, DescComboMap, ARRAYNUMBER( DescComboMap ));
 
 DescCombo::DescCombo( FXComposite *p,
 					  FXint cols,
@@ -19,7 +19,7 @@ DescCombo::DescCombo( FXComposite *p,
 					  FXint pr,
 					  FXint pt,
 					  FXint pb)
-  : FXComboBox( p, cols, tgt, sel, opts, x, y, w, h, pl, pr, pt, pb )
+  : ThemeComboBox( p, cols, tgt, sel, opts, x, y, w, h, pl, pr, pt, pb )
 {
 
 }

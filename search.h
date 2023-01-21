@@ -5,6 +5,7 @@
 
 #include <list>
 #include <vector>
+#include <string>
 
 class Search : public FXThread
 {

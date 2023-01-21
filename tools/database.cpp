@@ -1,5 +1,8 @@
 /*
  * $Log: database.cpp,v $
+ * Revision 1.3  2007/08/27 17:22:51  wamas
+ * Updated odbc Driver
+ *
  * Revision 1.2  2006/11/24 09:47:27  wamas
  * -Wshadow Warnings ausgebaut
  *
@@ -14,6 +17,7 @@
 #include "database.h"
 #include "mysql_db.h"
 #include "oracle_db.h"
+#include "odbc_db.h"
 #include "format.h"
 #include <iostream>
 
@@ -27,6 +31,10 @@ const unsigned Tools::Database::DB_MYSQL = 1;
 
 #ifdef TOOLS_USE_ORACLE
 const unsigned Tools::Database::DB_ORACLE = 2;
+#endif
+
+#ifdef TOOLS_USE_ODBC
+const unsigned Tools::Database::DB_ODBC = 3;
 #endif
 
 Database::Database( const std::string &host, 
@@ -43,6 +51,11 @@ Database::Database( const std::string &host,
 #ifdef TOOLS_USE_ORACLE
   if( type == DB_ORACLE )
 	db = new OracleDB();
+#endif
+
+#ifdef TOOLS_USE_ODBC
+  if( type == DB_ODBC )
+	db = new ODBCDB();
 #endif
 
   if( !db )

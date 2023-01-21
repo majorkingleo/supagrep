@@ -1,5 +1,8 @@
 /*
  * $Log: string_utils.cpp,v $
+ * Revision 1.3  2008/06/22 12:50:20  wamas
+ * improvement
+ *
  * Revision 1.2  2006/11/23 16:46:27  wamas
  * MOBERZA -Wshadow dazugeschalten und ausgebessert
  *
@@ -231,7 +234,18 @@ std::string substitude( std::string str, std::string what, std::string with )
       if( pos == std::string::npos )
         break;
 
-      str.replace( pos, what.size(), with );
+      if( with.empty() )
+	{
+	  std::string s = str.substr( 0, pos + what.size() );
+	  s = str.substr( pos + what.size() );
+	  str = s;
+	  continue;
+	}
+      else
+	{
+	  str.replace( pos, what.size(), with );
+	}
+
       pos += (what.size() > with.size() ? what.size() : with.size() );
     }
   return str;

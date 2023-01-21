@@ -1,5 +1,11 @@
 /*
  * $Log: mysql_db.cpp,v $
+ * Revision 1.4  2008/02/27 23:48:38  wamas
+ * nothing
+ *
+ * Revision 1.3  2007/08/27 17:22:51  wamas
+ * Updated odbc Driver
+ *
  * Revision 1.2  2006/11/22 22:46:31  wamas
  * mysql fixes
  *
@@ -76,6 +82,7 @@ DBErg<DBRowList> MySqlDB::select( const std::string &sql, bool table_names )
   MYSQL_RES *res;
   MYSQL_ROW row;
 
+
   if( mysql_real_query( C(db), sql.c_str(), sql.size() ) )
     {     
       DBErg<DBRowList> erg;
@@ -104,9 +111,9 @@ DBErg<DBRowList> MySqlDB::select( const std::string &sql, bool table_names )
   while( MYSQL_FIELD* field = mysql_fetch_field( res ) )
     {
       if( table_names )
-	names.push_back( std::string(field->table) + '.' + field->name );
+		names.push_back( std::string(field->table) + '.' + field->name );
       else
-	names.push_back( field->name );
+		names.push_back( field->name );
     }
   
   DBErg<DBRowList> sl( names );

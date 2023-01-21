@@ -1,5 +1,12 @@
 /*
  * $Log: format.h,v $
+ * Revision 1.5  2008/08/06 12:24:55  wamas
+ * new g++ fixes
+ *
+ * Revision 1.4  2008/02/20 09:30:20  wamas
+ * rewrote format for porting code to gccs -fstrict-aliasing
+ * and make it on M$ compiler work
+ *
  * Revision 1.3  2007/03/14 21:47:08  wamas
  * nicer cast
  *
@@ -54,9 +61,6 @@ extern "C" {
 #  define IS_DIGIT( x ) isdigit( x )
 #endif  
 
-#ifndef NFORMAT
-
-
 namespace Tools {
 
 namespace Format {
@@ -73,20 +77,20 @@ namespace Format
   {    
   public:
     
-    typedef enum Adjust
+    enum Adjust
       {
 	LEFT,
 	RIGHT
       };
     
-    typedef enum Base
+    enum Base
       {
 	OCT,
 	DEC,
 	HEX
       };
     
-    typedef enum Floating
+    enum Floating
       {
 	FIXED,
 	SCIENTIFIC
@@ -163,6 +167,9 @@ namespace Format
     bool is_int( unsigned int &n ) { return true; }
     bool is_int( short &n ) { return true; }
     bool is_int( unsigned short ) { return true; }
+    bool is_int( unsigned long ) { return true; }
+    bool is_int( unsigned long long ) { return true; }
+    bool is_int( long long ) { return true; }
 
     template <class S> bool is_string( S &s_ ) { return false; }
     bool is_string( std::string& s_ ) { return true; }
@@ -190,6 +197,16 @@ namespace Format
 #endif
     }
 
+	template<class T> int get_int( const T &t ) { return 0; }
+	int get_int( int n ) { return n; }
+    int get_int( unsigned int n ) { return n; }
+    int get_int( short n ) { return n; }
+    int get_int( unsigned short n ) { return n; }
+    int get_int( long long n ) { return n; }
+    int get_int( unsigned long long n  ) { return n; }
+    int get_int( long n ) { return n; }
+    int get_int( unsigned long n ) { return n; }
+
   };
 
   int skip_atoi( std::string s, ST start, ST& pos );
@@ -202,9 +219,10 @@ inline std::ostream& operator<<( std::ostream& out, Format::CFormat cf )
   return out;
 }
 
+namespace Format { /* M$ Comiler can't handle it otherwiese */
 
 template <class A, class B, class C, class D, class E, class F>
-Format::Format<A,B,C,D,E,F>::Format( std::string const &format_, A a_, B b_, C c_, D d_, E e_, F f_, unsigned int num_of_args_ )
+Format<A,B,C,D,E,F>::Format( std::string const &format_, A a_, B b_, C c_, D d_, E e_, F f_, unsigned int num_of_args_ )
   : format( format_ ), a(a_), b(b_), c(c_), d(d_), e(e_), f(f_), num_of_args( num_of_args_ )
 {
   if( num_of_args > 6 )
@@ -216,7 +234,7 @@ Format::Format<A,B,C,D,E,F>::Format( std::string const &format_, A a_, B b_, C c
 }
 
 template <class A, class B, class C, class D, class E, class F>
-int Format::Format<A,B,C,D,E,F>::get_int_arg( unsigned int num )
+int Format<A,B,C,D,E,F>::get_int_arg( unsigned int num )
 {
   if( static_cast<unsigned int>(num) > num_of_args - 1 )
     throw Error( "The arg you wan't to use is out of range" );
@@ -228,12 +246,12 @@ int Format::Format<A,B,C,D,E,F>::get_int_arg( unsigned int num )
     {
       switch( num )
 	{
-	case 0: return *reinterpret_cast<int*>(&a); // I have to cast here cause the compiler
-	case 1: return *reinterpret_cast<int*>(&b); // will make troubles if any of these
-	case 2: return *reinterpret_cast<int*>(&c); // values is not an unsigned int.
-	case 3: return *reinterpret_cast<int*>(&d); // Even if we are sure that
-	case 4: return *reinterpret_cast<int*>(&e); // an unsigned int value will be returned
-	case 5: return *reinterpret_cast<int*>(&f);
+	case 0: return get_int(a); // I have to cast here cause the compiler
+	case 1: return get_int(b); // will make troubles if any of these
+	case 2: return get_int(c); // values is not an unsigned int.
+	case 3: return get_int(d); // Even if we are sure that
+	case 4: return get_int(e); // an unsigned int value will be returned
+	case 5: return get_int(f);
 	}
     }
   else
@@ -243,7 +261,7 @@ int Format::Format<A,B,C,D,E,F>::get_int_arg( unsigned int num )
 }
 
 template <class A, class B, class C, class D, class E, class F>
-void Format::Format<A,B,C,D,E,F>::gen_arg_list()
+void Format<A,B,C,D,E,F>::gen_arg_list()
 {
   for( unsigned int i = 0; i < num_of_args; i++ )
     { 
@@ -282,7 +300,7 @@ void Format::Format<A,B,C,D,E,F>::gen_arg_list()
 }
 
 template <class A, class B, class C, class D, class E, class F>
-std::string Format::Format<A,B,C,D,E,F>::use_arg( unsigned int i, const CFormat &cf )
+std::string Format<A,B,C,D,E,F>::use_arg( unsigned int i, const CFormat &cf )
 {
   if( i > num_of_args || i < 0 )
     throw Error( "out of arg range" );
@@ -301,7 +319,7 @@ std::string Format::Format<A,B,C,D,E,F>::use_arg( unsigned int i, const CFormat 
 }
 
 template <class A, class B, class C, class D, class E, class F>
-void Format::Format<A,B,C,D,E,F>::parse()
+void Format<A,B,C,D,E,F>::parse()
 {
   if( format.empty() )
     return;
@@ -502,15 +520,19 @@ void Format::Format<A,B,C,D,E,F>::parse()
 	    {
 	      pos++;
 	      
-	      if( pos < len )
+	      if( pos < len ) {
 		if( hh == true )
 		  {
-		    if( format[pos] == 'h' )
+		    if( format[pos] == 'h' ) {
 		      pos++;
+			}
 		  }
-		else if( ll = true )
-		  if( format[pos] == 'l' )
+		else if( ll == true ) {
+		  if( format[pos] == 'l' ) {
 		    pos++;
+			}
+			}
+		}
 	    }
 	}
 
@@ -637,93 +659,7 @@ void Format::Format<A,B,C,D,E,F>::parse()
     }
 }
 
-#else // ifndef NFORMAT
-
-#include "string_utils.h" // for x2s
-
-#include <cstdio>
-#include <cstring>
-
-namespace Format
-{
-
-template <class T> const char* convert( T t ) { return x2s( t ).c_str(); }
-
-#define DEF( TYPE ) \
-inline TYPE convert( TYPE t ) { return t; }
-
-    DEF( unsigned )
-    DEF( int )
-    DEF( char  )
-    DEF( char* )
-    DEF( const char* )
-    DEF( short )
-    DEF( double )
-    DEF( float )
-    DEF( long )
-
-#undef DEF
-
-
-template<class A, class B, class C, class D, class E, class F>
-class Format
-{
-    std::string s;
-
- public:
-    Format( const std::string &format, A a, B b, C c, D d, E e, F f, unsigned int num_of_args )
-	{
-#define D( T ) convert( T )
-	    unsigned buffer_size = 256;
-
-	    bool cont = false;
-
-	    do {
-
-		cont = false;
-
-		char *buffer = new char[buffer_size];
-		int n = 0;
-		
-		switch( num_of_args )
-		{
-		    case 1: n = std::snprintf( buffer, buffer_size, format.c_str(),
-					       D( a ) ); break;
-		    case 2: n = std::snprintf( buffer, buffer_size, format.c_str(),
-					       D( a ), D( b ) ); break;
-		    case 3: n = std::snprintf( buffer, buffer_size, format.c_str(),
-					       D( a ), D( b ), D( c ) ); break;
-		    case 4: n = std::snprintf( buffer, buffer_size, format.c_str(),
-					       D( a ), D( b ), D( c ), D( d ) ); break;
-		    case 5: n = std::snprintf( buffer, buffer_size, format.c_str(),
-					       D( a ), D( b ), D( c ), D( d ), D( e ) ); break;
-		    case 6: n = std::snprintf( buffer, buffer_size, format.c_str(),
-					       D( a ), D( b ), D( c ), D( d ), D( e ), D( f ) ); break;
-		}
-		
-		
-		if( (unsigned) n >= buffer_size - 2 )
-		{
-		    buffer_size *= 2;
-		    cont = true;
-		    n = 0;
-		}
-
-		for( int i = 0; i < n; i++ )
-		    s += buffer[i];
-		
-		delete[] buffer;
-		
-	    } while( cont );
-#undef D
-	}
-
-    std::string get_string() const { return s; }
-};
-
-}
-
-#endif
+} // namespace Format
 
 template <class A, class B, class C, class D, class E, class F>
 inline std::string format( std::string fs, A a, B b, C c, D d, E e, F f )

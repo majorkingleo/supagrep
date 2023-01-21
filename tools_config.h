@@ -6,5 +6,6 @@
 // #define TOOLS_USE_ODBC
 // #define TOOLS_USE_DB
 // #define TOOLS_USE_ORACLE
+#define TOOLS_USE_GUI
 
 #endif

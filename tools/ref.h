@@ -1,5 +1,8 @@
 /*
  * $Log: ref.h,v $
+ * Revision 1.4  2008/06/20 07:19:18  wamas
+ * Memory Leaks Suchen
+ *
  * Revision 1.3  2007/03/28 07:30:12  wamas
  * Bugfixes um Abstuerze beim Multithreading zu verhindern
  *
@@ -19,7 +22,35 @@
 
 #include <exception>
 
+#include "../tools_config.h"
+
 namespace Tools {
+
+#ifdef TOOLS_USE_GLOBAL_COUNT
+
+class GlobalCount
+{
+  int count;
+
+ public:
+ GlobalCount() : count(0) {}
+
+  void add() { count++; }
+  void del() { count--; }
+  int get() const { return count; }
+};
+
+extern GlobalCount GLOBALCOUNT;
+
+#define GLOBAL_COUNT_ADD GLOBALCOUNT.add()
+#define GLOBAL_COUNT_DEL GLOBALCOUNT.del()
+
+#else
+
+#define GLOBAL_COUNT_ADD
+#define GLOBAL_COUNT_DEL
+
+#endif
 
 class BaseException : public std::exception
 {
@@ -86,19 +117,21 @@ template <class V> class Ref
      \param del  if the value is true (thats the default) the object will
      be deleted if the reference counter gets lower or equal zero
   */
-  explicit Ref( pointer v, bool del ) : rep( new Rep(1, v, del) ) {}
-  Ref( pointer v ) : rep( new Rep( 1, v, true ) ) {}
+  explicit Ref( pointer v, bool del ) : rep( new Rep(1, v, del) ) { GLOBAL_COUNT_ADD; }
+  Ref( pointer v ) : rep( new Rep( 1, v, true ) ) { GLOBAL_COUNT_ADD; }
   
-  explicit Ref( reference v, bool del ) : rep( new Rep( 1, &v, del ) ) {}
-  explicit Ref( reference v ) : rep( new Rep( 1, &v, false ) ) {}
+  explicit Ref( reference v, bool del ) : rep( new Rep( 1, &v, del ) ) { GLOBAL_COUNT_ADD; }
+  explicit Ref( reference v ) : rep( new Rep( 1, &v, false ) ) { GLOBAL_COUNT_ADD; }
   
-  explicit Ref( const_reference v, bool del ) : rep( new Rep( 1, &v, del ) ) {}
-  explicit Ref( const_reference v ) : rep( new Rep( 1, &v, false ) ) {}
+  explicit Ref( const_reference v, bool del ) : rep( new Rep( 1, &v, del ) ) { GLOBAL_COUNT_ADD; }
+  explicit Ref( const_reference v ) : rep( new Rep( 1, &v, false ) ) { GLOBAL_COUNT_ADD; }
   
-  Ref( const Ref &r ) : rep( r.rep )
+  Ref( const Ref<V> &r ) : rep( r.rep )
     {
-      if( rep )
-	rep->count++;
+      if( rep ) {
+		GLOBAL_COUNT_ADD;
+		rep->count++;
+	  }
     }    
   
   ~Ref() { unlink(); }
@@ -147,8 +180,10 @@ template <class V> class Ref
       unlink();
       rep = r.rep;
       
-      if( rep )
-	rep->count++;
+      if( rep ) {
+		GLOBAL_COUNT_ADD;
+		rep->count++;
+	  }
 
       return *this;
     }
@@ -233,13 +268,17 @@ template <class V> class Ref
   void unlink()
     {
       if( rep )
-	{
-	  if( --rep->count <= 0 )
-	    {
-	      delete rep;
-	      rep = 0;
-	    }
-	}
+		{		  
+		  GLOBAL_COUNT_DEL;
+
+		  rep->count--;
+
+		  if( rep->count <= 0 )
+			{
+			  delete rep;
+			  rep = 0;
+			}
+		}
     }
 };
 

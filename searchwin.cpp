@@ -3,7 +3,9 @@
 #include "main.h"
 #include "desccombo.h"
 #include "tab.h"
+#include "tools/theme.h"
 
+using namespace Tools;
 
 FXDEFMAP( SearchWin ) SearchWinMap[] = {
   FXMAPFUNC( SEL_COMMAND, SearchWin::ID_BT_PATH, SearchWin::onSelPath ),
@@ -33,7 +35,7 @@ SearchWin::SearchWin( Main *main_,
 					  FXint pb,
 					  FXint hs,
 					  FXint vs)
-  : FXHorizontalFrame( p, opts, x, y, w, h, pl, pr, pt, pb, hs, vs ),
+  : ThemeHorizontalFrame( p, opts, x, y, w, h, pl, pr, pt, pb, hs, vs ),
 	main(main_),
 	config(0),
 	tab(0),
@@ -42,8 +44,8 @@ SearchWin::SearchWin( Main *main_,
   FXVerticalFrame *vf = new FXVerticalFrame( this, LAYOUT_FILL_Y );
 
   new FXLabel( vf, LC("Path:") );
-  cb_path = new FXComboBox( vf, 30, this, ID_CB_PATH, FRAME_SUNKEN | COMBOBOX_INSERT_FIRST );
-  bt_lookup = new FXButton( vf, LC("Lookup"), NULL, this, ID_BT_PATH, BUTTON_NORMAL | LAYOUT_FILL_X );
+  cb_path = new ThemeComboBox( vf, 30, this, ID_CB_PATH, FRAME_SUNKEN | COMBOBOX_INSERT_FIRST );
+  bt_lookup = new ThemeButton( vf, LC("Lookup"), NULL, this, ID_BT_PATH, BUTTON_NORMAL | LAYOUT_FILL_X );
 
   new FXLabel( vf, LC("Files:") );
   cb_files = new DescCombo( vf, 30, this, ID_CB_FILES, FRAME_SUNKEN );
@@ -55,15 +57,15 @@ SearchWin::SearchWin( Main *main_,
 
   new FXHorizontalSeparator( vf );
 
-  new FXLabel( vf, LC("Search:") );
-  cb_search = new FXComboBox( vf, 30, this, ID_CB_SEARCH, FRAME_SUNKEN | COMBOBOX_INSERT_FIRST );
-  bt_search = new FXButton( vf, LC("Go"), NULL, this, ID_BT_SEARCH, BUTTON_NORMAL | LAYOUT_FILL_X );
+  new ThemeLabel( vf, LC("Search:") );
+  cb_search = new ThemeComboBox( vf, 30, this, ID_CB_SEARCH, FRAME_SUNKEN | COMBOBOX_INSERT_FIRST );
+  bt_search = new ThemeButton( vf, LC("Go"), NULL, this, ID_BT_SEARCH, BUTTON_NORMAL | LAYOUT_FILL_X );
 
   FXVerticalFrame *bf = new FXVerticalFrame( vf, LAYOUT_BOTTOM | LAYOUT_FILL_X, 0,0,0,0, 0,0,0,0 );
 
   new FXHorizontalSeparator( bf );
 
-  new FXLabel( bf, LC("Result Options:") );
+  new ThemeLabel( bf, LC("Result Options:") );
   FXHorizontalFrame *hf = new FXHorizontalFrame( bf );
   sp_lines = new FXSpinner( hf, 2, this, ID_SP_LINES, FRAME_SUNKEN );
   sp_lines->setValue(1);
@@ -80,7 +82,7 @@ SearchWin::SearchWin( Main *main_,
 
   new FXVerticalSeparator( this );
 
-  FXVerticalFrame *vf2 = new FXVerticalFrame( this, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0,0,0,0, 0,0,0,0 );
+  FXVerticalFrame *vf2 = new ThemeVerticalFrame( this, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0,0,0,0, 0,0,0,0 );
   result = new ResultWin( main, vf2, this, ID_RESULT, LIST_SINGLESELECT | LAYOUT_FILL_X | LAYOUT_FILL_Y );
 
 
@@ -133,7 +135,7 @@ const char *SearchWin::LC( const char *s )
 }
 
 long SearchWin::onSearch( FXObject *obj, FXSelector sel, void * )
-{
+{     
   if( config )
 	{
 	  if( mt_running.get() == true ) {

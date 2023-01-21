@@ -1,5 +1,11 @@
 /*
  * $Log: odbc_db.cpp,v $
+ * Revision 1.3  2007/09/19 23:05:08  wamas
+ * fixed ODBC driver
+ *
+ * Revision 1.2  2007/08/27 17:22:51  wamas
+ * Updated odbc Driver
+ *
  * Revision 1.1.1.1  2006/03/17 19:49:16  wamas
  * own tools reponsitority
  *
@@ -22,6 +28,8 @@
 #include <sql.h>
 #include <sqlext.h>
 #include <sqltypes.h>
+#include <mbstring.h>
+#include "debug.h"
 
 #define H( x ) (SQLHENV*)x
 #define C( x ) (SQLHDBC*)x
@@ -29,143 +37,210 @@
 using namespace Tools;
 
 ODBCDB::ODBCDB()
-    : DB(),
-      handle(0),
-      connection(0)
+  : DB(),
+	handle(0),
+	connection(0)
 {
-    handle     = new SQLHENV;
-    connection = new SQLHDBC;
-
-    SQLAllocHandle( SQL_HANDLE_ENV, SQL_NULL_HANDLE, H(handle) );
-    SQLSetEnvAttr( *H(handle), SQL_ATTR_ODBC_VERSION, (void*)SQL_OV_ODBC2, 0 );
-    SQLAllocHandle( SQL_HANDLE_DBC, *H(handle), C(connection) );
+  handle     = new SQLHENV;
+  connection = new SQLHDBC;
+  
+  SQLAllocHandle( SQL_HANDLE_ENV, SQL_NULL_HANDLE, H(handle) );
+  SQLSetEnvAttr( *H(handle), SQL_ATTR_ODBC_VERSION, (void*)SQL_OV_ODBC2, 0 );
+  SQLAllocHandle( SQL_HANDLE_DBC, *H(handle), C(connection) );
 }
 
 ODBCDB::~ODBCDB()
 {
-    close();
+  close();
 
-    SQLFreeHandle( SQL_HANDLE_DBC, *C(connection) );
-    SQLFreeHandle( SQL_HANDLE_ENV, *C(handle ) );
-
-    delete C(connection);
-    delete H(handle);
+  SQLFreeHandle( SQL_HANDLE_DBC, *C(connection) );
+  SQLFreeHandle( SQL_HANDLE_ENV, *C(handle ) );
+  
+  delete C(connection);
+  delete H(handle);
 }
 
 const char* ODBCDB::error()
 {
-    return err.c_str();
+  return err.c_str();
 }
 
 bool ODBCDB::connect( const char *hostname, const char* username, const char* password )
 {
-    if( SQL_SUCCESS != SQLConnect( *C(connection), 
-				   (SQLCHAR*) hostname, SQL_NTS,
-				   (SQLCHAR*) username, SQL_NTS,
-				   (SQLCHAR*) password, SQL_NTS ) )
+  if( SQL_SUCCESS != SQLConnectA( *C(connection), 
+								 (SQLCHAR*)hostname, SQL_NTS,
+								 (SQLCHAR*)username, SQL_NTS,
+								 (SQLCHAR*)password, SQL_NTS ) )
     {
-	err = "connection failed";
-	return false;
+	  err = "connection failed";
+	  return false;
     }
-
-    return true;	
+  
+  return true;	
 }
 
 bool ODBCDB::select_db( const char *db )
 {
-    return true;
+  return true;
 }
 
-std::string<std::vector> ODBCDB::read( const std::string & query )
+DBErg<DBRowList> ODBCDB::select( const std::string & sql, bool table_names )
 {
-    SQLHSTMT statement;
-    SQLRETURN ret;
-    SQLINTEGER e;
+  SQLHSTMT statement;
+  SQLRETURN ret;
+  SQLINTEGER e;
+  
+  ret = SQLAllocHandle( SQL_HANDLE_STMT, *C(connection), &statement );     
 
-    ret = SQLAllocHandle( SQL_HANDLE_STMT, *C(connection), &statement );     
-
-    ret = SQLExecDirect( statement, (SQLCHAR*) query.c_str(), SQL_NTS );
-
-    if( ret == SQL_ERROR )
+  ret = SQLExecDirectA( statement, (SQLCHAR*) sql.c_str(), SQL_NTS );
+  
+  if( ret == SQL_ERROR )
     {
-	printf( "here\n" );
-	printf( query.c_str() );
-	printf( "\n" );
-	err = format( "sql error\nquery: %s", query.c_str() ).c_str();
-	SQLFreeHandle( SQL_HANDLE_STMT, statement );
-	return std::vector<std::string>();
+	  printf( "here\n" );
+	  printf( sql.c_str() );
+	  printf( "\n" );
+	  err = format( "sql error\nquery: %s", sql );
+	  SQLFreeHandle( SQL_HANDLE_STMT, statement );
+	  return DBErg<DBRowList>();
     } 
-    else if( ret == SQL_INVALID_HANDLE ) 
-    {
-	err = "invalid handle";
-	SQLFreeHandle( SQL_HANDLE_STMT, statement );
-	return std::vector<std::string>();
-    }
-
-    SQLSMALLINT cols;
-
-    SQLNumResultCols( statement, &cols );
-
-    if( !cols )
-    {
-	SQLFreeHandle( SQL_HANDLE_STMT, statement );
-	return std::vector<std::string>();
-    }
-
-    ret = SQLFreeHandle( SQL_HANDLE_STMT, statement );
-
-
-    SQLAllocHandle( SQL_HANDLE_STMT, *C(connection), &statement );
-
-    std::vector<std::string> sl;
-
-    char buffer[cols][200];
-
-    for( int i = 0; i < cols; ++i )
+  else if( ret == SQL_INVALID_HANDLE ) 
+	{
+	  err = "invalid handle";
+	  SQLFreeHandle( SQL_HANDLE_STMT, statement );
+	  return DBErg<DBRowList>();
+	}
+  
+  SQLSMALLINT cols;
+  
+  SQLNumResultCols( statement, &cols );
+  
+  if( !cols )
+	{
+	  DBErg<DBRowList> erg;
+	  erg.success=1;
+	  SQLFreeHandle( SQL_HANDLE_STMT, statement );
+	  return erg;
+	}
+  
+  ret = SQLFreeHandle( SQL_HANDLE_STMT, statement );
+	
+	
+  SQLAllocHandle( SQL_HANDLE_STMT, *C(connection), &statement );
+	
+  char buffer[cols][200];
+	
+  for( int i = 0; i < cols; ++i )
 	SQLBindCol( statement, i+1, SQL_C_CHAR, &buffer[i], 150, &e );
 
-    SQLExecDirect( statement, (SQLCHAR*) query.c_str(), SQL_NTS );
+  SQLExecDirectA( statement, (SQLCHAR*) sql.c_str(), SQL_NTS );
+  
+  std::vector<std::string> names;  
 
-
-    long erg = SQLFetch( statement );
-    int count = 0;
-    while( erg != SQL_NO_DATA )
-    {
-	count++;
-	sl.push_back( std::vector<FXString>() );
-	
-	for( int i = 0; i < cols; ++i )
+  for( int i = 0; i < cols; i++ )
 	{
-	    FXString s;
-	    s = buffer[i];
-	    sl[count-1].push_back( s );
+	  char acBuffer[100] = {'\0'};
+	  SQLSMALLINT length;
+	  SQLSMALLINT type;
+	  SQLUINTEGER size;
+	  SQLSMALLINT digits;
+	  SQLSMALLINT isNull;
+	  int num;
+	  std::string name;
+
+	  SQLDescribeColA( statement,
+					  i+1, 
+					  (SQLCHAR*)&acBuffer[0], 
+					  sizeof(acBuffer),
+					  &length,
+					  &type,
+					  &size,
+					  &digits,
+					  &isNull );
+
+	  acBuffer[length]='\0';	  
+	  // std::cout << "fields:" << acBuffer << std::endl;
+	  name = acBuffer;
+	  
+
+	  if( table_names ) {
+
+		length = 0;
+		std::string table;
+
+		SQLColAttributeA( statement,
+						 i+1,
+						 SQL_DESC_BASE_TABLE_NAME,
+						 (SQLCHAR*)&acBuffer[0],
+						 sizeof(acBuffer),
+						 &length,
+						 &num);
+		
+		
+		acBuffer[length] = '\0';	   	   
+		table = acBuffer;
+
+        DEBUG( format( "Buffer: %s length: %d", acBuffer, length ) );
+
+		if( !table.empty() ) 
+		  {
+			name = table + '.' + name;
+		  }
+
+		// std::cout << acBuffer << "." << name << std::endl;
+	  }
+
+	  names.push_back( name );
 	}
 
-	erg = SQLFetch( statement );
+  DBErg<DBRowList> sl(names);
+
+  long erg = SQLFetch( statement );
+  int count = 0;
+  while( erg != SQL_NO_DATA )
+    {
+	  count++;
+	  sl.row_list.values.push_back( std::vector<std::string>() );
+	
+	  for( int i = 0; i < cols; ++i )
+		{
+		  std::string s;
+		  s = buffer[i];
+		  sl.row_list.values[count-1].push_back( s );
+		}
+	  
+	  erg = SQLFetch( statement );
     }
+  
+  SQLFreeHandle( SQL_HANDLE_STMT, statement );
+  
+  sl.success=1;
 
-    SQLFreeHandle( SQL_HANDLE_STMT, statement );
-
-    return sl;
+  return sl;
 }
 
 void ODBCDB::close()
 {
-    SQLDisconnect( *C(connection) );
+  SQLDisconnect( *C(connection) );
 }
 
 int ODBCDB::insert_id()
 {
-    std::vector<std::string> sl = read( "SELECT LAST_INSERT_ID()" );
-    
-    if( !sl.empty() )
-    {
-	int d = 0;
-	d = s2x<int>( sl[0][0].text(), 0 );
-	return d;
-    }
-
-    return 0;
+  DBErg<DBRowList> sl = select( "SELECT LAST_INSERT_ID()", false );
+  
+  if( !sl.row_list.values.empty() )
+	{
+	  int d = 0;
+	  d = s2x<int>( sl.row_list.values[0][0], 0 );
+	  return d;
+	}
+  
+  return 0;
 }
+
+DBErg<DBRowList> ODBCDB::query( const std::string &sql )
+{
+  return select( sql, false );
+}
+
 
 #endif

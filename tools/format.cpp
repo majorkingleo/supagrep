@@ -1,5 +1,12 @@
 /*
  * $Log: format.cpp,v $
+ * Revision 1.3  2008/08/06 12:24:55  wamas
+ * new g++ fixes
+ *
+ * Revision 1.2  2008/02/20 09:30:20  wamas
+ * rewrote format for porting code to gccs -fstrict-aliasing
+ * and make it on M$ compiler work
+ *
  * Revision 1.1.1.1  2006/03/17 19:49:16  wamas
  * own tools reponsitority
  *
@@ -9,6 +16,7 @@
  */
 
 #include "format.h"
+#include <cstdlib>
 
 #ifndef NFORMAT
 
@@ -92,14 +100,19 @@ void Format::CFormat::set( std::ostream& out )
       
       if( width )
       {
-	  for( int i = 0; i + strlength + 2 + 1 < width; ++i )
-	      out << ' ';
+		  /* For M$ Compile */ {
+			  for( int i = 0; i + strlength + 2 + 1 < width; ++i )
+				  out << ' ';
+		  }
+
 	  width = 0;
       }
 
       out << '0' << ( setupper ? 'X' : 'x' );
-      for( int i = 0; i + strlength < precision; ++i )
-	  out << '0';
+	  /* For M$ Compile */  {
+		  for( int i = 0; i + strlength < precision; ++i )
+			  out << '0';
+	  }
   }  
 
   if( adjust == LEFT && zero )
