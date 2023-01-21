@@ -1,0 +1,60 @@
+#!/bin/sh
+
+GUI=1
+WIN32=0
+
+if [ $# -gt 0 ] ; then
+  if [ $1 = "-g" ] ; then
+    export NOOPT=1 
+	export CXXFLAGS="$CXXFLAGS -g -Wall -Woverloaded-virtual -Wshadow"
+  fi
+
+  if [ $1 = "-gui" ] ; then
+	GUI=1;
+	if [ $# -gt "1" ] ; then
+		if [ $2 = "-win32" ] ; then
+			export WIN32=1
+		fi
+	fi
+  fi
+
+  if [ $# -gt "1" ] ; then
+  if [ $2 = "-gui" ] ; then
+	GUI=1;
+	if [ $# -gt "2" ] ; then
+		if [ $3 = "-win32" ] ; then
+			export WIN32=1
+		fi
+	fi
+  fi
+  fi
+fi
+
+if [ $GUI = "1" ] ; then
+	export CXXFLAGS="$CXXFLAGS -DUSE_GUI -DUSE_THREADS `fox-config --cflags`"
+	export LDFLAGS="$LDFLAGS `fox-config --libs`"
+fi
+
+if [ $WIN32 = "1" ] ; then
+	export CXXFLAGS="$CXXFLAGS -I/usr/local/cross-tools/include -I/home/martin/win32/include -I/home/martin/win32/include/fox"
+	export LDFLAGS="$LDFLAGS -L/usr/local/cross-tools/lib -L/home/martin/win32/libs -lcomctl32 -lwsock32 -lwinspool -lmpr -lm -mwindows -e _mainCRTStartup -mwindows -luser32 -lgdi32 -lwinmm -ldxguid"
+	echo
+	echo "WIN32 version configured user cross-make.sh to compile"
+	echo
+fi
+
+if [ `hostname` = salxdev1 ] ; then
+	LDFLAGS="$LDFLAGS -lXext -lX11 /usr/lib/libjpeg.so -lpng -ltiff -lz -lm -L/usr/X11R6/lib"
+fi
+#if [ `hostname` = sauxz2 ] ; then
+#	LDFLAGS="$LDFLAGS -L. -lFOX-1.6 -lm -ldl -lpthread -lrt -ljpeg -lz -lm -lIM -lX11 -lXext -lcrypt"
+#fi
+#if [ `hostname` = sasrvb ] || [ `hostname` = sauxz2 ] ; then
+#	LDFLAGS="$LDFLAGS  -L/usr/X11R6/lib -lXext -lX11 -lm "
+#fi
+
+LIBS=". tools "
+export LDFLAGS="$LDFLAGS"
+export WIN32
+./genmak tools "$LIBS"
+./genmak . "$LIBS"

@@ -1,0 +1,26 @@
+EXE=supagrep$(EXTENSION)
+PACKAGE=supagrep
+DIST=$(PACKAGE)-$(VERSION)
+
+all: $(EXE)
+
+tools/libtools.a:
+	cd tools && gmake
+
+$(EXE): $(OFILES) tools/libtools.a
+	$(CXX) -o $(EXE) $(CXXFLAGS) $(OFILES) $(LDFLAGS) tools/libtools.a
+
+clean_tools:
+	cd tools && gmake clean
+
+dist: clean clean_tools
+	rm -rf $(DIST)
+	rm -f $(DIST).tar.gz
+	mkdir $(DIST)
+	cp -r tools $(DIST)
+	cp $(CFILES) $(HFILES) COPYING genmak configure Makefile.in $(DIST)
+	find $(DIST) -name "CVS" | xargs rm -rf
+	chmod -R u+w  $(DIST)
+	tar cvf $(DIST).tar $(DIST)
+	gzip --best $(DIST).tar
+	rm -rf $(DIST)

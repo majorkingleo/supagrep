@@ -1,0 +1,97 @@
+#!/bin/sh
+
+VERSION=0.0.3
+BASE=`pwd`
+
+if [ $# -gt 1 ] ; then
+	ADD_LIB=""
+	INC_LIB=""
+	for i in $2 ; do
+		ADD_LIB="$ADD_LIB -L$i"
+		INC_LIB="$INC_LIB -I$BASE/$i"
+	done
+fi
+
+
+cd $1
+echo "entering directory $1"
+
+HOST=`uname | tr '[a-z]' '[A-Z]' | sed 's/-//'`
+HFILES=`echo *.h`
+EXTENSION=""
+
+if [ $WIN32 = "1" ] ; then
+	HOST="WIN32"
+	EXTENSION=".exe"
+fi
+
+if [ "$HFILES" = "*.h" ] ;  then
+	HFILES=""
+fi	
+
+if [ -z "$CXX" ] && g++ -v > /dev/null 2>&1 ; then
+	CXX=g++
+	if [ "$NOOPT" = 1 ] ; then
+		CXXFLAGS="$CXXFLAGS"
+	else
+		CXXFLAGS="$CXXFLAGS -O2 -Wall -Woverloaded-virtual -Wshadow"
+	fi
+fi	
+
+if [ $HOST = "SINIX" ] || [ $HOST = "SUNOS" ] ; then
+	LDFLAGS="$LDFLAGS -lnsl -lc -lsocket -lresolv"
+fi	
+
+CFILES=`echo *.cpp`
+OFILES=`echo *.cpp | sed 's/\.cpp/\.o/g'`
+
+echo "EXTENSION=$EXTENSION" > Makefile
+echo "HOST=$HOST" >> Makefile
+echo "HFILES=$HFILES" >> Makefile
+echo "CFILES=$CFILES" >> Makefile
+echo "OFILES=$OFILES" >> Makefile
+echo "VERSION=$VERSION" >> Makefile
+echo "CXX=$CXX" >> Makefile
+echo "CXXFLAGS=$CXXFLAGS $INC_LIB -D$HOST -DVERSION='\"$VERSION\"'" >> Makefile
+echo "LDFLAGS=$LDFLAGS $ADD_LIB" >> Makefile
+echo "RM=rm -f" >> Makefile
+echo >> Makefile
+echo >> Makefile
+
+cat < Makefile.in >> Makefile
+
+echo >> Makefile
+echo >> Makefile
+
+#for i in $CFILES ; do
+#    obj=` echo $i | sed 's/\.cpp$//'`.o
+#    cat >> Makefile <<EOF
+#$obj: $i \$(HFILES)
+#	\$(CXX) -o $obj -c $i \$(CXXFLAGS) -D$HOST -DVERSION='"$VERSION"'
+#
+#EOF
+#done
+
+cat >> Makefile <<EOF
+
+%.o: %.cpp
+	\$(CXX) \$(CXXFLAGS) -o \$@ -c $<
+
+.PHONY: depend
+depend:
+	\$(CXX) -MM \$(CFILES) \$(CXXFLAGS) >.dependencies
+
+.dependencies:
+	\$(CXX)  -MM \$(CFILES) \$(CXXFLAGS) >\$@ 
+
+.PHONY: clean
+clean:
+	\$(RM) \$(OFILES) \$(EXE) core .dependencies
+
+dep: \$(CFILES) \$(HFILES)
+	\$(RM) .dependencies
+	make .dependencies
+
+include .dependencies
+
+EOF
