@@ -10,6 +10,7 @@
 #include "debug.h"
 #include "OutDebug.h"
 #include "DetectLocale.h"
+#include <algorithm>
 
 using namespace Tools;
 
@@ -68,35 +69,43 @@ Main::Main( FXApp *app_ )
 	} 
 #endif
 	
-	for( auto it_arg = args.begin(); it_arg != args.end(); ) {
+	auto erase_empty_args = []( auto & arg ) {
+		return arg.empty();
+	};
+	std::erase_if( args, erase_empty_args );
 
-		if( it_arg->empty() ) {
-			it_arg = args.erase(it_arg);
-			continue;
+
+	auto arg_ignore_case = [&conf]( auto & arg ) {
+		if( arg == L"-i" ) {
+			conf.icase = true;
+			return true;
 		}
+		return false;
+	};
+	std::erase_if( args, arg_ignore_case );
 
-		// ignore command line args
-		if( it_arg->find('-') == 0 ) {
-			it_arg = args.erase(it_arg);
-			continue;
+
+	auto clear_all_other_args = [&conf]( auto & arg ) {
+		return arg.starts_with( L"-" );
+	};
+
+	std::erase_if( args, clear_all_other_args );
+
+	auto unescape_minus = [&conf]( auto & arg ) {
+		if( arg.starts_with( LR"(\-)" ) ) {
+			arg.substr( 1 );
 		}
+	};
 
-		// ignore command line args
-		if( it_arg->starts_with(LR"(\-)") ) {
-			*it_arg = it_arg->substr( 1 );
-			continue;
-		}
+	std::for_each( args.begin(), args.end(), unescape_minus );
 
-		it_arg++;
-	}
 
 	it_first = args.begin();
 	conf.search = it_first->c_str();
 
 	args.erase( it_first );
 
-    for( auto & arg : args )
-    {
+    for( auto & arg : args ){
          if( conf.pattern.empty() ) {
              conf.pattern = arg.c_str();
          } else {
