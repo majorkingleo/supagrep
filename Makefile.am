@@ -109,6 +109,7 @@ AM_LDFLAGS=
     
 if MINGW
 AM_LDFLAGS += -mwindows
+LIBS += -liconv
 # with -std=c++11 WIN32 is disabled (_WIN32) would be the valid one, so we define it in mingw.
 AM_CPPFLAGS += -DWIN32
 else

@@ -50,10 +50,9 @@ Main::Main( FXApp *app_ )
 	for( int i = 1; i < getApp()->getArgc(); i++ ) {
 		args.push_back( DetectLocale::in2w( getApp()->getArgv()[i] ) );
 	}
-
-#ifndef WIN32
 	auto it_first = args.begin();
 
+#ifdef WIN32
 	if( icase_cmp( *it_first, L"qc" ) ) {
 	  conf.pattern = "*.c,*.cpp,*.cc";
 	  args.erase(it_first);

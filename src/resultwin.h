@@ -33,7 +33,7 @@ class ResultWin : public FXList
     ID_CONSOLE,
 	ID_KONSOLE,
 	ID_GONSOLE,
-	ID_CMD,
+	ID_DO_CMD,
 	ID_LAST
   };
 

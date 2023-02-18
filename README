@@ -1,0 +1,44 @@
+# supagrep
+
+A simple sourcecode search tool for windows. It's something like 
+
+ find . -name "*.c" | xargs grep printf
+ 
+but for windows. This is not a command line tool.
+
+CROSSCOMPILATION FOR WIN
+=========================
+
+I'm using opensuse leap 15.4
+* install mingw64 cross toolchain
+  zypper addrepo https://download.opensuse.org/repositories/windows:mingw:win64/openSUSE_Leap_15.3/windows:mingw:win64.repo
+  zypper refresh
+  zypper install mingw64-cross-gcc-c++ \
+                 mingw64-cross-pkgconf \
+                 mingw64-libjpeg-devel \
+                 mingw64-libpng-devel \
+                 mingw64-zlib-devel \
+                 mingw64-libjpeg8 \
+                 mingw64-libbz2-1 \
+                 mingw64-libpng16-16 \
+                 mingw64-gettext-tools
+
+* cross compile the FOX library
+  wget ftp://fox-toolkit.org/pub/fox-1.7.78.tar.gz
+  tar xvfz fox-1.7.78.tar.gz
+  cd fox-1.7.78
+  ./configure --without-opengl \
+    --host=x86_64-w64-mingw32 \
+    --without-x \
+    --without-xft \
+    --prefix=/usr/x86_64-w64-mingw32/sys-root/mingw/ \
+    --libdir=/usr/x86_64-w64-mingw32/sys-root/mingw/lib
+  make install
+
+* cross-compile supagrep
+  if you cloned from git repo:
+    ./reconfigure.sh --host=x86_64-w64-mingw32
+
+  ./configure --host=x86_64-w64-mingw32
+  make
+

@@ -38,7 +38,7 @@ FXDEFMAP( ResultWin ) ResultWinMap[] = {
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_CONSOLE, ResultWin::onOpenExec ),
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_KONSOLE, ResultWin::onOpenExec ),
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_GONSOLE, ResultWin::onOpenExec ),
-  FXMAPFUNC(SEL_COMMAND, ResultWin::ID_CMD, ResultWin::onOpenExec ),
+  FXMAPFUNC(SEL_COMMAND, ResultWin::ID_DO_CMD, ResultWin::onOpenExec ),
 };
 
 FXIMPLEMENT( ResultWin, FXList, ResultWinMap, ARRAYNUMBER( ResultWinMap ));
@@ -407,6 +407,7 @@ pi ) )
       // ExitProcess(dw);
       return 0;
       }
+  return -1;
 #else
   return system( cmd.text() );   
 #endif
