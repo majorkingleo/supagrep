@@ -53,8 +53,11 @@ fi
 #	LDFLAGS="$LDFLAGS  -L/usr/X11R6/lib -lXext -lX11 -lm "
 #fi
 
-LIBS=". tools "
+LIBS=". tools cpputils/cpputilsshared cpputils/cpputilsshared/cpputilsformat cpputils/io"
 export LDFLAGS="$LDFLAGS"
 export WIN32
 ./genmak tools "$LIBS"
+./genmak cpputils/cpputilsshared "$LIBS"
+./genmak cpputils/cpputilsshared/cpputilsformat "$LIBS"
+./genmak cpputils/io "$LIBS"
 ./genmak . "$LIBS"

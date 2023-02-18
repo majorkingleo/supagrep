@@ -7,11 +7,27 @@ all: $(EXE)
 tools/libtools.a:
 	cd tools && gmake
 
-$(EXE): $(OFILES) tools/libtools.a
-	$(CXX) -o $(EXE) $(CXXFLAGS) $(OFILES) $(LDFLAGS) tools/libtools.a
+cpputils/io/libcpputilsio.a:
+	cd cpputils/io && gmake
+		
+cpputils/cpputilsshared/cpputilsshared.a:
+	cd cpputils/cpputilsshared && gmake
+	
+cpputils/cpputilsshared/cpputilsformat.a:
+	cd 	cpputils/cpputilsshared/cpputilsformat && gmake
+
+$(EXE): $(OFILES) tools/libtools.a \
+	cpputils/io/libcpputilsio.a \
+	cpputils/cpputilsshared/cpputilsshared.a \
+	cpputils/cpputilsshared/cpputilsformat.a
+	$(CXX) -o $(EXE) $(CXXFLAGS) $(OFILES) $(LDFLAGS) -lcpputilsformat -lcpputilsio -lcpputilsshared tools/libtools.a
 
 clean_tools:
 	cd tools && gmake clean
+	cd cpputils/cpputilsshared && gmake clean
+	cd cpputils/io && gmake clean
+	cd cpputils/cpputilsshared/cpputilsformat && gmake clean
+	
 
 dist: clean clean_tools
 	rm -rf $(DIST)
