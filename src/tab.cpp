@@ -57,7 +57,11 @@ Tab::Tab(FXTabBar* p,const FXString& text,FXObject *tgt_, long id_ ,FXuint opts,
 
 
 // If window can have focus
+#if FOX_MAJOR >= 1 && FOX_MINOR >= 7
 FXbool Tab::canFocus() const { return true; }
+#else
+bool Tab::canFocus() const { return true; }
+#endif
 
 
 // Gained focus

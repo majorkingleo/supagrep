@@ -8,6 +8,12 @@
 
 using namespace Tools;
 
+#if FOX_MAJOR >= 1 && FOX_MINOR >= 7
+const unsigned TIMEOUT_VALUE = 300 * 1000000; // 100ms
+#else
+const unsigned TIMEOUT_VALUE = 300; // 100ms
+#endif
+
 FXDEFMAP( SearchWin ) SearchWinMap[] = {
   FXMAPFUNC( SEL_COMMAND, SearchWin::ID_BT_PATH, SearchWin::onSelPath ),
   FXMAPFUNC( SEL_COMMAND, SearchWin::ID_BT_SEARCH, SearchWin::onSearch ),
@@ -189,7 +195,7 @@ long SearchWin::onSearch( FXObject *obj, FXSelector sel, void * )
   if( tab )
 	tab->setText( config->search );
 
-  getApp()->addTimeout( this, ID_TIMER, 300000 );
+  getApp()->addTimeout( this, ID_TIMER, TIMEOUT_VALUE );
 
   return 1;
 }

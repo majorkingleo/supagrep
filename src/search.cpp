@@ -4,6 +4,7 @@
 #include <format.h>
 #include <DetectLocale.h>
 #include <debug.h>
+#include <utf8_util.h>
 
 using namespace Tools;
 
@@ -39,6 +40,7 @@ FXint Search::run()
 	  int count = 0;
 	  for( file_list::iterator it = files.begin(); it != files.end() && !config.mt_stop->get(); it++ )
 		{
+		  // DEBUG( wformat( L"Searching in file: '%s'", DetectLocale::in2w(it->text()) ) );
 		  do_search( *it );
 
 		  count++;
@@ -48,7 +50,10 @@ FXint Search::run()
 
   config.mt_runtime->set(FXThread::time()-start_time);
   config.mt_running->set(false);
+
+#if FOX_MAJOR >= 1 && FOX_MINOR >= 7
   delete this;
+#endif
   return 1;
 }
 
@@ -58,7 +63,7 @@ bool Search::find_files( const FXString &path )
 	return false;
 
   // printf( "%s\n", path.text() );
-  DEBUG( wformat(L"path: '%s'", DetectLocale::in2w( path.text() ) ) );
+  // DEBUG( wformat(L"path: '%s'", DetectLocale::in2w( path.text() ) ) );
 
   FXString *list = NULL;
 
@@ -88,8 +93,6 @@ bool Search::find_files( const FXString &path )
 	  
 	  if( match_file_type( *list ) ) {
 	      files.push_back( format( "%s%s%s", path.text(), PATHSEPSTRING, list->text() ).c_str() );
-      } else {
-
       }
     }
 
@@ -101,7 +104,11 @@ bool Search::find_files( const FXString &path )
 
 bool Search::match_file_type( const FXString & file )
 {
+#if FOX_MAJOR >= 1 && FOX_MINOR >= 7
   bool ret = FXPath::match( file, config.pattern, FXPath::NoEscape|FXPath::PathName|FXPath::CaseFold );
+#else
+  bool ret = FXPath::match( config.pattern, file, FILEMATCH_NOESCAPE|FILEMATCH_FILE_NAME|FILEMATCH_CASEFOLD );
+#endif
   if( !ret ) {
 	  DEBUG( wformat(L"file: '%s' didn't matched pattern '%s'",
 					 DetectLocale::in2w( file.text() ),
@@ -115,11 +122,17 @@ void Search::do_search( const FXString & file )
 {
   FXMemMap map;
 
-  char *base = static_cast<char*>(map.openMap(file));
+  char *base = nullptr;
 
-  if( base == NULL )
-  {
-   return;
+#if FOX_MAJOR >= 1 && FOX_MINOR >= 7
+  base = static_cast<char*>(map.openMap( file ));
+#else
+  base = static_cast<char*>(map.mapFile( file ));
+#endif
+
+  if( base == NULL ) {
+	  DEBUG( wformat( L"cannot open file: '%s'", Utf8Util::utf8toWString(file.text()) ) );
+	  return;
   }
 
   do_simple_search( base, map.length(), file );

@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+
+
+git log > ChangeLog
+touch NEWS
+if ! test -f README ; then
+        cp README.md README
+fi
+
 aclocal
 automake --add-missing
 automake -f

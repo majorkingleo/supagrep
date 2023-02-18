@@ -170,7 +170,13 @@ FXString ResultWin::getLineAtPos( const FXString & file, long pos, int lines )
 {
   FXMemMap map;
 
-  char *base = static_cast<char*>(map.openMap( file ));
+  char *base = nullptr;
+
+#if FOX_MAJOR >= 1 && FOX_MINOR >= 7
+  base = static_cast<char*>(map.openMap( file ));
+#else
+  base = static_cast<char*>(map.mapFile( file ));
+#endif
 
   if( base == NULL )
 	return FXString();

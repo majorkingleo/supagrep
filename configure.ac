@@ -45,9 +45,10 @@ AM_CONDITIONAL([MINGW], [test x$mingw = xtrue])
 
 
 AC_PROG_CC
-#AC_CONFIG_FILES([ po/Makefile.in
-#Makefile
-#])
+#  po/Makefile.in
+AC_CONFIG_FILES([
+Makefile
+])
 AC_PROG_RANLIB
 AM_PROG_AR
 AC_PROG_CXX

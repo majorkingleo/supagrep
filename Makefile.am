@@ -26,15 +26,18 @@ AM_CPPFLAGS = -I$(top_srcdir)/tools \
 	-I$(top_srcdir)/cpputils/cpputilsshared  \
 	-I$(top_srcdir)/cpputils/cpputilsshared/cpputilsformat \
 	-I$(top_srcdir)/cpputils/io \
+	-I$(top_srcdir)/cpputils/fox \
 	-DNOWAMAS \
+	$(LIBFOX_CFLAGS) \
 	-std=gnu++20 \
 	-D_XOPEN_SOURCE=700 # for cyggwin fileno()
 
 noinst_LIBRARIES=cpputils/io/libcpputilsio.a \
 	cpputils/cpputilsshared/libcpputilsshared.a \
-	cpputils/cpputilsshared/cpputilsformat/libcpputilsformat.a
+	cpputils/cpputilsshared/cpputilsformat/libcpputilsformat.a \
+	cpputils/fox/libcpputilsfox.a
 
-cpputils_libcpputilsio_a_SOURCES= \
+cpputils_io_libcpputilsio_a_SOURCES= \
 	cpputils/io/ColoredOutput.h \
 	cpputils/io/ColoredOutput.cc \
 	cpputils/io/debug.cc \
@@ -88,6 +91,30 @@ cpputils_cpputilsshared_cpputilsformat_libcpputilsformat_a_SOURCES= \
 	cpputils/cpputilsshared/cpputilsformat/wformat2.h \
 	cpputils/cpputilsshared/cpputilsformat/cwformat.h \
 	cpputils/cpputilsshared/cpputilsformat/cwformat.cc
+	
+	
+cpputils_fox_libcpputilsfox_a_SOURCES= \
+	cpputils/fox/theme.h \
+	cpputils/fox/theme.cpp	
 
-supagrep_LDADD = cpputils/io/cpputilsio.a cpputils/cpputilsshared/libcpputilsshared.a cpputils/cpputilsshared/cpputilsformat/libcpputilsformat.a
+supagrep_LDADD = cpputils/io/libcpputilsio.a \
+				 cpputils/cpputilsshared/libcpputilsshared.a \
+				 cpputils/cpputilsshared/cpputilsformat/libcpputilsformat.a \
+				 cpputils/fox/libcpputilsfox.a
+				 
+LIBS= \
+    $(LIBFOX_LIBS)
+    
+AM_LDFLAGS=
+    
+if MINGW
+AM_LDFLAGS += -mwindows
+# with -std=c++11 WIN32 is disabled (_WIN32) would be the valid one, so we define it in mingw.
+AM_CPPFLAGS += -DWIN32
+else
+AM_LDFLAGS += -lX11
+endif
+
+
+    
 

@@ -49,7 +49,12 @@ class Tab : public FXHorizontalFrame {
   Tab(FXTabBar* p,const FXString& text,FXObject *tgt, long id,FXuint opts=TAB_TOP_NORMAL,FXint x=0,FXint y=0,FXint w=0,FXint h=0,FXint pl=DEFAULT_PAD,FXint pr=DEFAULT_PAD,FXint pt=DEFAULT_PAD,FXint pb=DEFAULT_PAD);
   
   // Returns true because a tab item can receive focus
+
+#if FOX_MAJOR >= 1 && FOX_MINOR >= 7
   virtual FXbool canFocus() const;
+#else
+  virtual bool canFocus() const;
+#endif
   
   // Return current tab item orientation
   FXuint getTabOrientation() const;

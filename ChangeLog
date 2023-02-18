@@ -1,0 +1,71 @@
+commit 8547cd3861456b12eb8b47e68582ecf3e88a2158
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Feb 18 20:23:13 2023 +0100
+
+    first step to move to automake/autoconf
+
+commit ef228742102fd8387e31aeff4d13fad010bdf4d2
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Feb 18 19:15:46 2023 +0100
+
+    Fixed command line parsing
+
+commit bc627c41f116c979132c279c6381f43b7fec3a7b
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Feb 18 10:45:51 2023 +0100
+
+    Compile with c++20, added debugging code, fixed filesearch for FOX-1.7
+
+commit 72ecd6ab66a6560b996ea7934dc79b5c051dc97e
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Feb 18 08:10:45 2023 +0100
+
+    ported to FOX-1.7
+
+commit 42894878934a81e6f835ade269eb5290ca264c7a
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Feb 18 08:10:04 2023 +0100
+
+    glue buildsystem with cpputils mode together
+
+commit e62ee0cdd101cdb711c60a2ea6c1f4c897863930
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Feb 18 08:09:18 2023 +0100
+
+    removed binary file from source
+
+commit 5a38f1007aaeb29cf04d61c572a64b3080e9836e
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Feb 18 08:08:49 2023 +0100
+
+    Choose util classes from cpputils
+
+commit fb3f88e879341c3f7060a807fd542864917c86cb
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Feb 18 07:22:34 2023 +0100
+
+    Added module cpputils
+
+commit 1b96fbc6c54e5394dd764f7a6acf14aef2cf9da7
+Author: Martin Oberzalek <76852670+majorkingleo@users.noreply.github.com>
+Date:   Sat Jan 21 14:36:56 2023 +0100
+
+    Update README.md
+
+commit 864fd66e4f4a2b9890d3e17042a3d62950b6418b
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Jan 21 14:28:02 2023 +0100
+
+    Found Version 0.0.4 on my disk
+
+commit 6289666be58e088dd24f31fd339cab5cbbe9e3c5
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Jan 21 14:03:28 2023 +0100
+
+    Initial import of the sourcecode from 2007
+
+commit d98bde417332d1cb5221a61c1739e0ea032c63e2
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Jan 21 14:02:11 2023 +0100
+
+    first commit
