@@ -3,11 +3,11 @@
 #include <FXGIFIcon.h>
 #include <FX88591Codec.h>
 #include <FXUTF16Codec.h>
-#include "tools/string_utils.h"
+#include "string_utils.h"
 #include "icon_add.h"
 #include "main.h"
 
-#include "tools/format.h"
+#include "format.h"
 
 using namespace Tools;
 
@@ -61,59 +61,59 @@ ResultWin::ResultWin( Main *main_,
   icon = new FXGIFIcon( getApp(), icon_add );
 
   add_cmd( Cmd( ID_OPEN_GVIM, 
-				FXString().format( LC( "Open File with %s" ), LC( "GVim" ) ), 
+				format( LC( "Open File with %s" ), LC( "GVim" ) ),
 				"gvim", "gvim +%d %s" ) );
   add_cmd( Cmd( ID_OPEN_KVIM, 
-				FXString().format( LC( "Open File with %s" ), LC( "KVim" ) ), 
+				format( LC( "Open File with %s" ), LC( "KVim" ) ),
 				"kvim", "kvim +%d %s" ) );
   add_cmd( Cmd( ID_OPEN_EMACS, 
-				FXString().format( LC( "Open File with %s" ), LC( "Emacs" ) ), 
+				format( LC( "Open File with %s" ), LC( "Emacs" ) ),
 				"emacs", "emacs +%d %s" ) );
   add_cmd( Cmd( ID_OPEN_EMACS_CLIENT, 
-				FXString().format( LC( "Open File with %s" ), LC( "Emacs Client" ) ), 
+				format( LC( "Open File with %s" ), LC( "Emacs Client" ) ),
 				"emacsclient", "emacsclient +%d %s" ) );
   add_cmd( Cmd( ID_OPEN_XEMACS, 
-				FXString().format( LC( "Open File with %s" ), LC( "XEmacs" ) ), 
+				format( LC( "Open File with %s" ), LC( "XEmacs" ) ),
 				"xemacs", "xemacs +%d %s" ) );
   add_cmd( Cmd( ID_OPEN_XEMACS_CLIENT, 
-				FXString().format( LC( "Open File with %s" ), LC( "XEmacs Client" ) ), 
+				format( LC( "Open File with %s" ), LC( "XEmacs Client" ) ),
 				"xemacsclient", "xemacsclient +%d %s" ) );
   add_cmd( Cmd( ID_OPEN_KATE, 
-				FXString().format( LC( "Open File with %s" ), LC( "Kate" ) ), 
+				format( LC( "Open File with %s" ), LC( "Kate" ) ),
 				"kate", "kate --line %d %s" ) );
   add_cmd( Cmd( ID_OPEN_ADIE, 
-				FXString().format( LC( "Open File with %s" ), LC( "Adie" ) ), 
+				format( LC( "Open File with %s" ), LC( "Adie" ) ),
 				"adie", "adie --line %d %s" ) );
   add_cmd( Cmd( ID_OPEN_ADIE_WIN, 
-				FXString().format( LC( "Open File with %s" ), LC( "Adie" ) ), 
+				format( LC( "Open File with %s" ), LC( "Adie" ) ),
 				"adie.exe", "adie --line %d %s" ) );
   add_cmd( Cmd( ID_OPEN_KWRITE, 
-				FXString().format( LC( "Open File with %s" ), LC( "Kwrite" ) ), 
+				format( LC( "Open File with %s" ), LC( "Kwrite" ) ),
 				"kwrite", "kwrite --line %d %s" ) );
 
   add_cmd( Cmd( ID_OPEN_WINVI, 
-				FXString().format( LC( "Open File with %s" ), LC( "WinVi" ) ), 
+				format( LC( "Open File with %s" ), LC( "WinVi" ) ),
 				"Winvi32.exe", "winvi32 +%d %s" ) );
 
   add_cmd( Cmd( ID_OPEN_VI, 
-				FXString().format( LC( "Open File with %s" ), LC( "Vi" ) ), 
+				format( LC( "Open File with %s" ), LC( "Vi" ) ),
 				"vi.exe", "vi +%d %s" ) );
 
 
   add_cmd( Cmd( ID_CONSOLE, 
-				FXString().format( LC( "Start %s" ), LC( "XTerm" ) ), 
+				format( LC( "Start %s" ), LC( "XTerm" ) ),
 				"xterm", "xterm" ) );
 
   add_cmd( Cmd( ID_KONSOLE, 
-				FXString().format( LC( "Start %s" ), LC( "Konsole" ) ), 
+				format( LC( "Start %s" ), LC( "Konsole" ) ),
 				"konsole", "konsole" ) );
 
   add_cmd( Cmd( ID_GONSOLE, 
-				FXString().format( LC( "Start %s" ), LC( "Gnome Terminal" ) ), 
+				format( LC( "Start %s" ), LC( "Gnome Terminal" ) ),
 				"gnome-terminal", "gnome-terminal" ) );
 				
   add_cmd( Cmd( ID_CMD, 
-				FXString().format( LC( "Start %s" ), LC( "Console" ) ), 
+				format( LC( "Start %s" ), LC( "Console" ) ),
 				"cmd.exe", "cmd" ) );				
 }
 
@@ -152,10 +152,10 @@ void ResultWin::appendItem( const Search::Result & result, const FXString &path,
 
   if( line.find( '\n' ) < 0 ) {
 	line.trim();
-	FXList::appendItem( FXString().format( "%s:%ld %s", file.text(), result.line, 
-										   line.text() ), NULL, address );
+	FXList::appendItem( format( "%s:%ld %s", file.text(), result.line,
+										   line.text() ).c_str(), NULL, address );
   } else {
-	FXList::appendItem( FXString().format( "%s:%ld", file.text(), result.line ), icon, address );
+	FXList::appendItem( format( "%s:%ld", file.text(), result.line ).c_str(), icon, address );
 
 	std::vector<std::string> sl = split_simple( line.text(), "\n" );
 

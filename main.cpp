@@ -3,8 +3,9 @@
 #include <locale.h>
 #include "main.h"
 #include "searchwin.h"
-#include "tools/string_utils.h"
+#include "string_utils.h"
 #include "tab.h"
+#include "format.h"
 
 using namespace Tools;
 
@@ -103,7 +104,7 @@ const char *Main::LC( const char *s )
 
 void Main::add_searchwin( bool create_ , const Search::Config *conf )
 {
-  Tab *ti = new Tab( tab, FXString().format( LC( "Search %d"), ++searchcount ), NULL, SearchWin::ID_DESTROY );
+  Tab *ti = new Tab( tab, FXString( format( LC( "Search %d"), ++searchcount ).c_str() ), NULL, SearchWin::ID_DESTROY );
   SearchWin *w = new SearchWin( this, tab, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_RAISED );
   ti->setTarget( w );
   w->setTab( ti );

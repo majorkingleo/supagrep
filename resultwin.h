@@ -54,6 +54,16 @@ class ResultWin : public FXList
 		 exec( exec_ ), 
 		 open_cmd( open_cmd_ )
 	{}
+
+	Cmd( int id_,
+		 const std::string & name_,
+		 const std::string & exec_,
+		 const std::string & open_cmd_ )
+	  : id( id_ ),
+		 name( name_.c_str() ),
+		 exec( exec_.c_str() ),
+		 open_cmd( open_cmd_.c_str() )
+	{}
   };
 
   std::vector<Cmd> cmds;

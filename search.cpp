@@ -1,6 +1,7 @@
 #include "search.h"
-#include "tools/string_utils.h"
+#include "string_utils.h"
 #include <FXMemMap.h>
+#include <format.h>
 
 using namespace Tools;
 
@@ -71,20 +72,20 @@ bool Search::find_files( const FXString &path )
   
   for( ; *list != FXString::null ; list++ )
     {
-	  if( FXStat::isDirectory( FXString().format( "%s%s%s", path.text(), PATHSEPSTRING, list->text()
-												  ) ) )
+	  if( FXStat::isDirectory( format( "%s%s%s", path.text(), PATHSEPSTRING, list->text()
+												  ).c_str() ) )
         {
 		  if( *list == ".." || *list == "." )
 			continue;
 
 		  
-		  find_files( FXString().format( "%s%s%s", path.text(), PATHSEPSTRING, list->text() ) );
+		  find_files( format( "%s%s%s", path.text(), PATHSEPSTRING, list->text() ).c_str() );
 		  continue;
         }
 	  
 	  if( match_file_type( *list ) )
         {
-	      files.push_back( FXString().format( "%s%s%s", path.text(), PATHSEPSTRING, list->text() ) );
+	      files.push_back( format( "%s%s%s", path.text(), PATHSEPSTRING, list->text() ).c_str() );
         }
     }
 
@@ -96,7 +97,7 @@ bool Search::find_files( const FXString &path )
 
 bool Search::match_file_type( const FXString & file )
 {
-  return FXPath::match( config.pattern, file, FILEMATCH_NOESCAPE|FILEMATCH_FILE_NAME|FILEMATCH_CASEFOLD );
+  return FXPath::match( config.pattern, file, FXPath::NoEscape|FXPath::PathName|FXPath::CaseFold );
 }
 
 void Search::do_search( const FXString & file )

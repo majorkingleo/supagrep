@@ -4,6 +4,7 @@
 #include "desccombo.h"
 #include "tab.h"
 #include "tools/theme.h"
+#include "format.h"
 
 using namespace Tools;
 
@@ -254,7 +255,7 @@ long SearchWin::onTimeout( FXObject *obj, FXSelector sel, void *ptr )
 
   if( mt_runtime.changed() )
 	{
-	  l_runtime->setText( FXString().format( "%3.3f sec", mt_runtime.access() / 1000000000.0 ) );
+	  l_runtime->setText( format( "%3.3f sec", mt_runtime.access() / 1000000000.0 ).c_str() );
 	  mt_runtime.clear_and_free();
 	}
 
@@ -301,7 +302,7 @@ void SearchWin::create()
 
   for( int i  = 0; i < MAX_ITEMS; i++ )
 	{  
-	  FXString s = getApp()->reg().readStringEntry( "PATH", FXString().format( "PATH%d", i ).text(), "" );
+	  FXString s = getApp()->reg().readStringEntry( "PATH", format( "PATH%d", i ).c_str(), "" );
 
 	  if( s.empty() )
 		break;
@@ -332,7 +333,7 @@ void SearchWin::writeConfig()
   for( int i = 0; i < MAX_ITEMS && i < cb_path->getNumItems(); i++ )
 	{
 	  getApp()->reg().writeStringEntry( "PATH", 
-										FXString().format( "PATH%d", i ).text(),
+										format( "PATH%d", i ).c_str(),
 										cb_path->getItemText(i).text() );
 	}
 
