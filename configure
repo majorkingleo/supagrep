@@ -31,7 +31,7 @@ if [ $# -gt 0 ] ; then
 fi
 
 if [ $GUI = "1" ] ; then
-	export CXXFLAGS="$CXXFLAGS -DUSE_GUI -DUSE_THREADS `fox-config --cflags`"
+	export CXXFLAGS="$CXXFLAGS -DUSE_GUI -DUSE_THREADS `fox-config --cflags` -std=gnu++20"
 	export LDFLAGS="$LDFLAGS `fox-config --libs`"
 fi
 

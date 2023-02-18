@@ -6,6 +6,10 @@
 #include "string_utils.h"
 #include "tab.h"
 #include "format.h"
+#include "arg.h"
+#include "debug.h"
+#include "OutDebug.h"
+#include "DetectLocale.h"
 
 using namespace Tools;
 
@@ -39,35 +43,64 @@ Main::Main( FXApp *app_ )
 
   if( getApp()->getArgc() > 1 ) {
 	Search::Config conf;
-	int count = 1;
+
+	std::list<std::wstring> args;
+
+	for( int i = 1; i < getApp()->getArgc(); i++ ) {
+		args.push_back( DetectLocale::in2w( getApp()->getArgv()[i] ) );
+	}
 
 #ifndef WIN32
-	if( icase_cmp( getApp()->getArgv()[0], "qc" ) ) {
+	auto it_first = args.begin();
+
+	if( icase_cmp( *it_first, L"qc" ) ) {
 	  conf.pattern = "*.c,*.cpp,*.cc";
-	} else if( icase_cmp( getApp()->getArgv()[0], "qh" ) ) {
+	  args.erase(it_first);
+	} else if( icase_cmp( *it_first, L"qh" ) ) {
 	  conf.pattern = "*.h,*.hh";
-	} else if( icase_cmp( getApp()->getArgv()[0], "qch" ) ) {
+	  args.erase(it_first);
+	} else if( icase_cmp( *it_first, L"qch" ) ) {
 	  conf.pattern = "*.h,*.hh,*.c,*.cpp,*.cc";
-	} else if( icase_cmp( getApp()->getArgv()[0], "qrc" ) ) {
+	  args.erase(it_first);
+	} else if( icase_cmp( *it_first, L"qrc" ) ) {
 	  conf.pattern = "*.rc";
+	  args.erase(it_first);
 	} 
 #endif
 	
-	if( getApp()->getArgc() > 2 ) {
-	  if( icase_cmp( getApp()->getArgv()[1], "-i" ) ) {
-		conf.icase = true;
-		count++;
-	  }
+	for( auto it_arg = args.begin(); it_arg != args.end(); ) {
+
+		if( it_arg->empty() ) {
+			it_arg = args.erase(it_arg);
+			continue;
+		}
+
+		// ignore command line args
+		if( it_arg->find('-') == 0 ) {
+			it_arg = args.erase(it_arg);
+			continue;
+		}
+
+		// ignore command line args
+		if( it_arg->starts_with(LR"(\-)") ) {
+			*it_arg = it_arg->substr( 1 );
+			continue;
+		}
+
+		it_arg++;
 	}
 
-	conf.search = getApp()->getArgv()[count++];
+	it_first = args.begin();
+	conf.search = it_first->c_str();
 
-    for( int i = count; i < getApp()->getArgc(); i++ )
+	args.erase( it_first );
+
+    for( auto & arg : args )
     {
          if( conf.pattern.empty() ) {
-             conf.pattern = getApp()->getArgv()[i];
+             conf.pattern = arg.c_str();
          } else {
-             conf.pattern += ',' + FXString(getApp()->getArgv()[i]);
+             conf.pattern += ',' + arg.c_str();
          }    
     }
 
@@ -155,6 +188,12 @@ long Main::onClose( FXObject *obj, FXSelector sel, void *ptr )
   return FXMainWindow::onCmdClose( obj, sel, ptr );
 }
 
+static void usage( const std::string & prog )
+{
+  std::cerr << "usage: "
+			<< prog << " SEARCH PATTERN\n";
+}
+
 int main( int argc, char **argv )
 {
   setlocale( LC_ALL, "" );
@@ -162,6 +201,41 @@ int main( int argc, char **argv )
   FXApp app( "SupaGrep", "KingLeo" );
   
   app.init( argc, argv );
+
+  Arg::Arg arg( argc, argv );
+
+  arg.addPrefix( "-" );
+  arg.addPrefix( "--" );
+
+  Arg::OptionChain oc_info;
+  arg.addChainR( &oc_info );
+  oc_info.setMinMatch( 1 );
+  oc_info.setContinueOnMatch( false );
+  oc_info.setContinueOnFail( true );
+
+  Arg::FlagOption o_help( "h" );
+  o_help.addName( "help" );
+  o_help.setDescription( "Show this page" );
+  oc_info.addOptionR( &o_help );
+
+  Arg::FlagOption o_debug("debug");
+  o_debug.setDescription("print debugging messages");
+  o_debug.setRequired(false);
+  arg.addOptionR( &o_debug );
+
+  arg.parse();
+
+  if( o_help.getState() )
+  {
+	  usage(argv[0]);
+	  std::cout << arg.getHelp(5,20,30, 80 ) << std::endl;
+	  return 0;
+  }
+
+  if( o_debug.getState() )
+  {
+	  Tools::x_debug = new OutDebug();
+  }
 
   new Main( &app );
   

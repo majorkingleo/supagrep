@@ -2,6 +2,8 @@
 #include "string_utils.h"
 #include <FXMemMap.h>
 #include <format.h>
+#include <DetectLocale.h>
+#include <debug.h>
 
 using namespace Tools;
 
@@ -56,6 +58,7 @@ bool Search::find_files( const FXString &path )
 	return false;
 
   // printf( "%s\n", path.text() );
+  DEBUG( wformat(L"path: '%s'", DetectLocale::in2w( path.text() ) ) );
 
   FXString *list = NULL;
 
@@ -83,10 +86,11 @@ bool Search::find_files( const FXString &path )
 		  continue;
         }
 	  
-	  if( match_file_type( *list ) )
-        {
+	  if( match_file_type( *list ) ) {
 	      files.push_back( format( "%s%s%s", path.text(), PATHSEPSTRING, list->text() ).c_str() );
-        }
+      } else {
+
+      }
     }
 
     // cleanup
@@ -97,7 +101,14 @@ bool Search::find_files( const FXString &path )
 
 bool Search::match_file_type( const FXString & file )
 {
-  return FXPath::match( config.pattern, file, FXPath::NoEscape|FXPath::PathName|FXPath::CaseFold );
+  bool ret = FXPath::match( file, config.pattern, FXPath::NoEscape|FXPath::PathName|FXPath::CaseFold );
+  if( !ret ) {
+	  DEBUG( wformat(L"file: '%s' didn't matched pattern '%s'",
+					 DetectLocale::in2w( file.text() ),
+					 DetectLocale::in2w( config.pattern.text() ) ) );
+  }
+
+  return ret;
 }
 
 void Search::do_search( const FXString & file )
