@@ -112,7 +112,7 @@ ResultWin::ResultWin( Main *main_,
 				format( LC( "Start %s" ), LC( "Gnome Terminal" ) ),
 				"gnome-terminal", "gnome-terminal" ) );
 				
-  add_cmd( Cmd( ID_CMD, 
+  add_cmd( Cmd( ID_DO_CMD, 
 				format( LC( "Start %s" ), LC( "Console" ) ),
 				"cmd.exe", "cmd" ) );				
 }

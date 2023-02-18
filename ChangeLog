@@ -1,3 +1,15 @@
+commit 56190fab04b292acc9d615d71dafc73dc0693bb7
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Feb 18 23:28:33 2023 +0100
+
+    WIN32 fixes
+
+commit 15f5981da3eeeb07e43399ff4091e49494cafaf8
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Feb 18 22:08:33 2023 +0100
+
+    Build with mingw for win32
+
 commit 0de9b91887dd56d60762104e61d75965de4f19c6
 Author: Martin Oberzalek <kingleo@gmx.at>
 Date:   Sat Feb 18 21:20:25 2023 +0100
