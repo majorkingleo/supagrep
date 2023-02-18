@@ -1,4 +1,26 @@
-bin_PROGRAMS=supagrep
+bin_PROGRAMS=\
+	supagrep
+	
+if MINGW
+bin_PROGRAMS += forward
+
+forward_SOURCES=\
+	forward/main.cpp
+	
+forward_LDADD = cpputils/cpputilsshared/libcpputilsshared.a \
+	cpputils/cpputilsshared/cpputilsformat/libcpputilsformat.a
+
+
+	
+bin_PROGRAMS += addpath
+
+addpath_SOURCES=\
+	addpath/main.cpp	
+	
+addpath_LDADD = cpputils/cpputilsshared/libcpputilsshared.a \
+	cpputils/cpputilsshared/cpputilsformat/libcpputilsformat.a	
+	
+endif
 
 supagrep_SOURCES=\
 		src/adie.h \

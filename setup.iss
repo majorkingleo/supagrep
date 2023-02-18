@@ -2,28 +2,31 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SupaGrep"
-#define MyAppVerName "SupaGrep 0.0.3"
+#define MyAppVersion "1.0"
 #define MyAppPublisher "Martin Oberzalek"
 #define MyAppURL "http://kingleo.pages.at"
 #define MyAppExeName "SupaGrep.exe"
 
 [Setup]
+AppId={{F8A2923A-5F2D-47DD-9772-DDE80F9B4B4D}
 AppName={#MyAppName}
-AppVerName={#MyAppVerName}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
+AppVersion={#MyAppVersion}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=true
-LicenseFile=C:\Dev-Cpp\project\supagrep\COPYING
-InfoAfterFile=C:\Dev-Cpp\project\supagrep\README.txt
-OutputBaseFilename=supagrep_setup
-Compression=lzma
-SolidCompression=true
+LicenseFile=COPYING
+OutputBaseFilename=supagrep_setup-{#MyAppVersion}
+Compression=bzip
+SolidCompression=no
 InternalCompressLevel=ultra
 ShowLanguageDialog=auto
+PrivilegesRequired=lowest
+PrivilegesRequiredOverridesAllowed=dialog
+WizardStyle=modern
 
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
@@ -33,20 +36,26 @@ Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:Ad
 Name: quicklaunchicon; Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked
 
 [Files]
-Source: C:\Dev-Cpp\project\supagrep\SupaGrep.exe; DestDir: {app}; Flags: ignoreversion
-Source: C:\Dev-Cpp\project\supagrep\qrc.exe; DestDir: {app}; Flags: ignoreversion
-Source: C:\Dev-Cpp\project\supagrep\qch.exe; DestDir: {app}; Flags: ignoreversion
-Source: C:\Dev-Cpp\project\supagrep\qh.exe; DestDir: {app}; Flags: ignoreversion
-Source: C:\Dev-Cpp\project\supagrep\qlog.exe; DestDir: {app}; Flags: ignoreversion
-Source: C:\Dev-Cpp\project\supagrep\qc.exe; DestDir: {app}; Flags: ignoreversion
-Source: C:\Dev-Cpp\project\supagrep\addon\WinVi32.exe; DestDir: {app}; Flags: ignoreversion
-Source: C:\Dev-Cpp\project\supagrep\addon\Adie.stx; DestDir: {app}; Flags: ignoreversion
-Source: C:\Dev-Cpp\project\supagrep\addon\adie.exe; DestDir: {app}; Flags: ignoreversion
-Source: C:\Dev-Cpp\project\supagrep\COPYING; DestDir: {app}; Flags: ignoreversion
-Source: C:\Dev-Cpp\project\supagrep\README.txt; DestDir: {app}; Flags: ignoreversion
+Source: supagrep.exe; DestDir: {app}; Flags: ignoreversion
+Source: dist\qrc.exe; DestDir: {app}; Flags: ignoreversion
+Source: dist\qch.exe; DestDir: {app}; Flags: ignoreversion
+Source: dist\qh.exe; DestDir: {app}; Flags: ignoreversion
+Source: dist\qc.exe; DestDir: {app}; Flags: ignoreversion
+Source: addon\WinVi32.exe; DestDir: {app}; Flags: ignoreversion
+Source: addon\Adie.stx; DestDir: {app}; Flags: ignoreversion
+Source: addon\adie.exe; DestDir: {app}; Flags: ignoreversion
+Source: COPYING; DestDir: {app}; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: addpath\AddPath.exe; DestDir: {app}; Tasks: ; Languages: ; Flags: ignoreversion
-Source: fox1-7-12.dll; DestDir: {app}
+Source: addpath.exe; DestDir: {app}; Tasks: ; Languages: ; Flags: ignoreversion
+Source: dist\libbz2-1.dll; DestDir: {app}
+Source: dist\libFOX-1.7-0.dll; DestDir: {app}
+Source: dist\libgcc_s_seh-1.dll; DestDir: {app}
+Source: dist\libjpeg-8.dll; DestDir: {app}
+Source: dist\libpng16-16.dll; DestDir: {app}
+Source: dist\libstdc++-6.dll; DestDir: {app}
+Source: dist\libtiff-5.dll; DestDir: {app}
+Source: dist\libwinpthread-1.dll; DestDir: {app}
+Source: dist\libz.dll; DestDir: {app}
 
 [Icons]
 Name: {group}\{#MyAppName}; Filename: {app}\{#MyAppExeName}
@@ -57,16 +66,5 @@ Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}; Filen
 Filename: {app}\AddPath.exe; Parameters: {app}; WorkingDir: {app}; Description: Automatically add the {app} directory to the PATH enviroment; StatusMsg: Automatically add the {app} directory to the PATH enviroment; Flags: postinstall; Tasks: ; Languages: 
 Filename: {app}\{#MyAppExeName}; Description: {cm:LaunchProgram,{#MyAppName}}; Flags: nowait postinstall skipifsilent
 
-[_ISToolPreCompile]
-Name: cmd; Parameters: /C copy /y forward\forward.exe qh.exe; Flags: abortonerror runminimized
-Name: cmd; Parameters: /C copy /y forward\forward.exe qc.exe; Flags: abortonerror runminimized
-Name: cmd; Parameters: /C copy /y forward\forward.exe qch.exe; Flags: abortonerror runminimized
-Name: cmd; Parameters: /C copy /y forward\forward.exe qlog.exe; Flags: abortonerror runminimized
-Name: cmd; Parameters: /C copy /y forward\forward.exe qrc.exe; Flags: abortonerror runminimized
-Name: C:\Dev-Cpp\project\supagrep\strip.exe; Parameters: *.exe; Flags: abortonerror runminimized
-Name: C:\Dev-Cpp\project\supagrep\strip.exe; Parameters: addpath\addpath.exe; Flags: abortonerror runminimized
-Name: C:\Dev-Cpp\project\supagrep\strip.exe; Parameters: *.dll; Flags: abortonerror runminimized
 [UninstallRun]
 Filename: {app}\AddPath.exe; Parameters: -r {app}; WorkingDir: {app}
-[_ISToolPostCompile]
-Name: cmd; Parameters: /C copy /Y output\supagrep_setup.exe z:; Flags: abortonerror runminimized

@@ -1,6 +1,6 @@
 #include <windows.h>
 #include <iostream>
-#include "../tools/string_utils.h"
+#include "string_utils.h"
 
 using namespace Tools;
 
@@ -110,12 +110,10 @@ int main( int argc, char **argv )
           HKEY_LOCAL_MACHINE, 
           "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment",
           remove ) ) == 0 ) {
-        
-        DWORD dwReturnValue;
                  
         SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0,
         (LPARAM) "Environment", SMTO_ABORTIFHUNG,
-        5000, &dwReturnValue);         
+        5000, 0);
         return 0;
     }
 
@@ -133,7 +131,7 @@ int main( int argc, char **argv )
                  
     SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0,
     (LPARAM) "Environment", SMTO_ABORTIFHUNG,
-    5000, &dwReturnValue);         
+    5000, 0);
     
     SILENT( std::cout << "done2" << std::endl );
     

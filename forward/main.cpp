@@ -4,13 +4,17 @@
 #include <windows.h>
 #include <tchar.h>
 
-#include "../tools/string_utils.h"
+#include "string_utils.h"
 
 using namespace Tools;
 
 std::string getCurrentDirectory(){
   TCHAR buffer[PATH_MAX];
-  if(GetCurrentDirectory(PATH_MAX,buffer)) return buffer;
+  if(GetCurrentDirectory(PATH_MAX,buffer)) {
+	  return buffer;
+  }
+
+  return "";
 }
 
 int do_system( const std::string & cmd )

@@ -12,13 +12,18 @@ cd "$DIR"
 
 if ! test -d dist ; then
 	mkdir dist
-	( cd dist && cp -u /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll dist )
+	( cd dist && cp -u /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll . )
 	( cd dist && ln -s ../supagrep.exe . )
+	( cd dist && ln -s ../addpath.exe . )
+	( cd dist && ln -s ../forward.exe qc.exe )
+	( cd dist && ln -s ../forward.exe qh.exe )
+	( cd dist && ln -s ../forward.exe qch.exe )
+	( cd dist && ln -s ../forward.exe qrc.exe )
 else
 # update dll
 	( cd dist && for i in *.dll ; do cp -u /usr/x86_64-w64-mingw32/sys-root/mingw/bin/$i . ; done )
 fi
 
 strip supagrep.exe
-ISCC="~/.wine/drive_c/Program Files (x86)/Inno Setup 6/ISCC.exe"
+ISCC="/home/martin/.wine/drive_c/Program Files (x86)/Inno Setup 6/ISCC.exe"
 wine "${ISCC}" setup.iss
