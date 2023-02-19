@@ -40,6 +40,15 @@ class Search : public FXThread
 		return t;
 	  }
 
+	  T getAndClear()
+	  {
+		mt.lock();
+		T t = value;
+		ch = false;
+		mt.unlock();
+		return t;
+	  }
+
 	  void clear()
 	  {
 		mt.lock();

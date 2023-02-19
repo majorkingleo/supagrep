@@ -37,13 +37,14 @@ FXint Search::run()
 	  }
 
 	  config.mt_status_max->set(files.size());
+	  DEBUG( wformat( L"Total files '%d'", files.size() ) );
 	  int count = 0;
 	  for( file_list::iterator it = files.begin(); it != files.end() && !config.mt_stop->get(); it++ )
 		{
-		  // DEBUG( wformat( L"Searching in file: '%s'", DetectLocale::in2w(it->text()) ) );
 		  do_search( *it );
 
 		  count++;
+		  // DEBUG( wformat( L"%d Searching in file: '%s'", count, DetectLocale::in2w(it->text()) ) );
 		  config.mt_status->set(count);
 		}
 	}
@@ -110,9 +111,11 @@ bool Search::match_file_type( const FXString & file )
   bool ret = FXPath::match( config.pattern, file, FILEMATCH_NOESCAPE|FILEMATCH_FILE_NAME|FILEMATCH_CASEFOLD );
 #endif
   if( !ret ) {
+	  /*
 	  DEBUG( wformat(L"file: '%s' didn't matched pattern '%s'",
 					 DetectLocale::in2w( file.text() ),
 					 DetectLocale::in2w( config.pattern.text() ) ) );
+	*/
   }
 
   return ret;

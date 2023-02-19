@@ -5,6 +5,7 @@
 #include "tab.h"
 #include "tools/theme.h"
 #include "format.h"
+#include "debug.h"
 
 using namespace Tools;
 
@@ -230,19 +231,27 @@ long SearchWin::onTimeout( FXObject *obj, FXSelector sel, void *ptr )
 	bt_lookup->enable();
 	cb_search->enable();
 	
-	bt_search->setText( LC( "Go" ) );	
+	bt_search->setText( LC( "Go" ) );
+
+	pb_state->update();
+
+	pb_state->setTotal(mt_status_max.getAndClear());
+	pb_state->setProgress(mt_status_max.getAndClear());
+	DEBUG( format( "done: max: %d", mt_status_max.getAndClear()) );
   }
 
   if( mt_status_max.changed() )
 	{
-	  pb_state->setTotal(mt_status_max.get());
-	  mt_status_max.clear();
+	  DEBUG( format( "Max Status: '%d'", mt_status.get() ) );
+	  pb_state->setTotal(mt_status_max.getAndClear());
+	  // mt_status_max.clear();
 	}
-  
+
   if( mt_status.changed() ) 
 	{
-	  pb_state->setProgress(mt_status.get());
-	  mt_status.clear();
+	  DEBUG( format( "Status: '%d'", mt_status.get() ) );
+	  pb_state->setProgress(mt_status.getAndClear());
+	  // mt_status.clear();
 	}
 
   if( mt_result.changed() )
