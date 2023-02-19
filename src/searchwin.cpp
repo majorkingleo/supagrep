@@ -3,7 +3,7 @@
 #include "main.h"
 #include "desccombo.h"
 #include "tab.h"
-#include "tools/theme.h"
+#include "theme.h"
 #include "format.h"
 #include "debug.h"
 

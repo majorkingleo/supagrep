@@ -1,7 +1,7 @@
 #include "tab.h"
 #include <fxkeys.h>
 #include "icon_close.h"
-#include "tools/theme.h"
+#include "theme.h"
 
 using namespace Tools;
 

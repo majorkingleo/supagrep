@@ -3,7 +3,7 @@
 
 #include <fx.h>
 
-#include "tools/theme.h"
+#include "theme.h"
 
 using namespace Tools;
 
