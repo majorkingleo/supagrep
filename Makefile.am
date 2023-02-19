@@ -87,6 +87,7 @@ cpputils_cpputilsshared_libcpputilsshared_a_SOURCES= \
 		cpputils/cpputilsshared/map_utils.h \
 		cpputils/cpputilsshared/pairs.h \
 		cpputils/cpputilsshared/pairs.cc \
+		cpputils/cpputilsshared/range.h \
 		cpputils/cpputilsshared/ref.h \
 		cpputils/cpputilsshared/stderr_exception.h \
 		cpputils/cpputilsshared/string_utils.h \
@@ -104,6 +105,7 @@ cpputils_cpputilsshared_libcpputilsshared_a_SOURCES= \
 
 
 cpputils_cpputilsshared_cpputilsformat_libcpputilsformat_a_SOURCES= \
+	cpputils/cpputilsshared/cpputilsformat/format.h \
 	cpputils/cpputilsshared/cpputilsformat/format1.cc \
 	cpputils/cpputilsshared/cpputilsformat/format2.cc \
 	cpputils/cpputilsshared/cpputilsformat/format2.h \
