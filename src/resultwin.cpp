@@ -37,6 +37,7 @@ FXDEFMAP( ResultWin ) ResultWinMap[] = {
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_OPEN_ADIE, ResultWin::onOpenExec ),
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_OPEN_ADIE_WIN, ResultWin::onOpenExec ),
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_OPEN_WINVI, ResultWin::onOpenExec ),
+  FXMAPFUNC(SEL_COMMAND, ResultWin::ID_OPEN_ECLIPSE, ResultWin::onOpenExec ),
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_CONSOLE, ResultWin::onOpenExec ),
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_KONSOLE, ResultWin::onOpenExec ),
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_GONSOLE, ResultWin::onOpenExec ),
@@ -116,7 +117,11 @@ ResultWin::ResultWin( Main *main_,
 				
   add_cmd( Cmd( ID_DO_CMD, 
 				format( LC( "Start %s" ), LC( "Console" ) ),
-				"cmd.exe", "cmd" ) );				
+				"cmd.exe", "cmd" ) );
+
+  add_cmd( Cmd( ID_OPEN_ECLIPSE,
+				format( LC( "Open File with %s" ), LC( "Eclipse" ) ),
+				"eclipse.exe", "eclipse.exe --launcher.openFile %s:%d" ) );
 }
 
 void ResultWin::create()
@@ -357,6 +362,8 @@ int ResultWin::do_system( const FXString & cmd )
   si.cb = sizeof(si);
   ZeroMemory( &pi, sizeof(pi) );
 
+  DEBUG( format( "cmd: '%s'",cmd.text()) );
+
   if( !CreateProcess( NULL, szCmdline, NULL, NULL, false, 0, NULL, szCwd, &si, &
 pi ) )
   {
@@ -421,7 +428,21 @@ long ResultWin::onOpenExec( FXObject *obj, FXSelector sel, void *ptr )
 		  
 		  FXSystem::setCurrentDirectory( FXPath::directory( entry->result.file ) );
 
-		  FXString s = format( cmds[i].open_cmd.text(), entry->result.line, entry->result.file.text() ).c_str();
+		  int idx_line = cmds[i].open_cmd.find( '%d' );
+		  int idx_file = cmds[i].open_cmd.find( '%s' );
+
+		  FXString s;
+
+		  if( idx_line != -1 ) {
+			  if( idx_line < idx_file ) {
+				 s = format( cmds[i].open_cmd.text(), entry->result.line, entry->result.file.text() ).c_str();
+			  } else {
+				 s = format( cmds[i].open_cmd.text(), entry->result.file.text(), entry->result.line ).c_str();
+			  }
+		  } else {
+			  s =  format( cmds[i].open_cmd.text(), entry->result.file.text() ).c_str();
+		  }
+
 
 #ifndef WIN32		  
 		  s += " &";
