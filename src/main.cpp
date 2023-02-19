@@ -32,7 +32,7 @@ Main::Main( FXApp *app_ )
   FXMenuBar *menubar=new FXMenuBar(this,LAYOUT_SIDE_TOP|LAYOUT_FILL_X|FRAME_RAISED);
   FXMenuPane *filemenu=new FXMenuPane(this);
   new FXMenuCommand(filemenu, LC( "&New Search" ),NULL,this,ID_NEW);
-  new FXMenuCommand(filemenu,LC( "&Settings" ) ,NULL,this,ID_SETTINGS);
+  // new FXMenuCommand(filemenu,LC( "&Settings" ) ,NULL,this,ID_SETTINGS);
   new FXMenuSeparator( filemenu );
   new FXMenuCommand(filemenu,LC( "&Quit the application" ),NULL,getApp(),FXApp::ID_QUIT);
   new FXMenuTitle(menubar,LC( "&Program" ),NULL,filemenu);
@@ -99,10 +99,12 @@ Main::Main( FXApp *app_ )
 	std::for_each( args.begin(), args.end(), unescape_minus );
 
 
-	it_first = args.begin();
-	conf.search = it_first->c_str();
+	if( !args.empty() ) {
+		it_first = args.begin();
+		conf.search = it_first->c_str();
 
-	args.erase( it_first );
+		args.erase( it_first );
+	}
 
     for( auto & arg : args ){
          if( conf.pattern.empty() ) {
@@ -114,11 +116,16 @@ Main::Main( FXApp *app_ )
 
 	conf.path = FXSystem::getCurrentDirectory();
 
-	add_searchwin( false, &conf );
-
+	if( !conf.search.empty() ) {
+		add_searchwin( false, &conf );
+	} else {
+		add_searchwin();
+	}
   } else {
-	add_searchwin();
+	  add_searchwin();
   }
+
+
 
   getAccelTable()->addAccel(MKUINT(KEY_q,CONTROLMASK),this,FXSEL(SEL_COMMAND,ID_CLOSE));
   getAccelTable()->addAccel(MKUINT(KEY_n,CONTROLMASK),this,FXSEL(SEL_COMMAND,ID_NEW));
@@ -174,7 +181,7 @@ long Main::onAbout( FXObject *obj, FXSelector sel, void *ptr )
   FXMessageBox::information(this,MBOX_OK,
 							LC("About SupaGrep"),
 							LC( "SupaGrep version " VERSION ",\n"
-								"Copyright (C) 2007 by Martin Oberzalek kingleo@gmx.at\n"
+								"Copyright (C) 2007 - 2023 by Martin Oberzalek kingleo@gmx.at\n"
 								"SupaGrep comes with ABSOLUTELY NO WARRANTY;\n"
 								"This is free software, and you are welcome to redistribute it\n"
 								"under certain conditions (GPL); Hove a look at COPYING for details." )
