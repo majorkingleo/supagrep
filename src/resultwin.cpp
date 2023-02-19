@@ -6,6 +6,8 @@
 #include "string_utils.h"
 #include "icon_add.h"
 #include "main.h"
+#include "utf8_util.h"
+#include "debug.h"
 
 #include "format.h"
 
@@ -313,32 +315,10 @@ long ResultWin::onClipboardRequest(FXObject* sender,FXSelector sel,void* ptr)
 	  // Get clipped string
 	  string=clipped;
 	  
-	  // Return clipped text as as UTF-8
-	  if(event->target==utf8Type)
-		{
-		  FXTRACE((100,"Request UTF8\n"));
-		  setDNDData(FROM_CLIPBOARD,event->target,string);
-		  return 1;
-		}
-	  
-	  // Return clipped text translated to 8859-1
-	  if(event->target==stringType || 
-		 event->target==textType)
-		{
-		  FX88591Codec ascii;
-		  FXTRACE((100,"Request ASCII\n"));
-		  setDNDData(FROM_CLIPBOARD,event->target,ascii.utf2mb(string));
-		  return 1;
-		}
-	  
-	  // Return text of the selection translated to UTF-16
-	  if(event->target==utf16Type)
-		{
-		  FXUTF16LECodec unicode;             // FIXME maybe other endianness for unix
-		  FXTRACE((100,"Request UTF16\n"));
-		  setDNDData(FROM_CLIPBOARD,event->target,unicode.utf2mb(string));
-		  return 1;
-		}
+	  DEBUG( wformat(L"Clippboard String: '%s'", Utf8Util::utf8toWString(string.text()) ) );
+
+	  setDNDData(FROM_CLIPBOARD,event->target,string);
+	  return 1;
 	}
   return 0;
 }
