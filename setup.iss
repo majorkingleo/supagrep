@@ -4,7 +4,7 @@
 #define MyAppName "SupaGrep"
 #define MyAppVersion "1.0"
 #define MyAppPublisher "Martin Oberzalek"
-#define MyAppURL "http://kingleo.pages.at"
+#define MyAppURL "https://github.com/majorkingleo/supagrep/"
 #define MyAppExeName "SupaGrep.exe"
 
 [Setup]
@@ -47,19 +47,11 @@ Source: addon\adie.exe; DestDir: {app}; Flags: ignoreversion
 Source: COPYING; DestDir: {app}; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: addpath.exe; DestDir: {app}; Tasks: ; Languages: ; Flags: ignoreversion
-Source: dist\libbz2-1.dll; DestDir: {app}
-Source: dist\libFOX-1.7-0.dll; DestDir: {app}
-Source: dist\libgcc_s_seh-1.dll; DestDir: {app}
-Source: dist\libjpeg-8.dll; DestDir: {app}
-Source: dist\libpng16-16.dll; DestDir: {app}
-Source: dist\libstdc++-6.dll; DestDir: {app}
-Source: dist\libtiff-5.dll; DestDir: {app}
-Source: dist\libwinpthread-1.dll; DestDir: {app}
-Source: dist\libz.dll; DestDir: {app}
+Source: dist\*dll; DestDir: {app}
 
 [Icons]
 Name: {group}\{#MyAppName}; Filename: {app}\{#MyAppExeName}
-Name: {commondesktop}\{#MyAppName}; Filename: {app}\{#MyAppExeName}; Tasks: desktopicon
+Name: {autodesktop}\{#MyAppName}; Filename: {app}\{#MyAppExeName}; Tasks: desktopicon
 Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}; Filename: {app}\{#MyAppExeName}; Tasks: quicklaunchicon
 
 [Run]
