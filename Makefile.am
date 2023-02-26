@@ -23,7 +23,6 @@ addpath_LDADD = cpputils/cpputilsshared/libcpputilsshared.a \
 endif
 
 supagrep_SOURCES=\
-		src/adie.h \
 		src/desccombo.h \
 		src/desccombo.cpp \
 		src/icon_add.h \
