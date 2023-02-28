@@ -59,3 +59,10 @@ m4/lt~obsolete.m4
 .project
 .settings/
 
+
+# cmake stuff
+CMakeCache.txt
+CMakeFiles
+supagrep_autogen
+.qt
+cmake_install.cmake
