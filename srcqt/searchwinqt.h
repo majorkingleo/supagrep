@@ -9,14 +9,21 @@
 #define SRCQT_SEARCHWINQT_H_
 
 #include <qwidget.h>
+#include <qlineedit.h>
 
 class SearchWinQt : public QWidget
 {
 	Q_OBJECT
 private:
 
+	QLineEdit *start_directory;
+	QLineEdit *search_file_pattern;
+
 public:
 	explicit SearchWinQt(QWidget *parent = 0);
+
+private slots:
+	void selectDirectory();
 };
 
 

@@ -17,11 +17,18 @@ SearchWinQt::SearchWinQt( QWidget *parent )
 	QVBoxLayout *setupLayout = new QVBoxLayout();
 	setupFrame->setLayout( setupLayout );
 	setupLayout->addWidget( new QLabel( u8"Path:" ) );
-	setupLayout->addWidget( new QLineEdit() );
-	setupLayout->addWidget( new QPushButton( u8"Search Directory") );
+
+	start_directory = new QLineEdit();
+	setupLayout->addWidget( start_directory );
+
+	auto *button_search_dir = new QPushButton( u8"Search Directory");
+	connect( button_search_dir, SIGNAL(pressed()), this, SLOT(selectDirectory()) );
+	setupLayout->addWidget( button_search_dir );
 
 	setupLayout->addWidget( new QLabel( u8"Files:" ) );
-	setupLayout->addWidget( new QLineEdit() );
+
+	search_file_pattern = new QLineEdit();
+	setupLayout->addWidget( search_file_pattern );
 
 	setupLayout->addWidget( new QLabel( u8"Search criterias:" ) );
 	setupLayout->addWidget( new QCheckBox( u8"Case sensitive" ) );
@@ -55,3 +62,11 @@ SearchWinQt::SearchWinQt( QWidget *parent )
 	setLayout(mainLayout);
 }
 
+void SearchWinQt::selectDirectory()
+{
+	auto text = QFileDialog::getExistingDirectory( this,
+									   u8"Choose the directory to start",
+									   start_directory->text() );
+
+	start_directory->setText( text );
+}

@@ -74,7 +74,7 @@ int main(int argc, char **argv)
 
 	MainWindowQt mainwindow;
 
-	mainwindow.resize(300,300);
+	mainwindow.resize(800,300);
 	mainwindow.move(200,200);
 	mainwindow.show();
 
