@@ -63,6 +63,6 @@ m4/lt~obsolete.m4
 # cmake stuff
 CMakeCache.txt
 CMakeFiles
-supagrep_autogen
+*_autogen
 .qt
 cmake_install.cmake
