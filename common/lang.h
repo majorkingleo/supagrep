@@ -2,22 +2,23 @@
 #define LANG_H
 
 #include <vector>
+#include <string>
 
 class Lang
 {
  protected:
   struct StaticText
   {
-	const char *lang;
-	const char *orig;
-	const char *result;
+	const char8_t *lang;
+	const char8_t *orig;
+	const char8_t *result;
   };
 
   std::vector<StaticText> messages;
   
   static StaticText TransMsg[];
 
-  const char* cl;
+  std::u8string cl;
 
  public:
   Lang();
