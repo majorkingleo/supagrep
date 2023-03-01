@@ -8,6 +8,8 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS SvgWidgets)
 qt_standard_project_setup()
 
+add_compile_definitions( VERSION="${PROJECT_VERSION}" )
+
 add_library(cpputilsio STATIC 
 	cpputils/io/ColoredOutput.h
 	cpputils/io/ColoredOutput.cc
@@ -80,6 +82,11 @@ target_include_directories(cpputilsshared PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/cpputilsformat/>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/>
 )		
+
+add_library(common STATIC
+	common/lang.h
+	common/lang.cc 
+)
 		
 add_executable(supagrep
 	srcqt/mainqt.h
@@ -100,6 +107,7 @@ target_link_libraries(supagrep PRIVATE Qt6::Core)
 target_link_libraries(supagrep PRIVATE Qt6::Widgets)
 target_link_libraries(supagrep PRIVATE Qt6::SvgWidgets)
 
+target_link_libraries( supagrep PRIVATE common )
 target_link_libraries( supagrep PRIVATE cpputilsio )
 target_link_libraries( supagrep PRIVATE cpputilsshared )
 target_link_libraries( supagrep PRIVATE cpputilsformat )

@@ -2,7 +2,6 @@
 #define LANG_H
 
 #include <vector>
-#include <fx.h>
 
 class Lang
 {

@@ -27,8 +27,6 @@ supagrep_SOURCES=\
 		src/desccombo.cpp \
 		src/icon_add.h \
 		src/icon_close.h \
-		src/lang.h \
-		src/lang.cpp \
 		src/main.h \
 		src/main.cpp \
 		src/resultwin.h \
@@ -48,7 +46,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/tools \
 	-I$(top_srcdir)/cpputils/cpputilsshared/cpputilsformat \
 	-I$(top_srcdir)/cpputils/io \
 	-I$(top_srcdir)/cpputils/fox \
-	-DNOWAMAS \
+	-I$(top_srcdir)/common \
 	$(LIBFOX_CFLAGS) \
 	-std=gnu++20 \
 	-D_XOPEN_SOURCE=700 # for cyggwin fileno()
@@ -56,7 +54,8 @@ AM_CPPFLAGS = -I$(top_srcdir)/tools \
 noinst_LIBRARIES=cpputils/io/libcpputilsio.a \
 	cpputils/cpputilsshared/libcpputilsshared.a \
 	cpputils/cpputilsshared/cpputilsformat/libcpputilsformat.a \
-	cpputils/fox/libcpputilsfox.a
+	cpputils/fox/libcpputilsfox.a \
+	common/libcommon.a
 
 cpputils_io_libcpputilsio_a_SOURCES= \
 	cpputils/io/ColoredOutput.h \
@@ -119,11 +118,16 @@ cpputils_cpputilsshared_cpputilsformat_libcpputilsformat_a_SOURCES= \
 cpputils_fox_libcpputilsfox_a_SOURCES= \
 	cpputils/fox/theme.h \
 	cpputils/fox/theme.cpp	
+	
+common_libcommon_a_SOURCES=\
+	common/lang.h \
+	common/lang.cc
 
 supagrep_LDADD = cpputils/io/libcpputilsio.a \
 				 cpputils/cpputilsshared/libcpputilsshared.a \
 				 cpputils/cpputilsshared/cpputilsformat/libcpputilsformat.a \
-				 cpputils/fox/libcpputilsfox.a
+				 cpputils/fox/libcpputilsfox.a \
+				 common/libcommon.a
 				 
 LIBS= \
     $(LIBFOX_LIBS)
