@@ -99,7 +99,7 @@ SearchWin::SearchWin( Main *main_,
 	   it != main->getSetup().config.file_pattern.end();
 	   it++ ) 
 	{
-	  cb_files->appendItem( it->descr, &it->entry );
+	  cb_files->appendItem( FXString(it->descr.c_str()), &it->entry );
 	}
 
   /* add first an empty record */

@@ -86,6 +86,13 @@ target_include_directories(cpputilsshared PUBLIC
 add_library(common STATIC
 	common/lang.h
 	common/lang.cc 
+	common/setup.h
+	common/setup.cc
+)
+
+target_include_directories(common PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/cpputilsformat/>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/>
 )
 		
 add_executable(supagrep

@@ -35,8 +35,6 @@ supagrep_SOURCES=\
 		src/search.cpp \
 		src/searchwin.h \
 		src/searchwin.cpp \
-		src/setup.h \
-		src/setup.cpp \
 		src/tab.h \
 		src/tab.cpp \
 		tools_config.h
@@ -121,7 +119,9 @@ cpputils_fox_libcpputilsfox_a_SOURCES= \
 	
 common_libcommon_a_SOURCES=\
 	common/lang.h \
-	common/lang.cc
+	common/lang.cc \
+	common/setup.h \
+	common/setup.cc
 
 supagrep_LDADD = cpputils/io/libcpputilsio.a \
 				 cpputils/cpputilsshared/libcpputilsshared.a \

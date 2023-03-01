@@ -1,6 +1,9 @@
 #include "lang.h"
 #include <locale.h>
 #include <cstring>
+#include <utf8_util.h>
+
+using namespace Tools;
 
 Lang::StaticText Lang::TransMsg[] = {
   { u8"de", u8"Lookup", u8"Verzeichnis" },
@@ -92,6 +95,10 @@ Lang::Lang()
 		  st.lang = TransMsg[i].lang;
 		  st.orig = TransMsg[i].orig;
 		  st.result = TransMsg[i].result;
+
+		  st.worig = Utf8Util::utf8toWString( TransMsg[i].orig );
+		  st.wresult = Utf8Util::utf8toWString( TransMsg[i].result );
+
 		  messages.push_back( st );
 		}
 	}
@@ -103,6 +110,17 @@ const char * Lang::translate( const char * msg )
   for( unsigned i = 0; i < messages.size(); i++ ) {
 	  if( strcmp( (char*)messages[i].orig, msg ) == 0 ) {
 		return (char*)messages[i].result;
+	  }
+  }
+
+  return msg;
+}
+
+std::wstring Lang::translate( const std::wstring & msg )
+{
+  for( unsigned i = 0; i < messages.size(); i++ ) {
+	  if( messages[i].worig == msg ) {
+		return messages[i].wresult;
 	  }
   }
 

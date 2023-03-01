@@ -1,8 +1,8 @@
 #ifndef SETUP_H
 #define SETUP_H
 
-#include <fx.h>
 #include <vector>
+#include <string>
 
 class Lang;
 
@@ -11,10 +11,10 @@ class Setup
  public:
   struct ConfigPair
   {
-	FXString entry;
-	FXString descr;
+	std::wstring entry;
+	std::wstring descr;
 
-	ConfigPair( const FXString & entry_, const FXString & descr_ )
+	ConfigPair( const std::wstring & entry_, const std::wstring & descr_ )
 	  : entry( entry_ ), descr( descr_ )
 	{}
   };
