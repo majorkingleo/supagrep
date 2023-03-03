@@ -66,3 +66,5 @@ CMakeFiles
 *_autogen
 .qt
 cmake_install.cmake
+dist
+mymoc.sh

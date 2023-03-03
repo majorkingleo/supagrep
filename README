@@ -42,3 +42,7 @@ I'm using opensuse leap 15.4
   ./configure --host=x86_64-w64-mingw32
   make
 
+
+* cross-compile supagrep from cygwin with QT 
+	You may have to edit the file to configure the QTDIR environment variable.
+	./build_cygwin_mingw_qt.sh
