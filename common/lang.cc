@@ -68,10 +68,10 @@ Lang::Lang()
 #ifdef WIN32
   if( strstr( loc, "German" ) != NULL ) 
   {
-      cl = "de_";
+      cl = u8"de_";
       if( strstr( loc, "Austria" ) != NULL )
       {
-          cl = "de_AT";
+          cl = u8"de_AT";
       }    
   }          
 #else
