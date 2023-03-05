@@ -1,4 +1,6 @@
 #include "desccombo.h"
+#include <debug.h>
+#include <format.h>
 
 FXDEFMAP( DescCombo ) DescComboMap[] = {
   FXMAPFUNC( SEL_COMMAND, DescCombo::ID_LIST, DescCombo::onCommand )
@@ -29,10 +31,11 @@ long DescCombo::onCommand( FXObject *obj, FXSelector sel, void *ptr )
   int index = getCurrentItem();
 
   if( index >= 0 ) {
-	FXString *s = static_cast<FXString*>(getItemData( index ));
+	std::wstring *s = static_cast<std::wstring*>(getItemData( index ));
 
 	if( s ) {
-	  setText( *s );
+	  DEBUG( wformat( L"search Text: %s", *s ) );
+	  setText( s->c_str() );
 	}
   }
   return target && target->tryHandle(this,FXSEL(SEL_COMMAND,message),ptr);
