@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <mutex>
+#include <chrono>
 
 class Search
 {
@@ -106,7 +107,7 @@ class Search
 	MTAccess<int> *mt_status_max;
 	MTAccess<bool> *mt_stop;
 	MTAccess<std::list<Result> > *mt_result;
-	MTAccess<FXTime> *mt_runtime;
+	MTAccess<std::chrono::milliseconds> *mt_runtime;
 
 	Config()
 	  : regex( false ),
@@ -125,15 +126,14 @@ class Search
   typedef std::list<FXString> file_list;  
   file_list files;
   std::vector<std::string> pattern_list;
-  FXTime start_time;
+  std::chrono::time_point<std::chrono::system_clock> start_time;
   FXString lsearch;
   FXString usearch;
 
  public:
   Search( Config & config );
-  virtual ~Search();
 
-  FXint run();
+  void run();
 
  protected:
   bool find_files( const FXString &path );

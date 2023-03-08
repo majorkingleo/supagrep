@@ -121,7 +121,7 @@ SearchWin::~SearchWin()
       if( mt_running.get() == true ) {
           mt_stop.set(true);
           while( mt_running.get() == true ) {
-                 FXThread::yield();
+        	  std::this_thread::yield();
           }
       }                           
   }
@@ -193,15 +193,16 @@ long SearchWin::onSearch( FXObject *obj, FXSelector sel, void * )
   
 
   std::thread search_thread( [this]{
-	  Search *s = new Search( *config );
+	  Search s( *config );
 	  mt_running.set(true);
-	  s->run();
+	  s.run();
   } );
 
   search_thread.detach();
 
-  if( tab )
+  if( tab ) {
 	tab->setText( config->search );
+  }
 
   getApp()->addTimeout( this, ID_TIMER, TIMEOUT_VALUE );
 
@@ -227,7 +228,7 @@ long SearchWin::onTimeout( FXObject *obj, FXSelector sel, void *ptr )
 	
 	bt_search->setText( LC( "Stop" ) );
 
-	getApp()->addTimeout( this, ID_TIMER, 300000 );
+	getApp()->addTimeout( this, ID_TIMER, TIMEOUT_VALUE );
   } else {
 	cb_path->enable();
 	cb_files->enable();
@@ -277,8 +278,11 @@ long SearchWin::onTimeout( FXObject *obj, FXSelector sel, void *ptr )
 
   if( mt_runtime.changed() )
 	{
-	  l_runtime->setText( format( "%3.3f sec", mt_runtime.access() / 1000000000.0 ).c_str() );
-	  mt_runtime.clear_and_free();
+	  using namespace std::chrono_literals;
+
+	  auto runtime = mt_runtime.getAndClear();
+	  double seconds = runtime / 1.0s;
+	  l_runtime->setText( format( "%3.3lf sec", seconds ).c_str() );
 	}
 
   return 1;

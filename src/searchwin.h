@@ -58,7 +58,7 @@ class SearchWin : public ThemeHorizontalFrame
   Search::MTAccess<int>  mt_status_max;
   Search::MTAccess<bool> mt_stop;
   Search::MTAccess<std::list<Search::Result> > mt_result;
-  Search::MTAccess<FXTime> mt_runtime;
+  Search::MTAccess<std::chrono::milliseconds> mt_runtime;
 
   Search::Config *config;
   Tab *tab;

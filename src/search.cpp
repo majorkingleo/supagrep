@@ -14,15 +14,10 @@ Search::Search( Config & config_ )
   config.mt_status->set(0);
 }
 
-Search::~Search()
-{
-
-}
-
-FXint Search::run()
+void Search::run()
 {
   config.mt_running->set(true);
-  start_time = FXThread::time();
+  start_time = std::chrono::system_clock::now();
   files.clear();
   pattern_list.clear();
 
@@ -49,13 +44,9 @@ FXint Search::run()
 		}
 	}
 
-  config.mt_runtime->set(FXThread::time()-start_time);
+  auto duration = std::chrono::system_clock::now().time_since_epoch() - start_time.time_since_epoch();
+  config.mt_runtime->set(std::chrono::duration_cast<std::chrono::milliseconds>(duration));
   config.mt_running->set(false);
-
-#if FOX_MAJOR >= 1 && FOX_MINOR >= 7
-  delete this;
-#endif
-  return 1;
 }
 
 bool Search::find_files( const FXString &path )
