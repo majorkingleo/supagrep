@@ -8,7 +8,7 @@
 #include <string>
 #include <mutex>
 
-class Search : public FXThread
+class Search
 {
  public:
   template<class T> class MTAccess

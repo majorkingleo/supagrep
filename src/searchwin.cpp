@@ -6,6 +6,7 @@
 #include "theme.h"
 #include "format.h"
 #include "debug.h"
+#include <thread>
 
 using namespace Tools;
 
@@ -99,6 +100,7 @@ SearchWin::SearchWin( Main *main_,
 	   it != main->getSetup().config.file_pattern.end();
 	   it++ ) 
 	{
+	  DEBUG( wformat( L"descr: '%s'; pattern: '%s'", it->descr, it->entry) );
 	  cb_files->appendItem( FXString(it->descr.c_str()), &it->entry );
 	}
 
@@ -189,9 +191,14 @@ long SearchWin::onSearch( FXObject *obj, FXSelector sel, void * )
 
   result->clear();
   
-  Search *s = new Search( *config );
-  mt_running.set(true);
-  s->start();
+
+  std::thread search_thread( [this]{
+	  Search *s = new Search( *config );
+	  mt_running.set(true);
+	  s->run();
+  } );
+
+  search_thread.detach();
 
   if( tab )
 	tab->setText( config->search );
