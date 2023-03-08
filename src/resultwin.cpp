@@ -343,7 +343,7 @@ long ResultWin::onOpen( FXObject *obj, FXSelector sel, void *ptr )
     return 0;
     
 #ifdef WIN32
-  ShellExecute( NULL, "open", entry->result.file.text(), "", "", SW_SHOWNORMAL );
+  ShellExecute( NULL, "open", entry->result.file.string().c_str(), "", "", SW_SHOWNORMAL );
 #else
 # warning TODO on Unix
 #endif

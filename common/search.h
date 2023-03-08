@@ -134,6 +134,8 @@ class Search
 
   void run();
 
+  static Config getConfFromCommandLine( int argc, const char *const*argv );
+
  protected:
   bool find_files( const std::filesystem::path & path );
   bool match_file_type( const std::filesystem::path & file );

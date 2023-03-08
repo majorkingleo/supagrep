@@ -154,3 +154,80 @@ void Search::do_simple_search( const std::wstring & s,
 	} while( pos != std::string::npos );
 }
 
+Search::Config Search::getConfFromCommandLine( int argc, const char *const*argv )
+{
+	Search::Config conf;
+
+	std::list<std::wstring> args;
+
+	for( int i = 1; i < argc; i++ ) {
+		args.push_back( DetectLocale::in2w( argv[i] ) );
+	}
+	auto it_first = args.begin();
+
+#ifdef WIN32
+	if( icase_cmp( *it_first, L"qc" ) ) {
+		conf.pattern = L"*.c,*.cpp,*.cc";
+		args.erase(it_first);
+	} else if( icase_cmp( *it_first, L"qh" ) ) {
+		conf.pattern = L"*.h,*.hh";
+		args.erase(it_first);
+	} else if( icase_cmp( *it_first, L"qch" ) ) {
+		conf.pattern = L"*.h,*.hh,*.c,*.cpp,*.cc";
+		args.erase(it_first);
+	} else if( icase_cmp( *it_first, L"qrc" ) ) {
+		conf.pattern = L"*.rc";
+		args.erase(it_first);
+	}
+#endif
+
+	auto erase_empty_args = []( auto & arg ) {
+		return arg.empty();
+	};
+	std::erase_if( args, erase_empty_args );
+
+
+	auto arg_ignore_case = [&conf]( auto & arg ) {
+		if( arg == L"-i" ) {
+			conf.icase = true;
+			return true;
+		}
+		return false;
+	};
+	std::erase_if( args, arg_ignore_case );
+
+
+	auto clear_all_other_args = [&conf]( auto & arg ) {
+		return arg.starts_with( L"-" );
+	};
+
+	std::erase_if( args, clear_all_other_args );
+
+	auto unescape_minus = [&conf]( auto & arg ) {
+		if( arg.starts_with( LR"(\-)" ) ) {
+			arg.substr( 1 );
+		}
+	};
+
+	std::for_each( args.begin(), args.end(), unescape_minus );
+
+
+	if( !args.empty() ) {
+		it_first = args.begin();
+		conf.search = it_first->c_str();
+
+		args.erase( it_first );
+	}
+
+	for( auto & arg : args ){
+		if( conf.pattern.empty() ) {
+			conf.pattern = arg.c_str();
+		} else {
+			conf.pattern += ',' + arg.c_str();
+		}
+	}
+
+	conf.path = std::filesystem::current_path().wstring();
+
+	return conf;
+}

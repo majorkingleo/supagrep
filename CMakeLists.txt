@@ -125,3 +125,9 @@ target_link_libraries( supagrep PRIVATE cpputilsio )
 target_link_libraries( supagrep PRIVATE cpputilsshared )
 target_link_libraries( supagrep PRIVATE cpputilsformat )
 
+if (WIN32)
+target_link_libraries( supagrep PRIVATE iconv )
+set(CMAKE_EXE_LINKER_FLAGS  "-mwindows")
+endif (WIN32)
+
+

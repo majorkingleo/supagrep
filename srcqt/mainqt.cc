@@ -12,7 +12,6 @@
 #include <debug.h>
 #include "OutDebug.h"
 #include "search.h"
-#include <DetectLocale.h>
 
 using namespace Tools;
 
@@ -63,78 +62,7 @@ MainWindowQt::MainWindowQt( int argc, char **argv, QWidget *parent)
     f->setLayout(mainLayout);
 
     if( argc > 1 ) {
-    	Search::Config conf;
-
-    	std::list<std::wstring> args;
-
-    	for( int i = 1; i < argc; i++ ) {
-    		args.push_back( DetectLocale::in2w( argv[i] ) );
-    	}
-    	auto it_first = args.begin();
-
-#ifdef WIN32
-    	if( icase_cmp( *it_first, L"qc" ) ) {
-    		conf.pattern = "*.c,*.cpp,*.cc";
-    		args.erase(it_first);
-    	} else if( icase_cmp( *it_first, L"qh" ) ) {
-    		conf.pattern = "*.h,*.hh";
-    		args.erase(it_first);
-    	} else if( icase_cmp( *it_first, L"qch" ) ) {
-    		conf.pattern = "*.h,*.hh,*.c,*.cpp,*.cc";
-    		args.erase(it_first);
-    	} else if( icase_cmp( *it_first, L"qrc" ) ) {
-    		conf.pattern = "*.rc";
-    		args.erase(it_first);
-    	}
-#endif
-
-    	auto erase_empty_args = []( auto & arg ) {
-    		return arg.empty();
-    	};
-    	std::erase_if( args, erase_empty_args );
-
-
-    	auto arg_ignore_case = [&conf]( auto & arg ) {
-    		if( arg == L"-i" ) {
-    			conf.icase = true;
-    			return true;
-    		}
-    		return false;
-    	};
-    	std::erase_if( args, arg_ignore_case );
-
-
-    	auto clear_all_other_args = [&conf]( auto & arg ) {
-    		return arg.starts_with( L"-" );
-    	};
-
-    	std::erase_if( args, clear_all_other_args );
-
-    	auto unescape_minus = [&conf]( auto & arg ) {
-    		if( arg.starts_with( LR"(\-)" ) ) {
-    			arg.substr( 1 );
-    		}
-    	};
-
-    	std::for_each( args.begin(), args.end(), unescape_minus );
-
-
-    	if( !args.empty() ) {
-    		it_first = args.begin();
-    		conf.search = it_first->c_str();
-
-    		args.erase( it_first );
-    	}
-
-    	for( auto & arg : args ){
-    		if( conf.pattern.empty() ) {
-    			conf.pattern = arg.c_str();
-    		} else {
-    			conf.pattern += ',' + arg.c_str();
-    		}
-    	}
-
-    	conf.path = std::filesystem::current_path().wstring();
+    	Search::Config conf = Search::getConfFromCommandLine( argc, argv );
 
     	if( !conf.search.empty() ) {
 #warning TODOOOOOOO
