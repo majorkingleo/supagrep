@@ -24,10 +24,10 @@ void Search::run()
   files.clear();
   pattern_list.clear();
 
-  if( find_files( config.path.text() ) )
+  if( find_files( config.path ) )
 	{
 	  if( config.icase ) {
-		lsearch = tolower(Utf8Util::utf8toWString(config.search.text()));
+		lsearch = tolower(config.search);
 	  }
 
 	  config.mt_status_max->set(files.size());
@@ -97,7 +97,7 @@ bool Search::match_file_type( const std::filesystem::path & file )
 {
   std::wstring file_name = file.wstring();
 
-  for( std::wregex & regex : build_pattern_list(  Utf8Util::utf8toWString(config.pattern.text())) ) {
+  for( std::wregex & regex : build_pattern_list( config.pattern ) ) {
 
 	  bool ret = std::regex_match( file_name, regex );
 
@@ -121,7 +121,7 @@ void Search::do_search( const std::filesystem::path & file )
   if( config.icase ) {
 	  do_simple_search( tolower(content), lsearch, file );
   } else {
-	  do_simple_search( content, Utf8Util::utf8toWString(config.search.text()), file );
+	  do_simple_search( content, config.search, file );
   }
 }
 

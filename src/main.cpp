@@ -114,7 +114,7 @@ Main::Main( FXApp *app_ )
          }    
     }
 
-	conf.path = FXSystem::getCurrentDirectory();
+	conf.path = std::filesystem::current_path().wstring();
 
 	if( !conf.search.empty() ) {
 		add_searchwin( false, &conf );

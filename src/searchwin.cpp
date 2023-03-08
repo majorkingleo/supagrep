@@ -7,6 +7,7 @@
 #include "format.h"
 #include "debug.h"
 #include <thread>
+#include <utf8_util.h>
 
 using namespace Tools;
 
@@ -185,9 +186,9 @@ long SearchWin::onSearch( FXObject *obj, FXSelector sel, void * )
 
   config->regex = cx_regex->getCheck();
   config->icase = cx_icase->getCheck();
-  config->pattern = cb_files->getText();
-  config->path = cb_path->getText();
-  config->search = cb_search->getText();
+  config->pattern = Utf8Util::utf8toWString(cb_files->getText().text());
+  config->path =  Utf8Util::utf8toWString(cb_path->getText().text());
+  config->search =  Utf8Util::utf8toWString(cb_search->getText().text());
 
   result->clear();
   
@@ -201,7 +202,7 @@ long SearchWin::onSearch( FXObject *obj, FXSelector sel, void * )
   search_thread.detach();
 
   if( tab ) {
-	tab->setText( config->search );
+	tab->setText( config->search.c_str() );
   }
 
   getApp()->addTimeout( this, ID_TIMER, TIMEOUT_VALUE );
@@ -268,7 +269,7 @@ long SearchWin::onTimeout( FXObject *obj, FXSelector sel, void *ptr )
 
 	  for( std::list<Search::Result>::iterator it = l.begin(); it != l.end(); it++ )
 		{
-		  result->appendItem( *it, config->path );
+		  result->appendItem( *it, config->path.c_str() );
 		}
 
 	  l.clear();
@@ -296,12 +297,12 @@ long SearchWin::onVisChanged( FXObject *obj, FXSelector sel, void * )
 
 void SearchWin::startwith( const Search::Config & conf )
 {
-  cb_search->setText( conf.search );
+  cb_search->setText( conf.search.c_str() );
   cx_icase->setCheck( conf.icase );
   cx_regex->setCheck( conf.regex );
-  cb_files->setText( conf.pattern );
-  cb_path->setText( conf.path );
-  cb_path->prependItem( conf.path );
+  cb_files->setText( conf.pattern.c_str() );
+  cb_path->setText( conf.path.c_str() );
+  cb_path->prependItem( conf.path.c_str() );
   getApp()->addChore( this, ID_START_NOW );
 }
 

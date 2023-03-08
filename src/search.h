@@ -101,9 +101,9 @@ class Search
   {
 	bool regex;
 	bool icase;
-	FXString pattern;
-	FXString path;
-	FXString search;
+	std::wstring pattern;
+	std::wstring path;
+	std::wstring search;
 	MTAccess<bool> *mt_running;
 	MTAccess<int> *mt_status;
 	MTAccess<int> *mt_status_max;
