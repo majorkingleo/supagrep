@@ -7,9 +7,17 @@
 #include "mainqt.h"
 #include <QtWidgets>
 #include "searchwinqt.h"
+#include <arg.h>
+#include <iostream>
+#include <debug.h>
+#include "OutDebug.h"
+
+using namespace Tools;
 
 MainWindowQt::MainWindowQt(QWidget *parent)
-: QMainWindow( parent )
+: QMainWindow( parent ),
+  lang(),
+  setup( &lang )
 {
 	QAction *actionNewSearch;
 	QAction *actionQuit;
@@ -59,7 +67,7 @@ void MainWindowQt::newSearch()
 {
 	static int idx;
 	idx++;
-	int tabidx = tabs->addTab( new SearchWinQt(), QString(u8"Search %1").arg(idx) );
+	int tabidx = tabs->addTab( new SearchWinQt(this), QString(u8"Search %1").arg(idx) );
 	tabs->setCurrentIndex( tabidx );
 }
 
@@ -68,8 +76,52 @@ void MainWindowQt::closeSearch(int idx)
 	tabs->removeTab( idx );
 }
 
+static void usage( const std::string & prog )
+{
+  std::cerr << "usage: "
+			<< prog << " SEARCH PATTERN\n";
+}
+
+
 int main(int argc, char **argv)
 {
+	setlocale( LC_ALL, "" );
+
+	Arg::Arg arg( argc, argv );
+
+	arg.addPrefix( "-" );
+	arg.addPrefix( "--" );
+
+	Arg::OptionChain oc_info;
+	arg.addChainR( &oc_info );
+	oc_info.setMinMatch( 1 );
+	oc_info.setContinueOnMatch( false );
+	oc_info.setContinueOnFail( true );
+
+	Arg::FlagOption o_help( "h" );
+	o_help.addName( "help" );
+	o_help.setDescription( "Show this page" );
+	oc_info.addOptionR( &o_help );
+
+	Arg::FlagOption o_debug("debug");
+	o_debug.setDescription("print debugging messages");
+	o_debug.setRequired(false);
+	arg.addOptionR( &o_debug );
+
+	arg.parse();
+
+	if( o_help.getState() )
+	{
+		usage(argv[0]);
+		std::cout << arg.getHelp(5,20,30, 80 ) << std::endl;
+		return 0;
+	}
+
+	if( o_debug.getState() )
+	{
+		Tools::x_debug = new OutDebug();
+	}
+
 	QApplication app (argc, argv);
 
 	MainWindowQt mainwindow;

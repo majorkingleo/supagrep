@@ -10,6 +10,8 @@
 
 #include <qmainwindow.h>
 #include <qtabwidget.h>
+#include "setup.h"
+#include "lang.h"
 
 class MainWindowQt : public QMainWindow
 {
@@ -17,8 +19,13 @@ class MainWindowQt : public QMainWindow
 private:
 	 QTabWidget *tabs;
 
+	  Lang lang;
+	  Setup setup;
+
 public:
 	 explicit MainWindowQt(QWidget *parent = 0);
+
+	 Setup & getSetup() { return setup; }
 
 private slots:
 	 void newSearch();

@@ -105,12 +105,15 @@ add_executable(supagrep
 	srcqt/searchwinqt.cc 
 	srcqt/separatorqt.h
 	srcqt/separatorqt.cc
+	srcqt/desccomboqt.h
+	srcqt/desccomboqt.cc
 )
 
 target_include_directories(supagrep PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/cpputilsformat/>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/io/>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/common>
 )
 
 target_link_libraries(supagrep PRIVATE Qt6::Core)

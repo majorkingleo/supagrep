@@ -11,16 +11,21 @@
 #include <qwidget.h>
 #include <qlineedit.h>
 
+class DescComboQt;
+class MainWindowQt;
+
 class SearchWinQt : public QWidget
 {
 	Q_OBJECT
 private:
 
+	MainWindowQt *main;
+
 	QLineEdit *start_directory;
-	QLineEdit *search_file_pattern;
+	DescComboQt *search_file_pattern;
 
 public:
-	explicit SearchWinQt(QWidget *parent = 0);
+	explicit SearchWinQt( MainWindowQt *main, QWidget *parent = 0);
 
 private slots:
 	void selectDirectory();

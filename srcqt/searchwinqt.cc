@@ -6,10 +6,17 @@
  */
 #include "searchwinqt.h"
 #include "separatorqt.h"
+#include "desccomboqt.h"
 #include <QtWidgets>
+#include "mainqt.h"
+#include <format.h>
+#include <debug.h>
 
-SearchWinQt::SearchWinQt( QWidget *parent )
-: QWidget(parent)
+using namespace Tools;
+
+SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
+: main( main_ ),
+  QWidget(parent)
 {
 	QFrame *setupFrame = new QFrame();
 	//setupFrame->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -27,7 +34,7 @@ SearchWinQt::SearchWinQt( QWidget *parent )
 
 	setupLayout->addWidget( new QLabel( u8"Files:" ) );
 
-	search_file_pattern = new QLineEdit();
+	search_file_pattern = new DescComboQt();
 	setupLayout->addWidget( search_file_pattern );
 
 	setupLayout->addWidget( new QLabel( u8"Search criterias:" ) );
@@ -60,6 +67,15 @@ SearchWinQt::SearchWinQt( QWidget *parent )
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	mainLayout->addWidget( splitter );
 	setLayout(mainLayout);
+
+	/* add File pattern */
+	for( Setup::config_pair_list_it it = main->getSetup().config.file_pattern.begin();
+			it != main->getSetup().config.file_pattern.end();
+			it++ )
+	{
+		DEBUG( wformat( L"descr: '%s'; pattern: '%s'", it->descr, it->entry) );
+		search_file_pattern->addItem( QString::fromStdWString(it->descr), QVariant::fromValue(&it->entry) );
+	}
 }
 
 void SearchWinQt::selectDirectory()
