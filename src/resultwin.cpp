@@ -146,23 +146,25 @@ void ResultWin::appendItem( const Search::Result & result, const FXString &path,
 	  address = &(*results.rbegin());
 	} 
 
-  FXString file = result.file;
+  auto file = result.file;
   FXString line = getLineAtPos( result.file, result.pos, view_lines );
 
   line.substitute( '\t', ' ' );
   line.substitute( '\r', ' ' );
 
-  if( file.find( path ) == 0 )
+  FXString file_name = file.wstring().c_str();
+
+  if( file_name.find( path ) == 0 )
 	{
-	  file.erase(0, path.length() + 1 );
+	  file_name.erase(0, path.length() + 1 );
 	}
 
   if( line.find( '\n' ) < 0 ) {
 	line.trim();
-	FXList::appendItem( format( "%s:%ld %s", file.text(), result.line,
+	FXList::appendItem( format( "%s:%ld %s", file_name.text(), result.line,
 										   line.text() ).c_str(), NULL, address );
   } else {
-	FXList::appendItem( format( "%s:%ld", file.text(), result.line ).c_str(), icon, address );
+	FXList::appendItem( format( "%s:%ld", file_name.text(), result.line ).c_str(), icon, address );
 
 	std::vector<std::string> sl = split_simple( line.text(), "\n" );
 
@@ -173,16 +175,16 @@ void ResultWin::appendItem( const Search::Result & result, const FXString &path,
   }
 }
 
-FXString ResultWin::getLineAtPos( const FXString & file, long pos, int lines )
+FXString ResultWin::getLineAtPos( const std::filesystem::path & file, long pos, int lines )
 {
   FXMemMap map;
 
   char *base = nullptr;
 
 #if FOX_MAJOR >= 1 && FOX_MINOR >= 7
-  base = static_cast<char*>(map.openMap( file ));
+  base = static_cast<char*>(map.openMap( file.string().c_str() ));
 #else
-  base = static_cast<char*>(map.mapFile( file ));
+  base = static_cast<char*>(map.mapFile( file.string().c_str() ));
 #endif
 
   if( base == NULL )
@@ -294,7 +296,7 @@ long ResultWin::onCopy( FXObject *obj, FXSelector sel, void *ptr )
 	if( entry == NULL )
 	  return 0;
 
-	clipped = entry->result.file;
+	clipped = entry->result.file.wstring().c_str();
 	return 0;
   }
 
@@ -426,7 +428,7 @@ long ResultWin::onOpenExec( FXObject *obj, FXSelector sel, void *ptr )
 		{
 		  FXString workingdir = FXSystem::getCurrentDirectory();
 		  
-		  FXSystem::setCurrentDirectory( FXPath::directory( entry->result.file ) );
+		  FXSystem::setCurrentDirectory( FXPath::directory( entry->result.file.wstring().c_str() ) );
 
 		  int idx_line = cmds[i].open_cmd.find( '%d' );
 		  int idx_file = cmds[i].open_cmd.find( '%s' );
@@ -435,12 +437,12 @@ long ResultWin::onOpenExec( FXObject *obj, FXSelector sel, void *ptr )
 
 		  if( idx_line != -1 ) {
 			  if( idx_line < idx_file ) {
-				 s = format( cmds[i].open_cmd.text(), entry->result.line, entry->result.file.text() ).c_str();
+				 s = format( cmds[i].open_cmd.text(), entry->result.line, entry->result.file.string() ).c_str();
 			  } else {
-				 s = format( cmds[i].open_cmd.text(), entry->result.file.text(), entry->result.line ).c_str();
+				 s = format( cmds[i].open_cmd.text(), entry->result.file.string(), entry->result.line ).c_str();
 			  }
 		  } else {
-			  s =  format( cmds[i].open_cmd.text(), entry->result.file.text() ).c_str();
+			  s =  format( cmds[i].open_cmd.text(), entry->result.file.string() ).c_str();
 		  }
 
 

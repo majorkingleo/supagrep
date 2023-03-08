@@ -5,6 +5,9 @@
 #include <DetectLocale.h>
 #include <debug.h>
 #include <utf8_util.h>
+#include <filesystem>
+#include "read_file.h"
+#include <string_utils.h>
 
 using namespace Tools;
 
@@ -21,14 +24,10 @@ void Search::run()
   files.clear();
   pattern_list.clear();
 
-  if( find_files( config.path ) )
+  if( find_files( config.path.text() ) )
 	{
 	  if( config.icase ) {
-		lsearch = config.search;
-		usearch = config.search;
-
-		lsearch.lower();
-		usearch.upper();
+		lsearch = tolower(Utf8Util::utf8toWString(config.search.text()));
 	  }
 
 	  config.mt_status_max->set(files.size());
@@ -49,159 +48,108 @@ void Search::run()
   config.mt_running->set(false);
 }
 
-bool Search::find_files( const FXString &path )
+bool Search::find_files( const std::filesystem::path & path )
 {
-  if( config.mt_stop->get() )
+  if( config.mt_stop->get() ) {
 	return false;
+  }
 
   // printf( "%s\n", path.text() );
   // DEBUG( wformat(L"path: '%s'", DetectLocale::in2w( path.text() ) ) );
 
-  FXString *list = NULL;
-
-  if( !FXDir::listFiles( list, path ) )
-    {
-	  return false;
-    }
-
-  if( FXStat::isLink( path ) &&  FXStat::isDirectory( path ) ) {
+  if( !std::filesystem::is_directory(path) ) {
 	  return false;
   }
   
-  FXString *list_back = list;
+  for( const auto & entry : std::filesystem::directory_iterator(path) ) {
+	  if( std::filesystem::is_directory(entry.status()) ) {
+		  find_files( std::filesystem::path(entry) );
+	  }
+
+	  if( match_file_type( entry.path().filename() ) ) {
+		  files.push_back( entry.path() );
+	  }
+  }
   
-  for( ; *list != FXString::null ; list++ )
-    {
-	  if( FXStat::isDirectory( format( "%s%s%s", path.text(), PATHSEPSTRING, list->text()
-												  ).c_str() ) )
-        {
-		  if( *list == ".." || *list == "." )
+  return true;
+}
+
+std::vector<std::wregex> Search::build_pattern_list( const std::wstring & pattern )
+{
+	std::vector<std::wstring> sl = split_and_strip_simple( pattern, L",;" );
+	std::vector<std::wregex> ret;
+
+	for( auto & str : sl ) {
+		if( str.empty() ) {
 			continue;
-
-		  
-		  find_files( format( "%s%s%s", path.text(), PATHSEPSTRING, list->text() ).c_str() );
-		  continue;
-        }
-	  
-	  if( match_file_type( *list ) ) {
-	      files.push_back( format( "%s%s%s", path.text(), PATHSEPSTRING, list->text() ).c_str() );
-      }
-    }
-
-    // cleanup
-    delete [] list_back;
-
-    return true;
-}
-
-bool Search::match_file_type( const FXString & file )
-{
-#if FOX_MAJOR >= 1 && FOX_MINOR >= 7
-  bool ret = FXPath::match( file, config.pattern, FXPath::NoEscape|FXPath::PathName|FXPath::CaseFold );
-#else
-  bool ret = FXPath::match( config.pattern, file, FILEMATCH_NOESCAPE|FILEMATCH_FILE_NAME|FILEMATCH_CASEFOLD );
-#endif
-  if( !ret ) {
-	  /*
-	  DEBUG( wformat(L"file: '%s' didn't matched pattern '%s'",
-					 DetectLocale::in2w( file.text() ),
-					 DetectLocale::in2w( config.pattern.text() ) ) );
-	*/
-  }
-
-  return ret;
-}
-
-void Search::do_search( const FXString & file )
-{
-  FXMemMap map;
-
-  char *base = nullptr;
-
-#if FOX_MAJOR >= 1 && FOX_MINOR >= 7
-  base = static_cast<char*>(map.openMap( file ));
-#else
-  base = static_cast<char*>(map.mapFile( file ));
-#endif
-
-  if( base == NULL ) {
-	  DEBUG( wformat( L"cannot open file: '%s'", Utf8Util::utf8toWString(file.text()) ) );
-	  return;
-  }
-
-  do_simple_search( base, map.length(), file );
-}
-
-void Search::do_simple_search( char *s, long length, const FXString & file )
-{
-  long pstart = 0;
-  long linecount = 1;
-  long last_line = -1;
-
-  do
-	{
-	  pstart = find( s, pstart, length, linecount );
-	  
-	  if( pstart > 0 ) 
-		{
-		  if( last_line != linecount ) {
-			/* jede Zeile nur einmal */
-			// printf( "%s:%ld\n", file.text(), linecount );
-			config.mt_result->access().push_back(Result( file, linecount, pstart ));
-			config.mt_result->free();
-		  }
-
-		  last_line = linecount;
-
-		  pstart += config.search.length();
 		}
 
-	} while( pstart > 0 && pstart < length );
-}
+		str = substitude( str, L".", L"\\." );
+		str = substitude( str, L"*", L".*" );
 
-int Search::find( char *s, long pstart, long length, long &linecount )
-{
-  if( pstart < 0 )
-	return -1;
-
-  if( pstart >= length )
-	return -1;
-
-  if( config.search.empty() )
-	return -1;
-
-  long pos = 0;
-
-  do {
-	if( s[pstart] == '\n' )
-	  linecount++;
-
-	if( config.icase ) {
-	  if( s[pstart] != lsearch[pos] && s[pstart] != usearch[pos] )
-		{
-		  pstart++;
-		  pos=0;
-		} else {
-		pstart++;
-		pos++;
-	  }
-	} else {
-	  if( s[pstart] != config.search[pos] )
-		{
-		  pstart++;
-		  pos=0;
-		} else {
-		pstart++;
-		pos++;
-	  }
-	} /* else */	
-  } while( pstart < length && pos < config.search.length() );
-
-  if( pstart < length && pos == config.search.length() )
-	{
-	  return pstart - config.search.length();
+		ret.push_back( std::wregex(str, std::regex_constants::icase) );
 	}
 
-  return -1;
+	return ret;
+}
+
+bool Search::match_file_type( const std::filesystem::path & file )
+{
+  std::wstring file_name = file.wstring();
+
+  for( std::wregex & regex : build_pattern_list(  Utf8Util::utf8toWString(config.pattern.text())) ) {
+
+	  bool ret = std::regex_match( file_name, regex );
+
+	  if( ret ) {
+		  return true;
+	  }
+  }
+
+  return false;
+}
+
+void Search::do_search( const std::filesystem::path & file )
+{
+  std::wstring content;
+  ReadFile read_file;
+
+  if( !read_file.read_file( file.string(), content ) ) {
+	  DEBUG( wformat( L"cannot open file: '%s'", file.wstring() ) );
+  }
+
+  if( config.icase ) {
+	  do_simple_search( tolower(content), lsearch, file );
+  } else {
+	  do_simple_search( content, Utf8Util::utf8toWString(config.search.text()), file );
+  }
+}
+
+void Search::do_simple_search( const std::wstring & s,
+							   const std::wstring & search_term,
+							   const std::filesystem::path & file )
+{
+	std::wstring::size_type pos = 0;
+	unsigned line_count = 0;
+
+	do {
+		std::wstring::size_type pos_linebreak = s.find( L'\n', pos );
+		std::wstring::size_type pos_keyword = s.find( search_term, pos );
+
+		if( pos_keyword == std::wstring::npos ) {
+			break;
+		}
+
+		if( pos_linebreak != std::wstring::npos ) {
+			line_count++;
+			pos = pos_linebreak+1;
+		}
+
+		if( pos_keyword < pos ) {
+			config.mt_result->access().push_back(Result( file, line_count, pos_keyword ));
+			config.mt_result->free();
+		}
+
+	} while( pos != std::string::npos );
 }
 

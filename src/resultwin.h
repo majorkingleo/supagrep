@@ -109,7 +109,7 @@ class ResultWin : public FXList
 
 
  protected:
-  FXString getLineAtPos( const FXString & file, long pos, int lines );
+  FXString getLineAtPos( const std::filesystem::path & file, long pos, int lines );
   
   int do_system( const FXString & cmd );
   void add_cmd( const Cmd & cmd );

@@ -8,6 +8,8 @@
 #include <string>
 #include <mutex>
 #include <chrono>
+#include <filesystem>
+#include <regex>
 
 class Search
 {
@@ -86,11 +88,11 @@ class Search
 
   struct Result
   {
-	FXString file;
+	std::filesystem::path file;
 	long line;
 	long pos;
 
-	Result( const FXString & file_, long line_, long pos_ )
+	Result( const std::filesystem::path & file_, long line_, long pos_ )
 	  : file( file_ ), line( line_ ), pos( pos_ )
 	{}
   };
@@ -123,12 +125,11 @@ class Search
 
  protected:
   Config & config;
-  typedef std::list<FXString> file_list;  
+  typedef std::list<std::filesystem::path> file_list;
   file_list files;
   std::vector<std::string> pattern_list;
   std::chrono::time_point<std::chrono::system_clock> start_time;
-  FXString lsearch;
-  FXString usearch;
+  std::wstring lsearch;
 
  public:
   Search( Config & config );
@@ -136,11 +137,14 @@ class Search
   void run();
 
  protected:
-  bool find_files( const FXString &path );
-  bool match_file_type( const FXString &file );
-  void do_search( const FXString & file );
-  void do_simple_search( char *s, long length, const FXString & file );
-  int find( char *s, long start, long lenght, long &linecount );
+  bool find_files( const std::filesystem::path & path );
+  bool match_file_type( const std::filesystem::path & file );
+  void do_search( const std::filesystem::path & file );
+  void do_simple_search( const std::wstring & s,
+						 const std::wstring & search_term,
+						 const std::filesystem::path & file );
+
+  std::vector<std::wregex> build_pattern_list( const std::wstring & pattern );
 };
 
 #endif
