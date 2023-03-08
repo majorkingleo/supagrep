@@ -23,7 +23,7 @@ private:
 	  Setup setup;
 
 public:
-	 explicit MainWindowQt(QWidget *parent = 0);
+	 explicit MainWindowQt( int argc, char **argv, QWidget *parent = 0);
 
 	 Setup & getSetup() { return setup; }
 
