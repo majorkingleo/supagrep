@@ -1,6 +1,5 @@
 #include "search.h"
 #include "string_utils.h"
-#include <FXMemMap.h>
 #include <format.h>
 #include <DetectLocale.h>
 #include <debug.h>
@@ -116,9 +115,11 @@ void Search::do_search( const std::filesystem::path & file )
 
   if( !read_file.read_file( file.string(), content ) ) {
 	  DEBUG( wformat( L"cannot open file: '%s'", file.wstring() ) );
+	  return;
   }
 
   if( config.icase ) {
+	  DEBUG( lsearch );
 	  do_simple_search( tolower(content), lsearch, file );
   } else {
 	  do_simple_search( content, config.search, file );

@@ -1,8 +1,6 @@
 #ifndef SEARCH_H
 #define SEARCH_H
 
-#include <fx.h>
-
 #include <list>
 #include <vector>
 #include <string>

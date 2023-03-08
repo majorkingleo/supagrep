@@ -31,8 +31,6 @@ supagrep_SOURCES=\
 		src/main.cpp \
 		src/resultwin.h \
 		src/resultwin.cpp \
-		src/search.h \
-		src/search.cpp \
 		src/searchwin.h \
 		src/searchwin.cpp \
 		src/tab.h \
@@ -120,6 +118,8 @@ cpputils_fox_libcpputilsfox_a_SOURCES= \
 common_libcommon_a_SOURCES=\
 	common/lang.h \
 	common/lang.cc \
+	common/search.h \
+	common/search.cc \
 	common/setup.h \
 	common/setup.cc
 
