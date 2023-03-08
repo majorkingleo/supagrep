@@ -6,6 +6,7 @@
 #include <list>
 #include <vector>
 #include <string>
+#include <mutex>
 
 class Search : public FXThread
 {
@@ -13,7 +14,8 @@ class Search : public FXThread
   template<class T> class MTAccess
 	{
 	private:
-	  FXMutex mt;
+	  std::mutex mt;
+	  using slock = std::lock_guard<std::mutex>;
 	  T value;
 	  bool ch;
 
@@ -26,43 +28,39 @@ class Search : public FXThread
 
 	  void set( const T &value_ )
 	  { 
-		mt.lock(); 
+		slock ml(mt);
 		value = value_;
 		ch = true;
-		mt.unlock();
 	  }
 
 	  T get() 
 	  {
-		mt.lock();
+		slock ml(mt);
 		T t = value;
-		mt.unlock();
 		return t;
 	  }
 
 	  T getAndClear()
 	  {
-		mt.lock();
+		slock ml(mt);
 		T t = value;
 		ch = false;
-		mt.unlock();
 		return t;
 	  }
 
 	  void clear()
 	  {
-		mt.lock();
+		slock ml(mt);
 		ch = false;
-		mt.unlock();
 	  }
 
 	  bool changed()
 	  {
 		bool ret;
 
-		mt.lock();
+		slock ml(mt);
 		ret = ch;
-		mt.unlock();
+
 		return ret;
 	  }
 
