@@ -15,6 +15,7 @@ DescComboQt::DescComboQt(QWidget *parent)
 {
 	setEditable(true);
 	connect( this, SIGNAL(activated(int)), this, SLOT(setFilePatternAsText(int)) );
+	connect( this, SIGNAL(currentIndexChanged(int)),this,SLOT(setFilePatternAsText(int)));
 }
 
 void DescComboQt::setFilePatternAsText(int index)
