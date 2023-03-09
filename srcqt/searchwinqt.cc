@@ -25,27 +25,38 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 	setupFrame->setLayout( setupLayout );
 	setupLayout->addWidget( new QLabel( u8"Path:" ) );
 
-	start_directory = new QLineEdit();
-	setupLayout->addWidget( start_directory );
+	cb_start_directory = new QComboBox();
+	cb_start_directory->setEditable( true );
+	setupLayout->addWidget( cb_start_directory );
 
-	auto *button_search_dir = new QPushButton( u8"Search Directory");
-	connect( button_search_dir, SIGNAL(pressed()), this, SLOT(selectDirectory()) );
-	setupLayout->addWidget( button_search_dir );
+	auto *bt_search_dir = new QPushButton( u8"Search Directory");
+	connect( bt_search_dir, SIGNAL(pressed()), this, SLOT(selectDirectory()) );
+	setupLayout->addWidget( bt_search_dir );
 
 	setupLayout->addWidget( new QLabel( u8"Files:" ) );
 
-	search_file_pattern = new DescComboQt();
-	setupLayout->addWidget( search_file_pattern );
+	cb_search_file_pattern = new DescComboQt();
+	setupLayout->addWidget( cb_search_file_pattern );
 
 	setupLayout->addWidget( new QLabel( u8"Search criterias:" ) );
-	setupLayout->addWidget( new QCheckBox( u8"Case sensitive" ) );
-	setupLayout->addWidget( new QCheckBox( u8"Regular expresssion" ) );
+
+	cx_icase = new QCheckBox( u8"Case sensitive" );
+	setupLayout->addWidget( cx_icase );
+
+	cx_regex = new QCheckBox( u8"Regular expresssion" );
+	setupLayout->addWidget( cx_regex );
 
 	setupLayout->addWidget( new HSeparatorQt() );
 
 	setupLayout->addWidget( new QLabel( u8"Search:" ) );
-	setupLayout->addWidget( new QLineEdit() );
-	setupLayout->addWidget( new QPushButton( u8"Start" ) );
+
+	ef_search_term = new QLineEdit();
+	setupLayout->addWidget( ef_search_term );
+
+	bt_search = new QPushButton( u8"Start" );
+	connect( bt_search, SIGNAL(pressed()), this, SLOT(onSearch()) );
+	connect( this, SIGNAL(StartSearchNow()), this, SLOT(onSearch()) );
+	setupLayout->addWidget( bt_search );
 
 	setupLayout->addSpacing(10);
 
@@ -74,15 +85,33 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 			it++ )
 	{
 		DEBUG( wformat( L"descr: '%s'; pattern: '%s'", it->descr, it->entry) );
-		search_file_pattern->addItem( QString::fromStdWString(it->descr), QVariant::fromValue(&it->entry) );
+		cb_search_file_pattern->addItem( QString::fromStdWString(it->descr), QVariant::fromValue(&it->entry) );
 	}
+
 }
 
 void SearchWinQt::selectDirectory()
 {
 	auto text = QFileDialog::getExistingDirectory( this,
 									   u8"Choose the directory to start",
-									   start_directory->text() );
+									   cb_start_directory->currentText() );
 
-	start_directory->setText( text );
+	cb_start_directory->setEditText( text );
+}
+
+void SearchWinQt::startwith( const Search::Config & conf )
+{
+	ef_search_term->setText( QString::fromStdWString(conf.search) );
+	cx_icase->setCheckState( conf.icase ? Qt::Checked : Qt::Unchecked );
+	cx_regex->setCheckState( conf.regex ? Qt::Checked : Qt::Unchecked );
+	cb_search_file_pattern->setEditText( QString::fromStdWString( conf.pattern ) );
+	cb_start_directory->setEditText( QString::fromStdWString( conf.path ) );
+	cb_start_directory->insertItem( 0, QString::fromStdWString( conf.path ) );
+
+	emit StartSearchNow();
+}
+
+void SearchWinQt::onSearch()
+{
+	DEBUG( "onSearch()" );
 }

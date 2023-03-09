@@ -11,7 +11,6 @@
 #include <iostream>
 #include <debug.h>
 #include "OutDebug.h"
-#include "search.h"
 
 using namespace Tools;
 
@@ -65,8 +64,7 @@ MainWindowQt::MainWindowQt( int argc, char **argv, QWidget *parent)
     	Search::Config conf = Search::getConfFromCommandLine( argc, argv );
 
     	if( !conf.search.empty() ) {
-#warning TODOOOOOOO
-    		// add_searchwin( false, &conf );
+    		newSearch( &conf );
     	} else {
     		newSearch();
     	}
@@ -77,10 +75,20 @@ MainWindowQt::MainWindowQt( int argc, char **argv, QWidget *parent)
 
 void MainWindowQt::newSearch()
 {
+	newSearch( nullptr );
+}
+
+void MainWindowQt::newSearch( const Search::Config *conf )
+{
 	static int idx;
 	idx++;
-	int tabidx = tabs->addTab( new SearchWinQt(this), QString(u8"Search %1").arg(idx) );
+	SearchWinQt *w = new SearchWinQt(this);
+	int tabidx = tabs->addTab( w, QString(u8"Search %1").arg(idx) );
 	tabs->setCurrentIndex( tabidx );
+
+	if( conf ) {
+		w->startwith( *conf );
+	}
 }
 
 void MainWindowQt::closeSearch(int idx)

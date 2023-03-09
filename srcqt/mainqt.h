@@ -12,6 +12,7 @@
 #include <qtabwidget.h>
 #include "setup.h"
 #include "lang.h"
+#include "search.h"
 
 class MainWindowQt : public QMainWindow
 {
@@ -30,6 +31,9 @@ public:
 private slots:
 	 void newSearch();
 	 void closeSearch(int idx);
+
+private:
+	 void newSearch( const Search::Config *conf );
 };
 
 #endif /* SRCQT_MAINQT_H_ */
