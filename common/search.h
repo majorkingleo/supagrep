@@ -25,7 +25,9 @@ class Search
 		: value( value ), ch( false )
 		{}
 		
-	  MTAccess(): ch(false) {}
+	  MTAccess()
+		: value(), ch(false)
+	  {}
 
 	  void set( const T &value_ )
 	  { 
@@ -146,5 +148,8 @@ class Search
 
   std::vector<std::wregex> build_pattern_list( const std::wstring & pattern );
 };
+
+std::wostream & operator<<( std::wostream & out, const Search::Config & config );
+std::wostream & operator<<( std::wostream & out, const Search::Result & result );
 
 #endif

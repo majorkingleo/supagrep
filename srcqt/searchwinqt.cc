@@ -16,7 +16,9 @@ using namespace Tools;
 
 SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 : main( main_ ),
-  QWidget(parent)
+  QWidget(parent),
+  config(0),
+  tabidx(0)
 {
 	QFrame *setupFrame = new QFrame();
 	//setupFrame->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -29,7 +31,7 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 	cb_start_directory->setEditable( true );
 	setupLayout->addWidget( cb_start_directory );
 
-	auto *bt_search_dir = new QPushButton( u8"Search Directory");
+	bt_search_dir = new QPushButton( u8"Search Directory");
 	connect( bt_search_dir, SIGNAL(pressed()), this, SLOT(selectDirectory()) );
 	setupLayout->addWidget( bt_search_dir );
 
@@ -88,6 +90,15 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 		cb_search_file_pattern->addItem( QString::fromStdWString(it->descr), QVariant::fromValue(&it->entry) );
 	}
 
+	timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+	timer->start(300);
+}
+
+SearchWinQt::~SearchWinQt()
+{
+	timer->stop();
+	delete config;
 }
 
 void SearchWinQt::selectDirectory()
@@ -114,4 +125,132 @@ void SearchWinQt::startwith( const Search::Config & conf )
 void SearchWinQt::onSearch()
 {
 	DEBUG( "onSearch()" );
+
+	if( config ) {
+		if( mt_running.get() == true ) {
+			mt_stop.set( true );
+			return;
+		}
+	}
+
+	delete config;
+
+	config = new Search::Config();
+
+	mt_result.access().clear();
+	mt_result.free();
+
+	mt_running.set(false);
+	mt_status.set(0);
+	mt_status.clear();
+	mt_stop.set(false);
+	mt_status_max.set(0);
+	mt_status_max.clear();
+
+	config->mt_running = &mt_running;
+	config->mt_status = &mt_status;
+	config->mt_status_max = &mt_status_max;
+	config->mt_stop = &mt_stop;
+	config->mt_result = &mt_result;
+	config->mt_runtime = &mt_runtime;
+
+	if( cb_start_directory->currentText().isEmpty() ) {
+		cb_start_directory->setEditText( QString::fromStdWString(std::filesystem::current_path().wstring()) );
+	}
+
+	if( cb_search_file_pattern->currentText().isEmpty() ) {
+		cb_search_file_pattern->setCurrentIndex(2);
+	}
+
+	config->regex = cx_regex->checkState() == Qt::Checked ? true : false;
+	config->icase = cx_icase->checkState() == Qt::Checked ? true : false;
+	config->pattern = cb_search_file_pattern->currentText().toStdWString();
+	config->path =  cb_start_directory->currentText().toStdWString();
+	config->search =  ef_search_term->text().toStdWString();
+
+	//result->clear();
+
+
+	std::thread search_thread( [this]{
+		Search s( *config );
+		mt_running.set(true);
+		s.run();
+	} );
+
+	search_thread.detach();
+
+	main->setTabTitle( tabidx, QString::fromStdWString(config->search) );
 }
+
+
+void SearchWinQt::onTimeout()
+{
+	DEBUG( "onTimeout()" );
+
+	if( mt_running.get() ) {
+		cb_start_directory->setEnabled(false);
+		cb_search_file_pattern->setEnabled(false);
+		cx_regex->setEnabled(false);
+		cx_icase->setEnabled(false);
+		bt_search_dir->setEnabled(false);
+		ef_search_term->setEnabled(false);
+
+		bt_search->setText( u8"Stop" );
+
+	} else {
+		cb_start_directory->setEnabled(true);
+		cb_search_file_pattern->setEnabled(true);
+		cx_regex->setEnabled(true);
+		cx_icase->setEnabled(true);
+		bt_search_dir->setEnabled(true);
+		ef_search_term->setEnabled(true);
+
+		bt_search->setText( u8"Go" );
+
+		/*
+	pb_state->update();
+
+	pb_state->setTotal(mt_status_max.getAndClear());
+	pb_state->setProgress(mt_status_max.getAndClear());
+		 */
+		DEBUG( format( "done: max: %d", mt_status_max.getAndClear()) );
+	}
+
+	if( mt_status_max.changed() )
+	{
+		DEBUG( format( "Max Status: '%d'", mt_status.get() ) );
+		// pb_state->setTotal(mt_status_max.getAndClear());
+	}
+
+	if( mt_status.changed() )
+	{
+		DEBUG( format( "Status: '%d'", mt_status.get() ) );
+		// pb_state->setProgress(mt_status.getAndClear());
+	}
+
+	if( mt_result.changed() )
+	{
+		std::list<Search::Result> & l = mt_result.access();
+
+		for( std::list<Search::Result>::iterator it = l.begin(); it != l.end(); it++ )
+		{
+			// result->appendItem( *it, config->path.c_str() );
+			DEBUG( wformat( L"Result: %s", it->file.wstring() ) );
+		}
+
+		l.clear();
+
+		mt_result.clear_and_free();
+	}
+
+	if( mt_runtime.changed() )
+	{
+		using namespace std::chrono_literals;
+
+		auto runtime = mt_runtime.getAndClear();
+		double seconds = runtime / 1.0s;
+		DEBUG( format( "%3.3lf sec", seconds ) );
+		// l_runtime->setText( format( "%3.3lf sec", seconds ).c_str() );
+	}
+}
+

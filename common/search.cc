@@ -13,6 +13,7 @@ using namespace Tools;
 Search::Search( Config & config_ )
   : config( config_ )
 {
+  DEBUG( wformat( L"Search with config: %s", config ) );
   config.mt_status->set(0);
 }
 
@@ -230,4 +231,44 @@ Search::Config Search::getConfFromCommandLine( int argc, const char *const*argv 
 	conf.path = std::filesystem::current_path().wstring();
 
 	return conf;
+}
+
+std::wostream & operator<<( std::wostream & out, const Search::Config & config )
+{
+	/*
+	bool regex;
+	bool icase;
+	std::wstring pattern;
+	std::wstring path;
+	std::wstring search;
+	MTAccess<bool> *mt_running;
+	MTAccess<int> *mt_status;
+	MTAccess<int> *mt_status_max;
+	MTAccess<bool> *mt_stop;
+	MTAccess<std::list<Result> > *mt_result;
+	MTAccess<std::chrono::milliseconds> *mt_runtime;
+	*/
+	out << L"path: " << config.path << L"\n"
+		<< L"pattern: " << config.pattern << L"\n"
+		<< L"search: " << config.search;
+/*
+	if( config.mt_running->get() ) {
+		out << L"running\n";
+	}
+
+	out << "status: " << config.mt_status->get() << " of " << config.mt_status_max->get() << "\n";
+
+	if( config.mt_stop->get() ) {
+		out << L"stopping\n";
+	}
+
+	out << L"runtime: " << config->mt_runtime.get();
+	*/
+	return out;
+}
+
+std::wostream & operator<<( std::wostream & out, const Search::Result & result )
+{
+	return out << result.file.wstring()
+			   << L"{ line: " << result.line << L", pos: " << result.pos << L"}";
 }

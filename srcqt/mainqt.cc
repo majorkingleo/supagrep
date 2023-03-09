@@ -85,6 +85,7 @@ void MainWindowQt::newSearch( const Search::Config *conf )
 	SearchWinQt *w = new SearchWinQt(this);
 	int tabidx = tabs->addTab( w, QString(u8"Search %1").arg(idx) );
 	tabs->setCurrentIndex( tabidx );
+	w->setTabIdx( tabidx );
 
 	if( conf ) {
 		w->startwith( *conf );
@@ -94,6 +95,11 @@ void MainWindowQt::newSearch( const Search::Config *conf )
 void MainWindowQt::closeSearch(int idx)
 {
 	tabs->removeTab( idx );
+}
+
+void MainWindowQt::setTabTitle( int idx, const QString & text )
+{
+	tabs->setTabText( idx, text );
 }
 
 static void usage( const std::string & prog )

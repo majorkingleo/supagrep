@@ -17,6 +17,7 @@ class MainWindowQt;
 class QCheckBox;
 class QComboBox;
 class QPushButton;
+class QTimer;
 
 class SearchWinQt : public QWidget
 {
@@ -25,17 +26,34 @@ private:
 
 	MainWindowQt *main;
 
-	QComboBox *cb_start_directory;
+	QComboBox 	*cb_start_directory;
 	DescComboQt *cb_search_file_pattern;
-	QLineEdit *ef_search_term;
-	QCheckBox *cx_icase;
-	QCheckBox *cx_regex;
+	QLineEdit 	*ef_search_term;
+	QCheckBox 	*cx_icase;
+	QCheckBox 	*cx_regex;
 	QPushButton *bt_search;
+	QTimer 		*timer;
+	QPushButton	*bt_search_dir;
+
+	Search::MTAccess<bool> mt_running;
+	Search::MTAccess<int>  mt_status;
+	Search::MTAccess<int>  mt_status_max;
+	Search::MTAccess<bool> mt_stop;
+	Search::MTAccess<std::list<Search::Result> > mt_result;
+	Search::MTAccess<std::chrono::milliseconds> mt_runtime;
+
+	Search::Config *config;
+	int tabidx = 0;
 
 public:
 	explicit SearchWinQt( MainWindowQt *main, QWidget *parent = 0);
+	~SearchWinQt();
 
 	void startwith( const Search::Config & conf );
+
+	 void setTabIdx( int idx ) {
+		 tabidx = idx;
+	 }
 
 signals:
 	void StartSearchNow();
@@ -43,6 +61,7 @@ signals:
 private slots:
 	void selectDirectory();
 	void onSearch();
+	void onTimeout();
 };
 
 

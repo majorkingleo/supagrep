@@ -28,6 +28,8 @@ public:
 
 	 Setup & getSetup() { return setup; }
 
+	 void setTabTitle( int idx, const QString & text );
+
 private slots:
 	 void newSearch();
 	 void closeSearch(int idx);
