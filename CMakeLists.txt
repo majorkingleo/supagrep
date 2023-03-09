@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
-find_package(Qt6 REQUIRED COMPONENTS SvgWidgets)
+# find_package(Qt6 REQUIRED COMPONENTS SvgWidgets)
 qt_standard_project_setup()
 
 add_compile_definitions( VERSION="${PROJECT_VERSION}" )
@@ -118,7 +118,7 @@ target_include_directories(supagrep PUBLIC
 
 target_link_libraries(supagrep PRIVATE Qt6::Core)
 target_link_libraries(supagrep PRIVATE Qt6::Widgets)
-target_link_libraries(supagrep PRIVATE Qt6::SvgWidgets)
+# target_link_libraries(supagrep PRIVATE Qt6::SvgWidgets)
 
 target_link_libraries( supagrep PRIVATE common )
 target_link_libraries( supagrep PRIVATE cpputilsio )
