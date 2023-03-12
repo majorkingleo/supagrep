@@ -11,6 +11,7 @@
 #include "mainqt.h"
 #include <format.h>
 #include <debug.h>
+#include "resultwinqt.h"
 
 using namespace Tools;
 
@@ -74,8 +75,8 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 	QSplitter *splitter = new QSplitter();
 	splitter->addWidget( setupFrame );
 
-	QTextEdit *edit = new QTextEdit();
-	splitter->addWidget( edit );
+	result = new ResultWinQt( main );
+	splitter->addWidget( result );
 
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	mainLayout->addWidget( splitter );

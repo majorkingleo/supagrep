@@ -18,6 +18,7 @@ class QCheckBox;
 class QComboBox;
 class QPushButton;
 class QTimer;
+class ResultWinQt;
 
 class SearchWinQt : public QWidget
 {
@@ -34,6 +35,7 @@ private:
 	QPushButton *bt_search;
 	QTimer 		*timer;
 	QPushButton	*bt_search_dir;
+	ResultWinQt *result;
 
 	Search::MTAccess<bool> mt_running;
 	Search::MTAccess<int>  mt_status;
