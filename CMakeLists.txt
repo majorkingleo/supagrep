@@ -90,6 +90,8 @@ add_library(common STATIC
 	common/setup.cc
 	common/search.h
 	common/search.cc
+	common/getline.h
+	common/getline.cc
 )
 
 target_include_directories(common PUBLIC
@@ -107,6 +109,8 @@ add_executable(supagrep
 	srcqt/separatorqt.cc
 	srcqt/desccomboqt.h
 	srcqt/desccomboqt.cc
+	srcqt/resultwinqt.h
+	srcqt/resultwinqt.cc
 )
 
 target_include_directories(supagrep PUBLIC

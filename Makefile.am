@@ -121,7 +121,9 @@ common_libcommon_a_SOURCES=\
 	common/search.h \
 	common/search.cc \
 	common/setup.h \
-	common/setup.cc
+	common/setup.cc \
+	common/getline.h \
+	common/getline.cc
 
 supagrep_LDADD = cpputils/io/libcpputilsio.a \
 				 cpputils/cpputilsshared/libcpputilsshared.a \
