@@ -14,6 +14,9 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 
 }
 
-
+void ResultWinQt::appendItem( Search::Result & result, const std::wstring & path )
+{
+	addItem( QString::fromStdWString( path ) );
+}
 
 

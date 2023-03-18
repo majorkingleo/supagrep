@@ -5,6 +5,7 @@
  *      Author: martin
  */
 #include <qlistwidget.h>
+#include <search.h>
 
 #ifndef SRCQT_RESULTWINQT_H_
 #define SRCQT_RESULTWINQT_H_
@@ -21,6 +22,7 @@ private:
 public:
 	ResultWinQt( MainWindowQt *main, QWidget *parent = 0 );
 
+	void appendItem( Search::Result & result, const std::wstring & path );
 };
 
 

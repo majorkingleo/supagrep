@@ -235,7 +235,7 @@ void SearchWinQt::onTimeout()
 
 		for( std::list<Search::Result>::iterator it = l.begin(); it != l.end(); it++ )
 		{
-			// result->appendItem( *it, config->path.c_str() );
+			result->appendItem( *it, config->path );
 			DEBUG( wformat( L"Result: %s", it->file.wstring() ) );
 		}
 
