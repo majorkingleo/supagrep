@@ -75,3 +75,27 @@ std::wstring diff_lines( const std::wstring & orig, std::wstring & modded )
 
   return res;
 }
+
+std::wstring get_whole_line( const std::wstring & s, std::wstring::size_type pos )
+{
+    if( pos == std::wstring::npos ) {
+        return std::wstring();
+    }
+
+    std::wstring::size_type ppos = s.rfind( '\n', pos );
+
+    if( ppos == std::string::npos ) {
+        ppos = 0;
+    } else {
+        ppos++;
+    }
+
+    std::wstring::size_type p = s.find( '\n', ppos );
+    std::wstring ret = s.substr( ppos, p - ppos );
+
+    // std::cout << "ppos: " << ppos << " p: " << p << " >" << ret << "< " << std::endl;
+
+    return ret;
+}
+
+
