@@ -4,10 +4,11 @@
 #include <fx.h>
 
 #include "search.h"
+#include <ResultWinCommon.h>
 
 class Main;
 
-class ResultWin : public FXList
+class ResultWin : public FXList, ResultWinCommon
 {
   FXDECLARE( ResultWin );
 
@@ -69,20 +70,6 @@ class ResultWin : public FXList
 
   std::vector<Cmd> cmds;
 
-  struct Entry
-  {
-	Search::Result result;
-	FXString path;
-
-	Entry( const Search::Result &res, const FXString &p )
-	  : result( res ), path( p )
-	{}
-  };
-
-  typedef std::list<Entry> result_list;
-
-  result_list results;
-
   int view_lines;
 
   FXFont *my_font;
@@ -93,7 +80,7 @@ class ResultWin : public FXList
  public:
   ResultWin( Main *main, FXComposite *p,FXObject* tgt=NULL,FXSelector sel=0,FXuint opts=LIST_NORMAL,FXint x=0,FXint y=0,FXint w=0,FXint h=0);
 
-  void appendItem( const Search::Result & result, const FXString &path, bool do_append = true, void *address = NULL );
+  void appendItem( const Search::Result & result, const std::wstring &path, bool do_append = true, void *address = NULL );
   void clear();
   void setVisibleLines( int vl );
   void create();
@@ -109,7 +96,7 @@ class ResultWin : public FXList
 
 
  protected:
-  FXString getLineAtPos( const std::filesystem::path & file, long pos, int lines );
+
   
   int do_system( const FXString & cmd );
   void add_cmd( const Cmd & cmd );

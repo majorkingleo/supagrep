@@ -92,6 +92,8 @@ add_library(common STATIC
 	common/search.cc
 	common/getline.h
 	common/getline.cc
+	commotn/ResultWinCommon.h
+	commotn/ResultWinCommon.cc
 )
 
 target_include_directories(common PUBLIC

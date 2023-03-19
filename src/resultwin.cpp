@@ -1,3 +1,8 @@
+#ifdef WIN32
+#include <windows.h>
+# include <tchar.h>
+#endif
+
 #include "resultwin.h"
 #include <FXMemMap.h>
 #include <FXGIFIcon.h>
@@ -8,15 +13,12 @@
 #include "main.h"
 #include "utf8_util.h"
 #include "debug.h"
+#include <read_file.h>
+#include <getline.h>
 
 #include "format.h"
 
 using namespace Tools;
-
-#ifdef WIN32
-#include <windows.h>
-# include <tchar.h>
-#endif
 
 using namespace Tools;
 
@@ -56,6 +58,7 @@ ResultWin::ResultWin( Main *main_,
 					  FXint w,
 					  FXint h)
   : FXList( p, tgt, sel, opts, x, y, w, h ),
+    ResultWinCommon(),
 	view_lines(1),
 	main(main_)
 {
@@ -138,101 +141,41 @@ void ResultWin::clear()
   results.clear();
 }
 
-void ResultWin::appendItem( const Search::Result & result, const FXString &path, bool do_append, void *address )
+void ResultWin::appendItem( const Search::Result & result, const std::wstring &path, bool do_append, void *address )
 {
-  if( do_append )
-	{
-	  results.push_back( Entry( result, path ) );
-	  address = &(*results.rbegin());
+	if( do_append ) {
+		results.push_back( Entry( result, path ) );
+		address = &(*results.rbegin());
 	} 
 
-  auto file = result.file;
-  FXString line = getLineAtPos( result.file, result.pos, view_lines );
+	auto file = result.file;
+	std::wstring line = getLineAtPos( result.file, result.pos, view_lines );
 
-  line.substitute( '\t', ' ' );
-  line.substitute( '\r', ' ' );
+	line = substitude( line, L"\t", L" " );
+	line = substitude( line, L"\r", L" " );
 
-  FXString file_name = file.wstring().c_str();
+	std::wstring file_name = file.wstring();
 
-  if( file_name.find( path ) == 0 )
-	{
-	  file_name.erase(0, path.length() + 1 );
+	if( file_name.find( path ) == 0 ) {
+		file_name = file_name.substr( path.length() );
 	}
 
-  if( line.find( '\n' ) < 0 ) {
-	line.trim();
-	FXList::appendItem( format( "%s:%ld %s", file_name.text(), result.line,
-										   line.text() ).c_str(), NULL, address );
-  } else {
-	FXList::appendItem( format( "%s:%ld", file_name.text(), result.line ).c_str(), icon, address );
+	if( line.find( L'\n' ) == std::wstring::npos ) {
+		line = strip( line );
+		FXList::appendItem( wformat( L"%s:%ld %s", file_name, result.line,
+				line ).c_str(), NULL, address );
+	} else {
+		FXList::appendItem( wformat( L"%s:%ld", file_name, result.line ).c_str(), icon, address );
 
-	std::vector<std::string> sl = split_simple( line.text(), "\n" );
+		std::vector<std::wstring> sl = split_simple( line, L"\n" );
 
-	for( unsigned int i = 0; i < sl.size(); i++ )
-	  {
-		FXList::appendItem( sl[i].c_str(), NULL, address );
-	  }
-  }
-}
-
-FXString ResultWin::getLineAtPos( const std::filesystem::path & file, long pos, int lines )
-{
-  FXMemMap map;
-
-  char *base = nullptr;
-
-#if FOX_MAJOR >= 1 && FOX_MINOR >= 7
-  base = static_cast<char*>(map.openMap( file.string().c_str() ));
-#else
-  base = static_cast<char*>(map.mapFile( file.string().c_str() ));
-#endif
-
-  if( base == NULL )
-	return FXString();
-  
-  if( pos < 0 )
-	return FXString();
-
-  if( pos > map.length() )
-	return FXString();
-
-  long end;
-  const long pplines = ( (lines == 1) ? 1 : ((lines - 1) / 2 + 1));
-  long ppcount;
-  bool found = false;
-
-  for( end = pos, ppcount = 0; end < map.length() && ppcount < pplines; end++ )
-	{
-	  if( base[end] == '\n' ) 
-		{
-		  ppcount++;
-		  found = true;
+		for( unsigned int i = 0; i < sl.size(); i++ ) {
+			FXList::appendItem( sl[i].c_str(), NULL, address );
 		}
 	}
-
-  if( found )
-	end-=2;
-
-  long start;
-  found = false;
-
-  for( start = pos, ppcount = 0; start >= 0 && ppcount < pplines; start-- )
-	{
-	  if( base[start] == '\n' ) 
-		{
-		  found = true;
-		  ppcount++;
-		}
-	}
-
-  if( found )
-	start+=2;
-
-  if( start < 0 ) // das ist die allererste Zeile.
-	start = 0; 
-
-  return FXString( &base[start], end - start + 1 );
 }
+
+
 
 void ResultWin::setVisibleLines( int vl )
 {

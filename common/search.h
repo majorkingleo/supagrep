@@ -123,6 +123,16 @@ class Search
 	{}
   };
 
+  struct ResultEntry
+  {
+	Result result;
+	std::wstring path;
+
+	ResultEntry( const Search::Result &res, const std::wstring &p )
+	  : result( res ), path( p )
+	{}
+  };
+
  protected:
   Config & config;
   typedef std::list<std::filesystem::path> file_list;

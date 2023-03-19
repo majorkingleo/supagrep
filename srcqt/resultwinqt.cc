@@ -9,6 +9,7 @@
 
 ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
  : QListWidget( parent ),
+   ResultWinCommon(),
    main( main_ )
 {
 

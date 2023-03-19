@@ -6,13 +6,14 @@
  */
 #include <qlistwidget.h>
 #include <search.h>
+#include <ResultWinCommon.h>
 
 #ifndef SRCQT_RESULTWINQT_H_
 #define SRCQT_RESULTWINQT_H_
 
 class MainWindowQt;
 
-class ResultWinQt : public QListWidget
+class ResultWinQt : public QListWidget, ResultWinCommon
 {
 	Q_OBJECT
 
