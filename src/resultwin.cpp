@@ -136,8 +136,8 @@ void ResultWin::create()
 
 void ResultWin::clear()
 {
+  ResultWinCommon::clear();
   clearItems();
-  results.clear();
 }
 
 void ResultWin::append( const std::wstring & path, bool use_icon, void *address )

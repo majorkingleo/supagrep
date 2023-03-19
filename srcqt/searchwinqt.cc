@@ -169,8 +169,7 @@ void SearchWinQt::onSearch()
 	config->path =  cb_start_directory->currentText().toStdWString();
 	config->search =  ef_search_term->text().toStdWString();
 
-	//result->clear();
-
+	result->clear();
 
 	std::thread search_thread( [this]{
 		Search s( *config );
@@ -235,7 +234,7 @@ void SearchWinQt::onTimeout()
 
 		for( std::list<Search::Result>::iterator it = l.begin(); it != l.end(); it++ )
 		{
-			result->appendItem( *it, config->path );
+			result->appendResult( *it, config->path );
 			DEBUG( wformat( L"Result: %s", it->file.wstring() ) );
 		}
 

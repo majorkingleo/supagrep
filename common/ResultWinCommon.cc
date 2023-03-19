@@ -7,7 +7,7 @@
 #include <debug.h>
 #include "ResultWinCommon.h"
 #include <read_file.h>
-#include <getline.h>
+#include "getline.h"
 #include <string_utils.h>
 
 using namespace Tools;
@@ -71,4 +71,9 @@ void ResultWinCommon::appendResult( const Search::Result & result, const std::ws
 		std::vector<std::wstring> sl = split_simple( line, L"\n" );
 		append( sl, false, address );
 	}
+}
+
+void ResultWinCommon::clear()
+{
+	results.clear();
 }

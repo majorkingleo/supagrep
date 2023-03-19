@@ -15,9 +15,24 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 
 }
 
-void ResultWinQt::appendItem( Search::Result & result, const std::wstring & path )
+void ResultWinQt::append( const std::wstring & path, bool use_icon, void *address )
 {
-	addItem( QString::fromStdWString( path ) );
+	QListWidgetItem *item = new QListWidgetItem( QString::fromStdWString( path ) );
+	item->setData( Qt::UserRole, QVariant::fromValue( address ) );
+	addItem( item );
 }
 
+void ResultWinQt::append( const std::vector<std::wstring> & paths, bool use_icon, void *address )
+{
+	for( const auto & path : paths ) {
+		QListWidgetItem *item = new QListWidgetItem( QString::fromStdWString( path ) );
+		item->setData( Qt::UserRole, QVariant::fromValue( address ) );
+		addItem( item );
+	}
+}
 
+void ResultWinQt::clear()
+{
+	ResultWinCommon::clear();
+	QListWidget::clear();
+}

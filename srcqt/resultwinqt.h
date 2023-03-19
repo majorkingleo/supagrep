@@ -13,7 +13,7 @@
 
 class MainWindowQt;
 
-class ResultWinQt : public QListWidget, ResultWinCommon
+class ResultWinQt : public QListWidget, public ResultWinCommon
 {
 	Q_OBJECT
 
@@ -23,7 +23,9 @@ private:
 public:
 	ResultWinQt( MainWindowQt *main, QWidget *parent = 0 );
 
-	void appendItem( Search::Result & result, const std::wstring & path );
+	void append( const std::wstring & path, bool use_icon, void *address ) override;
+	void append( const std::vector<std::wstring> & paths, bool use_icon, void *address ) override;
+	void clear() override;
 };
 
 

@@ -79,7 +79,7 @@ class ResultWin : public FXList, public ResultWinCommon
   ResultWin( Main *main, FXComposite *p,FXObject* tgt=NULL,FXSelector sel=0,FXuint opts=LIST_NORMAL,FXint x=0,FXint y=0,FXint w=0,FXint h=0);
 
 
-  void clear();
+  void clear() override;
   void setVisibleLines( int vl );
   void create();
 

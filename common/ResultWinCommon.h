@@ -29,6 +29,8 @@ public:
 
 	virtual void append( const std::wstring & path, bool use_icon, void *address ) = 0;
 	virtual void append( const std::vector<std::wstring> & paths, bool use_icon, void *address ) = 0;
+
+	virtual void clear();
 };
 
 #endif /* COMMON_RESULTWINCOMMON_H_ */
