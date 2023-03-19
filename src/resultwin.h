@@ -8,7 +8,7 @@
 
 class Main;
 
-class ResultWin : public FXList, ResultWinCommon
+class ResultWin : public FXList, public ResultWinCommon
 {
   FXDECLARE( ResultWin );
 
@@ -70,8 +70,6 @@ class ResultWin : public FXList, ResultWinCommon
 
   std::vector<Cmd> cmds;
 
-  int view_lines;
-
   FXFont *my_font;
   FXIcon *icon;
   Main *main;
@@ -80,7 +78,7 @@ class ResultWin : public FXList, ResultWinCommon
  public:
   ResultWin( Main *main, FXComposite *p,FXObject* tgt=NULL,FXSelector sel=0,FXuint opts=LIST_NORMAL,FXint x=0,FXint y=0,FXint w=0,FXint h=0);
 
-  void appendItem( const Search::Result & result, const std::wstring &path, bool do_append = true, void *address = NULL );
+
   void clear();
   void setVisibleLines( int vl );
   void create();
@@ -97,6 +95,8 @@ class ResultWin : public FXList, ResultWinCommon
 
  protected:
 
+  void append( const std::wstring & path, bool use_icon, void *address ) override;
+  void append( const std::vector<std::wstring> & paths, bool use_icon, void *address ) override;
   
   int do_system( const FXString & cmd );
   void add_cmd( const Cmd & cmd );

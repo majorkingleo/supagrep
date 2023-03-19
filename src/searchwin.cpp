@@ -269,7 +269,7 @@ long SearchWin::onTimeout( FXObject *obj, FXSelector sel, void *ptr )
 
 	  for( std::list<Search::Result>::iterator it = l.begin(); it != l.end(); it++ )
 		{
-		  result->appendItem( *it, config->path.c_str() );
+		  result->appendResult( *it, config->path );
 		}
 
 	  l.clear();

@@ -59,7 +59,6 @@ ResultWin::ResultWin( Main *main_,
 					  FXint h)
   : FXList( p, tgt, sel, opts, x, y, w, h ),
     ResultWinCommon(),
-	view_lines(1),
 	main(main_)
 {
   my_font = new FXFont( getApp(), "Courier", 10 );
@@ -141,40 +140,17 @@ void ResultWin::clear()
   results.clear();
 }
 
-void ResultWin::appendItem( const Search::Result & result, const std::wstring &path, bool do_append, void *address )
+void ResultWin::append( const std::wstring & path, bool use_icon, void *address )
 {
-	if( do_append ) {
-		results.push_back( Entry( result, path ) );
-		address = &(*results.rbegin());
-	} 
-
-	auto file = result.file;
-	std::wstring line = getLineAtPos( result.file, result.pos, view_lines );
-
-	line = substitude( line, L"\t", L" " );
-	line = substitude( line, L"\r", L" " );
-
-	std::wstring file_name = file.wstring();
-
-	if( file_name.find( path ) == 0 ) {
-		file_name = file_name.substr( path.length() );
-	}
-
-	if( line.find( L'\n' ) == std::wstring::npos ) {
-		line = strip( line );
-		FXList::appendItem( wformat( L"%s:%ld %s", file_name, result.line,
-				line ).c_str(), NULL, address );
-	} else {
-		FXList::appendItem( wformat( L"%s:%ld", file_name, result.line ).c_str(), icon, address );
-
-		std::vector<std::wstring> sl = split_simple( line, L"\n" );
-
-		for( unsigned int i = 0; i < sl.size(); i++ ) {
-			FXList::appendItem( sl[i].c_str(), NULL, address );
-		}
-	}
+	FXList::appendItem( path.c_str(), use_icon ? icon : nullptr, address );
 }
 
+void ResultWin::append( const std::vector<std::wstring> & paths, bool use_icon, void *address )
+{
+	for( const auto & path : paths ) {
+		FXList::appendItem( path.c_str(), use_icon ? icon : nullptr, address );
+	}
+}
 
 
 void ResultWin::setVisibleLines( int vl )
@@ -185,7 +161,7 @@ void ResultWin::setVisibleLines( int vl )
   for( result_list::iterator it = results.begin(); 
 	   it != results.end(); it++ )
 	{
-	  appendItem( it->result, it->path, false, &(*it) );
+	  appendResult( it->result, it->path, false, &(*it) );
 	}
 }
 
@@ -373,8 +349,8 @@ long ResultWin::onOpenExec( FXObject *obj, FXSelector sel, void *ptr )
 		  
 		  FXSystem::setCurrentDirectory( FXPath::directory( entry->result.file.wstring().c_str() ) );
 
-		  int idx_line = cmds[i].open_cmd.find( '%d' );
-		  int idx_file = cmds[i].open_cmd.find( '%s' );
+		  int idx_line = cmds[i].open_cmd.find( "%d" );
+		  int idx_file = cmds[i].open_cmd.find( "%s" );
 
 		  FXString s;
 

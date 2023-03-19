@@ -8,11 +8,18 @@
 #include "ResultWinCommon.h"
 #include <read_file.h>
 #include <getline.h>
+#include <string_utils.h>
 
 using namespace Tools;
 
 ResultWinCommon::ResultWinCommon()
-: results()
+: results(),
+  view_lines(1)
+{
+
+}
+
+ResultWinCommon::~ResultWinCommon()
 {
 
 }
@@ -35,3 +42,33 @@ std::wstring ResultWinCommon::getLineAtPos( const std::filesystem::path & file, 
 	return line;
 }
 
+void ResultWinCommon::appendResult( const Search::Result & result, const std::wstring &path, bool do_append, void *address )
+{
+	if( do_append ) {
+		results.push_back( Entry( result, path ) );
+		address = &(*results.rbegin());
+	}
+
+	auto file = result.file;
+	std::wstring line = getLineAtPos( result.file, result.pos, view_lines );
+
+	line = substitude( line, L"\t", L" " );
+	line = substitude( line, L"\r", L" " );
+
+	std::wstring file_name = file.wstring();
+
+	if( file_name.find( path ) == 0 ) {
+		file_name = file_name.substr( path.length() );
+	}
+
+	if( line.find( L'\n' ) == std::wstring::npos ) {
+		line = strip( line );
+		append( wformat( L"%s:%ld %s", file_name, result.line,
+				line ), false, address );
+	} else {
+		append( wformat( L"%s:%ld", file_name, result.line ), true, address );
+
+		std::vector<std::wstring> sl = split_simple( line, L"\n" );
+		append( sl, false, address );
+	}
+}
