@@ -28,7 +28,7 @@ public:
 	void clear() override;
 
 protected:
-	std::wstring highLightKeyWord( const std::wstring & line );
+	std::wstring highLightKeyWord( const std::wstring & line ) override;
 
 	std::wstring hightLightFileNameAndLine( const std::wstring & file_name, long line_number ) override;
 };

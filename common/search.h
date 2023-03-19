@@ -134,7 +134,7 @@ class Search
   };
 
  protected:
-  Config & config;
+  std::shared_ptr<Config> config;
   typedef std::list<std::filesystem::path> file_list;
   file_list files;
   std::vector<std::string> pattern_list;
@@ -142,7 +142,7 @@ class Search
   std::wstring lsearch;
 
  public:
-  Search( Config & config );
+  Search( std::shared_ptr<Config> config );
 
   void run();
 

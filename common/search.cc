@@ -10,47 +10,47 @@
 
 using namespace Tools;
 
-Search::Search( Config & config_ )
+Search::Search( std::shared_ptr<Config> config_ )
   : config( config_ )
 {
   DEBUG( wformat( L"Search with config: %s", config ) );
-  config.mt_status->set(0);
+  config->mt_status->set(0);
 }
 
 void Search::run()
 {
-  config.mt_running->set(true);
+  config->mt_running->set(true);
   start_time = std::chrono::system_clock::now();
   files.clear();
   pattern_list.clear();
 
-  if( find_files( config.path ) )
+  if( find_files( config->path ) )
 	{
-	  if( config.icase ) {
-		lsearch = tolower(config.search);
+	  if( config->icase ) {
+		lsearch = tolower(config->search);
 	  }
 
-	  config.mt_status_max->set(files.size());
+	  config->mt_status_max->set(files.size());
 	  DEBUG( wformat( L"Total files '%d'", files.size() ) );
 	  int count = 0;
-	  for( file_list::iterator it = files.begin(); it != files.end() && !config.mt_stop->get(); it++ )
+	  for( file_list::iterator it = files.begin(); it != files.end() && !config->mt_stop->get(); it++ )
 		{
 		  do_search( *it );
 
 		  count++;
 		  // DEBUG( wformat( L"%d Searching in file: '%s'", count, DetectLocale::in2w(it->text()) ) );
-		  config.mt_status->set(count);
+		  config->mt_status->set(count);
 		}
 	}
 
   auto duration = std::chrono::system_clock::now().time_since_epoch() - start_time.time_since_epoch();
-  config.mt_runtime->set(std::chrono::duration_cast<std::chrono::milliseconds>(duration));
-  config.mt_running->set(false);
+  config->mt_runtime->set(std::chrono::duration_cast<std::chrono::milliseconds>(duration));
+  config->mt_running->set(false);
 }
 
 bool Search::find_files( const std::filesystem::path & path )
 {
-  if( config.mt_stop->get() ) {
+  if( config->mt_stop->get() ) {
 	return false;
   }
 
@@ -97,7 +97,7 @@ bool Search::match_file_type( const std::filesystem::path & file )
 {
   std::wstring file_name = file.wstring();
 
-  for( std::wregex & regex : build_pattern_list( config.pattern ) ) {
+  for( std::wregex & regex : build_pattern_list( config->pattern ) ) {
 
 	  bool ret = std::regex_match( file_name, regex );
 
@@ -119,11 +119,11 @@ void Search::do_search( const std::filesystem::path & file )
 	  return;
   }
 
-  if( config.icase ) {
+  if( config->icase ) {
 	  DEBUG( lsearch );
 	  do_simple_search( tolower(content), lsearch, file );
   } else {
-	  do_simple_search( content, config.search, file );
+	  do_simple_search( content, config->search, file );
   }
 }
 
@@ -148,8 +148,8 @@ void Search::do_simple_search( const std::wstring & s,
 		}
 
 		if( pos_keyword < pos ) {
-			config.mt_result->access().push_back(Result( file, line_count, pos_keyword ));
-			config.mt_result->free();
+			config->mt_result->access().push_back(Result( file, line_count, pos_keyword ));
+			config->mt_result->free();
 		}
 
 	} while( pos != std::string::npos );
@@ -262,7 +262,7 @@ std::wostream & operator<<( std::wostream & out, const Search::Config & config )
 		out << L"stopping\n";
 	}
 
-	out << L"runtime: " << config->mt_runtime.get();
+	out << L"runtime: " << config.mt_runtime.get();
 	*/
 	return out;
 }

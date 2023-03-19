@@ -44,7 +44,7 @@ private:
 	Search::MTAccess<std::list<Search::Result> > mt_result;
 	Search::MTAccess<std::chrono::milliseconds> mt_runtime;
 
-	Search::Config *config;
+	std::shared_ptr<Search::Config> config;
 	int tabidx = 0;
 
 public:

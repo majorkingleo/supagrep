@@ -45,3 +45,8 @@ std::wstring ResultWinQt::hightLightFileNameAndLine( const std::wstring & file_n
 {
 	return  wformat( L"<small>%s:%ld</small>", file_name, line_number );
 }
+
+std::wstring ResultWinQt::highLightKeyWord( const std::wstring & line )
+{
+	return line;
+}

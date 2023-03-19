@@ -99,7 +99,6 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 SearchWinQt::~SearchWinQt()
 {
 	timer->stop();
-	delete config;
 }
 
 void SearchWinQt::selectDirectory()
@@ -134,9 +133,7 @@ void SearchWinQt::onSearch()
 		}
 	}
 
-	delete config;
-
-	config = new Search::Config();
+	config = std::make_shared<Search::Config>();
 
 	mt_result.access().clear();
 	mt_result.free();
@@ -172,7 +169,7 @@ void SearchWinQt::onSearch()
 	result->clear();
 
 	std::thread search_thread( [this]{
-		Search s( *config );
+		Search s( config );
 		mt_running.set(true);
 		s.run();
 	} );

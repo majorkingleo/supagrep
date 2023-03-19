@@ -34,6 +34,10 @@ public:
 
 protected:
 	virtual std::wstring hightLightFileNameAndLine( const std::wstring & file_name, long line_number );
+
+	virtual std::wstring highLightKeyWord( const std::wstring & line ) {
+		return line;
+	}
 };
 
 #endif /* COMMON_RESULTWINCOMMON_H_ */

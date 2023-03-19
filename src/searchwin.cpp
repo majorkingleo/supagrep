@@ -126,8 +126,6 @@ SearchWin::~SearchWin()
           }
       }                           
   }
-  
-  delete config;
 }
 
 long SearchWin::onSelPath( FXObject *obj, FXSelector sel, void * )
@@ -155,9 +153,7 @@ long SearchWin::onSearch( FXObject *obj, FXSelector sel, void * )
 	  } 
 	}
 
-  delete config;
-
-  config = new Search::Config();
+  config = std::make_shared<Search::Config>();
 
   mt_result.access().clear();
   mt_result.free();
@@ -194,7 +190,7 @@ long SearchWin::onSearch( FXObject *obj, FXSelector sel, void * )
   
 
   std::thread search_thread( [this]{
-	  Search s( *config );
+	  Search s( config );
 	  mt_running.set(true);
 	  s.run();
   } );

@@ -1,3 +1,5 @@
+#include <read_file.h>
+
 #ifdef WIN32
 #include <windows.h>
 # include <tchar.h>
@@ -13,7 +15,6 @@
 #include "main.h"
 #include "utf8_util.h"
 #include "debug.h"
-#include <read_file.h>
 #include <getline.h>
 
 #include "format.h"

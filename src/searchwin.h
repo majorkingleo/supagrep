@@ -60,7 +60,7 @@ class SearchWin : public ThemeHorizontalFrame
   Search::MTAccess<std::list<Search::Result> > mt_result;
   Search::MTAccess<std::chrono::milliseconds> mt_runtime;
 
-  Search::Config *config;
+  std::shared_ptr<Search::Config> config;
   Tab *tab;
 
   bool destroy;
