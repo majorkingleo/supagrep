@@ -31,6 +31,9 @@ public:
 	virtual void append( const std::vector<std::wstring> & paths, bool use_icon, void *address ) = 0;
 
 	virtual void clear();
+
+protected:
+	virtual std::wstring hightLightFileNameAndLine( const std::wstring & file_name, long line_number );
 };
 
 #endif /* COMMON_RESULTWINCOMMON_H_ */

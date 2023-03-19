@@ -63,14 +63,18 @@ void ResultWinCommon::appendResult( const Search::Result & result, const std::ws
 
 	if( line.find( L'\n' ) == std::wstring::npos ) {
 		line = strip( line );
-		append( wformat( L"%s:%ld %s", file_name, result.line,
-				line ), false, address );
+		append( hightLightFileNameAndLine( file_name, result.line ) + line, false, address );
 	} else {
-		append( wformat( L"%s:%ld", file_name, result.line ), true, address );
+		append( hightLightFileNameAndLine( file_name, result.line), true, address );
 
 		std::vector<std::wstring> sl = split_simple( line, L"\n" );
 		append( sl, false, address );
 	}
+}
+
+std::wstring ResultWinCommon::hightLightFileNameAndLine( const std::wstring & file_name, long line_number )
+{
+	return  wformat( L"%s:%ld", file_name, line_number );
 }
 
 void ResultWinCommon::clear()

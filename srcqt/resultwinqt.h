@@ -26,6 +26,11 @@ public:
 	void append( const std::wstring & path, bool use_icon, void *address ) override;
 	void append( const std::vector<std::wstring> & paths, bool use_icon, void *address ) override;
 	void clear() override;
+
+protected:
+	std::wstring highLightKeyWord( const std::wstring & line );
+
+	std::wstring hightLightFileNameAndLine( const std::wstring & file_name, long line_number ) override;
 };
 
 

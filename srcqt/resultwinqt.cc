@@ -6,6 +6,10 @@
  */
 #include "resultwinqt.h"
 #include "mainqt.h"
+#include <format.h>
+#include <qlabel.h>
+
+using namespace Tools;
 
 ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
  : QListWidget( parent ),
@@ -17,17 +21,17 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 
 void ResultWinQt::append( const std::wstring & path, bool use_icon, void *address )
 {
-	QListWidgetItem *item = new QListWidgetItem( QString::fromStdWString( path ) );
+	QLabel *label = new QLabel( QString::fromStdWString( path ) );
+	QListWidgetItem *item = new QListWidgetItem();
 	item->setData( Qt::UserRole, QVariant::fromValue( address ) );
 	addItem( item );
+	setItemWidget( item, label );
 }
 
 void ResultWinQt::append( const std::vector<std::wstring> & paths, bool use_icon, void *address )
 {
 	for( const auto & path : paths ) {
-		QListWidgetItem *item = new QListWidgetItem( QString::fromStdWString( path ) );
-		item->setData( Qt::UserRole, QVariant::fromValue( address ) );
-		addItem( item );
+		append( path, use_icon, address );
 	}
 }
 
@@ -35,4 +39,9 @@ void ResultWinQt::clear()
 {
 	ResultWinCommon::clear();
 	QListWidget::clear();
+}
+
+std::wstring ResultWinQt::hightLightFileNameAndLine( const std::wstring & file_name, long line_number )
+{
+	return  wformat( L"<small>%s:%ld</small>", file_name, line_number );
 }
