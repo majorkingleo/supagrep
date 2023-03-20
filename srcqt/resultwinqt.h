@@ -19,6 +19,7 @@ class ResultWinQt : public QListWidget, public ResultWinCommon
 
 private:
 	MainWindowQt *main;
+	QAction *actionOpenWidthDefaultApp;
 
 public:
 	ResultWinQt( MainWindowQt *main, QWidget *parent = 0 );
@@ -33,6 +34,11 @@ protected:
 	std::wstring hightLightFileNameAndLine( const std::wstring & file_name, long line_number ) override;
 
 	void contextMenuEvent(QContextMenuEvent *event) override;
+
+	Search::Result getCurrentSelecteResult();
+
+private slots:
+	void openWidthDefaultApp();
 };
 
 

@@ -4,11 +4,18 @@
  *  Created on: 12.03.2023
  *      Author: martin
  */
+#ifdef WIN32
+#include <windows.h>
+# include <tchar.h>
+#endif
+
 #include "resultwinqt.h"
 #include "mainqt.h"
 #include <format.h>
 #include <qlabel.h>
 #include <debug.h>
+#include <qmenu.h>
+#include <QContextMenuEvent>
 
 using namespace Tools;
 
@@ -17,7 +24,11 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
    ResultWinCommon(),
    main( main_ )
 {
+	actionOpenWidthDefaultApp = new QAction(this);
+	actionOpenWidthDefaultApp->setObjectName( u8"actionOpenWidthDefaultApp" );
+	actionOpenWidthDefaultApp->setText( u8"Open with default App" );
 
+	connect(actionOpenWidthDefaultApp, SIGNAL (triggered()), this, SLOT (openWidthDefaultApp()));
 }
 
 void ResultWinQt::append( const std::wstring & path, bool use_icon, Search::ResultEntry *address )
@@ -60,11 +71,30 @@ void ResultWinQt::contextMenuEvent(QContextMenuEvent *event)
 
 	DEBUG( wformat( L"%s: Path: %s", __FUNCTION__, res->result.file ) );
 
-	/*
+
     QMenu menu(this);
-    menu.addAction(cutAct);
-    menu.addAction(copyAct);
-    menu.addAction(pasteAct);
+    //menu.setContextMenuPolicy(Qt::CustomContextMenu);
+    menu.addAction(actionOpenWidthDefaultApp);
     menu.exec(event->globalPos());
-    */
+}
+
+void ResultWinQt::openWidthDefaultApp()
+{
+  Search::Result result = getCurrentSelecteResult();
+
+#ifdef WIN32
+  ShellExecuteW( NULL, L"open", result.file.wstring().c_str(), L"", L"", SW_SHOWNORMAL );
+#else
+# warning TODO on Unix
+#endif
+}
+
+
+Search::Result ResultWinQt::getCurrentSelecteResult()
+{
+	auto item = currentItem();
+	QVariant var = item->data( Qt::UserRole );
+	Search::ResultEntry *res = var.value<Search::ResultEntry*>();
+
+	return res->result;
 }
