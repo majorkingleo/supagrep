@@ -16,6 +16,8 @@
 #include <debug.h>
 #include <qmenu.h>
 #include <QContextMenuEvent>
+#include <QClipboard>
+#include <QGuiApplication>
 
 using namespace Tools;
 
@@ -28,7 +30,12 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 	actionOpenWidthDefaultApp->setObjectName( u8"actionOpenWidthDefaultApp" );
 	actionOpenWidthDefaultApp->setText( u8"Open with default App" );
 
+	actionCopyFileNameToClipboard = new QAction(this);
+	actionCopyFileNameToClipboard->setObjectName( u8"actionCopyFileNameToClipboard" );
+	actionCopyFileNameToClipboard->setText( u8"Copy Filename" );
+
 	connect(actionOpenWidthDefaultApp, SIGNAL (triggered()), this, SLOT (openWidthDefaultApp()));
+	connect(actionCopyFileNameToClipboard, SIGNAL (triggered()), this, SLOT (copyFileNameToClipboard()));
 }
 
 void ResultWinQt::append( const std::wstring & path, bool use_icon, Search::ResultEntry *address )
@@ -75,6 +82,7 @@ void ResultWinQt::contextMenuEvent(QContextMenuEvent *event)
     QMenu menu(this);
     //menu.setContextMenuPolicy(Qt::CustomContextMenu);
     menu.addAction(actionOpenWidthDefaultApp);
+    menu.addAction(actionCopyFileNameToClipboard);
     menu.exec(event->globalPos());
 }
 
@@ -97,4 +105,12 @@ Search::Result ResultWinQt::getCurrentSelecteResult()
 	Search::ResultEntry *res = var.value<Search::ResultEntry*>();
 
 	return res->result;
+}
+
+void ResultWinQt::copyFileNameToClipboard()
+{
+	Search::Result result = getCurrentSelecteResult();
+
+	QClipboard *clipboard = QGuiApplication::clipboard();
+	clipboard->setText( QString::fromStdWString( result.file.wstring() ) );
 }

@@ -20,6 +20,7 @@ class ResultWinQt : public QListWidget, public ResultWinCommon
 private:
 	MainWindowQt *main;
 	QAction *actionOpenWidthDefaultApp;
+	QAction *actionCopyFileNameToClipboard;
 
 public:
 	ResultWinQt( MainWindowQt *main, QWidget *parent = 0 );
@@ -39,6 +40,7 @@ protected:
 
 private slots:
 	void openWidthDefaultApp();
+	void copyFileNameToClipboard();
 };
 
 
