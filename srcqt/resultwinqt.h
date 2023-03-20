@@ -23,14 +23,16 @@ private:
 public:
 	ResultWinQt( MainWindowQt *main, QWidget *parent = 0 );
 
-	void append( const std::wstring & path, bool use_icon, void *address ) override;
-	void append( const std::vector<std::wstring> & paths, bool use_icon, void *address ) override;
+	void append( const std::wstring & path, bool use_icon, Search::ResultEntry *address ) override;
+	void append( const std::vector<std::wstring> & paths, bool use_icon, Search::ResultEntry *address ) override;
 	void clear() override;
 
 protected:
 	std::wstring highLightKeyWord( const std::wstring & line ) override;
 
 	std::wstring hightLightFileNameAndLine( const std::wstring & file_name, long line_number ) override;
+
+	void contextMenuEvent(QContextMenuEvent *event) override;
 };
 
 

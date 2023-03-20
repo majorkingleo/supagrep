@@ -141,12 +141,12 @@ void ResultWin::clear()
   clearItems();
 }
 
-void ResultWin::append( const std::wstring & path, bool use_icon, void *address )
+void ResultWin::append( const std::wstring & path, bool use_icon, Search::ResultEntry *address )
 {
 	FXList::appendItem( path.c_str(), use_icon ? icon : nullptr, address );
 }
 
-void ResultWin::append( const std::vector<std::wstring> & paths, bool use_icon, void *address )
+void ResultWin::append( const std::vector<std::wstring> & paths, bool use_icon, Search::ResultEntry *address )
 {
 	for( const auto & path : paths ) {
 		FXList::appendItem( path.c_str(), use_icon ? icon : nullptr, address );

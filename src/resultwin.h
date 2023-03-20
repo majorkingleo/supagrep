@@ -95,8 +95,8 @@ class ResultWin : public FXList, public ResultWinCommon
 
  protected:
 
-  void append( const std::wstring & path, bool use_icon, void *address ) override;
-  void append( const std::vector<std::wstring> & paths, bool use_icon, void *address ) override;
+  void append( const std::wstring & path, bool use_icon, Search::ResultEntry *address ) override;
+  void append( const std::vector<std::wstring> & paths, bool use_icon, Search::ResultEntry *address ) override;
   
   int do_system( const FXString & cmd );
   void add_cmd( const Cmd & cmd );

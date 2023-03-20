@@ -182,7 +182,7 @@ void SearchWinQt::onSearch()
 
 void SearchWinQt::onTimeout()
 {
-	DEBUG( "onTimeout()" );
+	// DEBUG( "onTimeout()" );
 
 	if( mt_running.get() ) {
 		cb_start_directory->setEnabled(false);
@@ -210,18 +210,18 @@ void SearchWinQt::onTimeout()
 	pb_state->setTotal(mt_status_max.getAndClear());
 	pb_state->setProgress(mt_status_max.getAndClear());
 		 */
-		DEBUG( format( "done: max: %d", mt_status_max.getAndClear()) );
+		// DEBUG( format( "done: max: %d", mt_status_max.getAndClear()) );
 	}
 
 	if( mt_status_max.changed() )
 	{
-		DEBUG( format( "Max Status: '%d'", mt_status.get() ) );
+		// DEBUG( format( "Max Status: '%d'", mt_status.get() ) );
 		// pb_state->setTotal(mt_status_max.getAndClear());
 	}
 
 	if( mt_status.changed() )
 	{
-		DEBUG( format( "Status: '%d'", mt_status.get() ) );
+		// DEBUG( format( "Status: '%d'", mt_status.get() ) );
 		// pb_state->setProgress(mt_status.getAndClear());
 	}
 

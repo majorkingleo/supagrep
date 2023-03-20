@@ -42,10 +42,10 @@ std::wstring ResultWinCommon::getLineAtPos( const std::filesystem::path & file, 
 	return line;
 }
 
-void ResultWinCommon::appendResult( const Search::Result & result, const std::wstring &path, bool do_append, void *address )
+void ResultWinCommon::appendResult( const Search::Result & result, const std::wstring &path, bool do_append, Search::ResultEntry *address )
 {
 	if( do_append ) {
-		results.push_back( Entry( result, path ) );
+		results.push_back( Search::ResultEntry( result, path ) );
 		address = &(*results.rbegin());
 	}
 

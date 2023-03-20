@@ -8,6 +8,7 @@
 #include "mainqt.h"
 #include <format.h>
 #include <qlabel.h>
+#include <debug.h>
 
 using namespace Tools;
 
@@ -19,7 +20,7 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 
 }
 
-void ResultWinQt::append( const std::wstring & path, bool use_icon, void *address )
+void ResultWinQt::append( const std::wstring & path, bool use_icon, Search::ResultEntry *address )
 {
 	QLabel *label = new QLabel( QString::fromStdWString( path ) );
 	QListWidgetItem *item = new QListWidgetItem();
@@ -28,7 +29,7 @@ void ResultWinQt::append( const std::wstring & path, bool use_icon, void *addres
 	setItemWidget( item, label );
 }
 
-void ResultWinQt::append( const std::vector<std::wstring> & paths, bool use_icon, void *address )
+void ResultWinQt::append( const std::vector<std::wstring> & paths, bool use_icon, Search::ResultEntry *address )
 {
 	for( const auto & path : paths ) {
 		append( path, use_icon, address );
@@ -49,4 +50,21 @@ std::wstring ResultWinQt::hightLightFileNameAndLine( const std::wstring & file_n
 std::wstring ResultWinQt::highLightKeyWord( const std::wstring & line )
 {
 	return line;
+}
+
+void ResultWinQt::contextMenuEvent(QContextMenuEvent *event)
+{
+	auto item = currentItem();
+	QVariant var = item->data( Qt::UserRole );
+	Search::ResultEntry *res = var.value<Search::ResultEntry*>();
+
+	DEBUG( wformat( L"%s: Path: %s", __FUNCTION__, res->result.file ) );
+
+	/*
+    QMenu menu(this);
+    menu.addAction(cutAct);
+    menu.addAction(copyAct);
+    menu.addAction(pasteAct);
+    menu.exec(event->globalPos());
+    */
 }
