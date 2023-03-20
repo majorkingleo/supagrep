@@ -211,7 +211,7 @@ long ResultWin::onCopy( FXObject *obj, FXSelector sel, void *ptr )
   FXDragType types[4]={stringType,textType,utf8Type,utf16Type};
 
   if(acquireClipboard(types,4)){
-	Entry *entry = static_cast<Entry*>(getItemData( index ));
+	  Search::ResultEntry *entry = static_cast<Search::ResultEntry*>(getItemData( index ));
 
 	if( entry == NULL )
 	  return 0;
@@ -257,7 +257,7 @@ long ResultWin::onOpen( FXObject *obj, FXSelector sel, void *ptr )
   if( index < 0 )
 	return 0;
 
-  Entry *entry = static_cast<Entry*>(getItemData( index ));
+  Search::ResultEntry *entry = static_cast<Search::ResultEntry*>(getItemData( index ));
 
   if( entry == NULL )
     return 0;
@@ -337,7 +337,7 @@ long ResultWin::onOpenExec( FXObject *obj, FXSelector sel, void *ptr )
   if( index < 0 )
 	return 0;
   
-  Entry *entry = static_cast<Entry*>(getItemData( index ));
+  Search::ResultEntry *entry = static_cast<Search::ResultEntry*>(getItemData( index ));
   
   if( entry == NULL )
     return 0;
