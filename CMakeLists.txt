@@ -133,7 +133,29 @@ target_link_libraries( supagrep PRIVATE cpputilsformat )
 
 if (WIN32)
 target_link_libraries( supagrep PRIVATE iconv )
-set(CMAKE_EXE_LINKER_FLAGS  "-mwindows")
+#set(CMAKE_EXE_LINKER_FLAGS  "-mwindows")
 endif (WIN32)
 
+add_executable(forward
+	forward/main.cpp
+)
 
+target_link_libraries( forward PRIVATE cpputilsshared )
+target_link_libraries( forward PRIVATE cpputilsformat )
+
+target_include_directories(forward PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/cpputilsformat/>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/>
+)
+
+add_executable(addpath
+	addpath/main.cpp
+)
+
+target_link_libraries( addpath PRIVATE cpputilsshared )
+target_link_libraries( addpath PRIVATE cpputilsformat )
+
+target_include_directories(addpath PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/cpputilsformat/>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/>
+)
