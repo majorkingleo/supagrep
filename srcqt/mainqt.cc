@@ -102,6 +102,16 @@ void MainWindowQt::setTabTitle( int idx, const QString & text )
 	tabs->setTabText( idx, text );
 }
 
+std::wstring MainWindowQt::wLC( const std::wstring & s )
+{
+	return lang.wLC( s );
+}
+
+const char* MainWindowQt::LC( const char * msg )
+{
+	return lang.LC( msg );
+}
+
 static void usage( const std::string & prog )
 {
   std::cerr << "usage: "

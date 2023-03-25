@@ -30,6 +30,9 @@ public:
 
 	 void setTabTitle( int idx, const QString & text );
 
+	 std::wstring wLC( const std::wstring & s );
+	 const char* LC( const char * msg );
+
 private slots:
 	 void newSearch();
 	 void closeSearch(int idx);

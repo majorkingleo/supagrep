@@ -18,9 +18,28 @@ class ResultWinQt : public QListWidget, public ResultWinCommon
 	Q_OBJECT
 
 private:
+	struct Cmd
+	{
+		QAction *action;
+		std::wstring name;
+		std::wstring exec;
+		std::wstring open_cmd;
+
+		Cmd(	const std::wstring & name_,
+				const std::wstring & exec_,
+				const std::wstring & open_cmd_ )
+		: action(0),
+		  name( name_ ),
+		  exec( exec_ ),
+		  open_cmd( open_cmd_ )
+		{}
+	};
+
+private:
 	MainWindowQt *main;
 	QAction *actionOpenWidthDefaultApp;
 	QAction *actionCopyFileNameToClipboard;
+	std::list<Cmd> cmds;
 
 public:
 	ResultWinQt( MainWindowQt *main, QWidget *parent = 0 );
@@ -38,9 +57,15 @@ protected:
 
 	Search::Result getCurrentSelecteResult();
 
+	void addCmd( const Cmd & cmd );
+
+	std::wstring wLC( const std::wstring & s );
+	const char* LC( const char * msg );
+
 private slots:
 	void openWidthDefaultApp();
 	void copyFileNameToClipboard();
+	void openWidthCmd();
 };
 
 
