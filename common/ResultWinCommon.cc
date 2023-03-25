@@ -63,7 +63,7 @@ void ResultWinCommon::appendResult( const Search::Result & result, const std::ws
 
 	if( line.find( L'\n' ) == std::wstring::npos ) {
 		line = strip( line );
-		append( hightLightFileNameAndLine( file_name, result.line ) + line, false, address );
+		append( hightLightFileNameAndLine( file_name, result.line ) + L" " + line, false, address );
 	} else {
 		append( hightLightFileNameAndLine( file_name, result.line), true, address );
 
