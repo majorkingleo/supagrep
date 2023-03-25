@@ -39,46 +39,46 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 	actionCopyFileNameToClipboard->setText( u8"Copy Filename" );
 
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"GVim" ) ),
-			L"gvim", L"gvim +%d %s" ) );
+			L"gvim", L"+%d %s" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"KVim" ) ),
-			L"kvim", L"kvim +%d %s" ) );
+			L"kvim", L"+%d %s" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Emacs" ) ),
-			L"emacs", L"emacs +%d %s" ) );
+			L"emacs", L"+%d %s" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Emacs Client" ) ),
-			L"emacsclient", L"emacsclient +%d %s" ) );
+			L"emacsclient", L"+%d %s" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"XEmacs" ) ),
-			L"xemacs", L"xemacs +%d %s" ) );
+			L"xemacs", L"+%d %s" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"XEmacs Client" ) ),
-			L"xemacsclient", L"xemacsclient +%d %s" ) );
+			L"xemacsclient", L"+%d %s" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Kate" ) ),
-			L"kate", L"kate --line %d %s" ) );
+			L"kate", L"--line %d %s" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Adie" ) ),
-			L"adie", L"adie --line %d %s" ) );
+			L"adie", L"--line %d %s" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Adie" ) ),
-			L"adie.exe", L"adie --line %d %s" ) );
+			L"adie.exe", L"--line %d %s" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Kwrite" ) ),
-			L"kwrite", L"kwrite --line %d %s" ) );
+			L"kwrite", L"--line %d %s" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"WinVi" ) ),
-			L"Winvi32.exe", L"winvi32 +%d %s" ) );
+			L"Winvi32.exe", L"+%d %s" ) );
 
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Vi" ) ),
-			L"vi.exe", L"vi +%d %s" ) );
+			L"vi.exe", L"+%d %s" ) );
 
 
 	addCmd( Cmd( wformat( wLC( L"Start %s" ), wLC( L"XTerm" ) ),
-			L"xterm", L"xterm" ) );
+			L"xterm" ) );
 
 	addCmd( Cmd( wformat( wLC( L"Start %s" ), wLC( L"Konsole" ) ),
-			L"konsole", L"konsole" ) );
+			L"konsole" ) );
 
 	addCmd( Cmd( wformat( wLC( L"Start %s" ), wLC( L"Gnome Terminal" ) ),
-			L"gnome-terminal", L"gnome-terminal" ) );
+			L"gnome-terminal" ) );
 
 	addCmd( Cmd( wformat( wLC( L"Start %s" ), wLC( L"Console" ) ),
-			L"cmd.exe", L"cmd" ) );
+			L"cmd.exe" ) );
 
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Eclipse" ) ),
-			L"eclipse.exe", L"eclipse.exe --launcher.openFile %s:%d" ) );
+			L"eclipse.exe", L"--launcher.openFile %s:%d" ) );
 
 	// DEBUG( wformat( L"notpaged.exe: %s", QStandardPaths::findExecutable("notepad" ).toStdWString() ) );
 

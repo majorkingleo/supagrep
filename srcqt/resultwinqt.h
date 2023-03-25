@@ -27,7 +27,7 @@ private:
 
 		Cmd(	const std::wstring & name_,
 				const std::wstring & exec_,
-				const std::wstring & open_cmd_ )
+				const std::wstring & open_cmd_ = std::wstring() )
 		: action(0),
 		  name( name_ ),
 		  exec( exec_ ),
