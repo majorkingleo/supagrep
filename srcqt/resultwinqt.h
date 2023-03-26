@@ -48,6 +48,8 @@ public:
 	void append( const std::vector<std::wstring> & paths, bool use_icon, Search::ResultEntry *address ) override;
 	void clear() override;
 
+	void setVisibleLines( int vl );
+
 protected:
 	std::wstring highLightKeyWord( const std::wstring & line ) override;
 
@@ -55,7 +57,7 @@ protected:
 
 	void contextMenuEvent(QContextMenuEvent *event) override;
 
-	Search::Result getCurrentSelecteResult();
+	Search::Result getCurrentSelectedResult();
 
 	void addCmd( const Cmd & cmd );
 

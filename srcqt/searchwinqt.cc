@@ -7,7 +7,18 @@
 #include "searchwinqt.h"
 #include "separatorqt.h"
 #include "desccomboqt.h"
-#include <QtWidgets>
+#include <QSpinBox>
+#include <QComboBox>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QCheckBox>
+#include <QFileDialog>
+#include <QTimer>
+#include <QSplitter>
+#include <QProgressBar>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <thread>
 #include "mainqt.h"
 #include <format.h>
 #include <debug.h>
@@ -65,6 +76,16 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 
 	setupLayout->addWidget( new HSeparatorQt() );
 	setupLayout->addWidget( new QLabel( u8"Display options:" ) );
+
+	setupLayout->addWidget( new QLabel( QString::fromStdWString(wLC( L"Number of lines\naround the keyword" ) )) );
+	bt_number_of_lines = new QSpinBox();
+	bt_number_of_lines->setMinimum( 1 );
+	bt_number_of_lines->setMaximum( 99 );
+	bt_number_of_lines->setSingleStep( 2 );
+	connect( bt_number_of_lines, SIGNAL( valueChanged(int) ), this, SLOT(onVisibleLinesChanged(int)) );
+	setupLayout->addWidget( bt_number_of_lines );
+
+	setupLayout->addWidget( new HSeparatorQt() );
 
 	setupLayout->addWidget( new QCheckBox( u8"Highlight" ) );
 	setupLayout->addWidget( new HSeparatorQt() );
@@ -251,3 +272,17 @@ void SearchWinQt::onTimeout()
 	}
 }
 
+std::wstring SearchWinQt::wLC( const std::wstring & s )
+{
+	return main->wLC( s );
+}
+
+const char* SearchWinQt::LC( const char  *msg )
+{
+	return main->LC( msg );
+}
+
+void SearchWinQt::onVisibleLinesChanged( int value )
+{
+	result->setVisibleLines( value );
+}

@@ -154,7 +154,7 @@ void ResultWinQt::contextMenuEvent(QContextMenuEvent *event)
 
 void ResultWinQt::openWidthDefaultApp()
 {
-  Search::Result result = getCurrentSelecteResult();
+  Search::Result result = getCurrentSelectedResult();
 
 #ifdef WIN32
   ShellExecuteW( NULL, L"open", result.file.wstring().c_str(), L"", L"", SW_SHOWNORMAL );
@@ -164,7 +164,7 @@ void ResultWinQt::openWidthDefaultApp()
 }
 
 
-Search::Result ResultWinQt::getCurrentSelecteResult()
+Search::Result ResultWinQt::getCurrentSelectedResult()
 {
 	auto item = currentItem();
 	QVariant var = item->data( Qt::UserRole );
@@ -175,7 +175,7 @@ Search::Result ResultWinQt::getCurrentSelecteResult()
 
 void ResultWinQt::copyFileNameToClipboard()
 {
-	Search::Result result = getCurrentSelecteResult();
+	Search::Result result = getCurrentSelectedResult();
 
 	QClipboard *clipboard = QGuiApplication::clipboard();
 	clipboard->setText( QString::fromStdWString( result.file.wstring() ) );
@@ -199,20 +199,30 @@ void ResultWinQt::openWidthCmd()
 
 	DEBUG( wformat( L"Open with: %s", cmd->exec ) );
 
-	auto item = currentItem();
-	QVariant var_result = item->data( Qt::UserRole );
-	Search::ResultEntry *res = var_result.value<Search::ResultEntry*>();
+	Search::Result result = getCurrentSelectedResult();
 
 	std::vector<std::wstring> sArgs = split_and_strip_simple( cmd->open_cmd );
 
 	QStringList args;
 
 	for( std::wstring & s : sArgs ) {
-		s = substitude( s, L"%d", std::to_wstring(res->result.line) );
-		s = substitude( s, L"%s", res->result.file.wstring() );
+		s = substitude( s, L"%d", std::to_wstring( result.line) );
+		s = substitude( s, L"%s", result.file.wstring() );
 
 		args << QString::fromStdWString( s );
 	}
 
 	QProcess::startDetached( QString::fromStdWString( cmd->exec ), args );
+}
+
+void ResultWinQt::setVisibleLines( int vl )
+{
+  view_lines = vl;
+  QListWidget::clear();
+
+  for( result_list::iterator it = results.begin();
+	   it != results.end(); it++ )
+	{
+	  appendResult( it->result, it->path, false, &(*it) );
+	}
 }

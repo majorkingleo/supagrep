@@ -19,6 +19,7 @@ class QComboBox;
 class QPushButton;
 class QTimer;
 class ResultWinQt;
+class QSpinBox;
 
 class SearchWinQt : public QWidget
 {
@@ -36,6 +37,7 @@ private:
 	QTimer 		*timer;
 	QPushButton	*bt_search_dir;
 	ResultWinQt *result;
+	QSpinBox	*bt_number_of_lines;
 
 	Search::MTAccess<bool> mt_running;
 	Search::MTAccess<int>  mt_status;
@@ -57,6 +59,9 @@ public:
 		 tabidx = idx;
 	 }
 
+	 std::wstring wLC( const std::wstring & s );
+	 const char* LC( const char * msg );
+
 signals:
 	void StartSearchNow();
 
@@ -64,6 +69,7 @@ private slots:
 	void selectDirectory();
 	void onSearch();
 	void onTimeout();
+	void onVisibleLinesChanged( int value );
 };
 
 
