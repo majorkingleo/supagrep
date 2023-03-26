@@ -2,6 +2,7 @@
 #include <vector>
 #include <string_utils.h>
 
+
 using namespace Tools;
 
 std::wstring getline( const std::wstring & s, std::wstring::size_type pos )
@@ -99,3 +100,32 @@ std::wstring get_whole_line( const std::wstring & s, std::wstring::size_type pos
 }
 
 
+std::wstring get_lines_before_line_at_pos( const std::wstring & s, std::wstring::size_type pos, int lines )
+{
+	pos = s.rfind( L'\n', pos );
+
+	if( pos == std::string::npos ) {
+		return std::wstring();
+	}
+
+	if( pos > 0 ) {
+		pos--;
+	}
+
+	auto start_it = find_prev_x_elements( s, L'\n', pos, lines );
+	return std::wstring( start_it, s.begin() + pos );
+}
+
+std::wstring get_lines_after_line_at_pos( const std::wstring & s, std::wstring::size_type pos, int lines )
+{
+	pos = s.find( L'\n', pos );
+
+	if( pos == std::string::npos ) {
+		return std::wstring();
+	}
+
+	pos++;
+
+	auto end_it = find_next_x_elements( s, L'\n', pos, lines );
+	return std::wstring( s.begin() + pos, end_it );
+}

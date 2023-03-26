@@ -11,6 +11,7 @@
 #include <iostream>
 #include <debug.h>
 #include "OutDebug.h"
+#include <getline.h>
 
 using namespace Tools;
 
@@ -121,6 +122,40 @@ static void usage( const std::string & prog )
 
 int main(int argc, char **argv)
 {
+	std::wstring testdata =
+			L"line 1\n"
+			L"line 2\n"
+			L"line 3\n"
+			L"line 4\n"
+			L"line 5\n"
+			L"line 6\n"
+			L"line 7\n"
+			L"line 8\n"
+			L"line 9\n"
+			L"line 10\n"
+			L"line 12\n";
+
+	auto p = find_next_x_elements( testdata, L'\n', 0, 5 );
+
+	std::wcout << Tools::wformat( L"p: %d data: '%s'", std::ranges::distance( testdata.begin(), p ),
+								  std::wstring_view(testdata.begin(), p) )
+			   << std::endl;
+
+	auto prev = find_prev_x_elements( testdata, L'\n', testdata.size()-2, 5 );
+
+	std::wcout << Tools::wformat( L"prev: %d data: '%s'", std::ranges::distance( testdata.begin(), prev ),
+									  std::wstring_view( prev, testdata.begin() + testdata.size()-2 ) )
+				   << std::endl;
+
+	std::wstring before = get_lines_before_line_at_pos( testdata, 40, 1 );
+	std::wcout << Tools::wformat( L"before: '%s'\n", before );
+
+	std::wstring after = get_lines_after_line_at_pos( testdata, 40, 1 );
+
+	std::wcout << Tools::wformat( L"after:  '%s'\n", after );
+
+	return 1;
+
 	setlocale( LC_ALL, "" );
 
 	Arg::Arg arg( argc, argv );

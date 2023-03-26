@@ -163,3 +163,22 @@ if (WIN32)
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/>
     )
 endif (WIN32)
+
+
+add_executable(testsupagrep
+   test/test_main.cc
+   test/ColBuilder.h
+   test/ColBuilder.cc
+)
+
+target_link_libraries( testsupagrep PRIVATE common )
+target_link_libraries( testsupagrep PRIVATE cpputilsio )
+target_link_libraries( testsupagrep PRIVATE cpputilsshared )
+target_link_libraries( testsupagrep PRIVATE cpputilsformat )
+
+target_include_directories( testsupagrep PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/cpputilsformat/>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/io/>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/common>
+)

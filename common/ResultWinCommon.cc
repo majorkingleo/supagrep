@@ -37,6 +37,13 @@ std::wstring ResultWinCommon::getLineAtPos( const std::filesystem::path & file, 
 
 	std::wstring line = get_whole_line( content, pos );
 
+	int lines_before_and_after = lines / 2;
+
+	if( lines_before_and_after ) {
+		line = get_lines_before_line_at_pos( content, pos, lines_before_and_after ) + L'\n' + line;
+		line += L'\n' + get_lines_after_line_at_pos( content, pos, lines_before_and_after );
+	}
+
 	DEBUG( wformat( L"Line: '%s'", line ) );
 
 	return line;
