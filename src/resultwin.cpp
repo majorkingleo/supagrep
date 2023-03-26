@@ -21,8 +21,6 @@
 
 using namespace Tools;
 
-using namespace Tools;
-
 FXDEFMAP( ResultWin ) ResultWinMap[] = {
   FXMAPFUNC(SEL_RIGHTBUTTONPRESS,     0,     ResultWin::onQueryMenu),
   FXMAPFUNC(SEL_COMMAND,     ResultWin::ID_COPY,     ResultWin::onCopy),
@@ -357,12 +355,12 @@ long ResultWin::onOpenExec( FXObject *obj, FXSelector sel, void *ptr )
 
 		  if( idx_line != -1 ) {
 			  if( idx_line < idx_file ) {
-				 s = format( cmds[i].open_cmd.text(), entry->result.line, entry->result.file.string() ).c_str();
+				 s = Tools::format( cmds[i].open_cmd.text(), entry->result.line, entry->result.file.string() ).c_str();
 			  } else {
-				 s = format( cmds[i].open_cmd.text(), entry->result.file.string(), entry->result.line ).c_str();
+				 s = Tools::format( cmds[i].open_cmd.text(), entry->result.file.string(), entry->result.line ).c_str();
 			  }
 		  } else {
-			  s =  format( cmds[i].open_cmd.text(), entry->result.file.string() ).c_str();
+			  s =  Tools::format( cmds[i].open_cmd.text(), entry->result.file.string() ).c_str();
 		  }
 
 
