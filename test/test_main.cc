@@ -22,7 +22,7 @@ public:
 
 	virtual ~TestCaseBase() {}
 
-	virtual bool run( const std::string & fac, void *tid ) = 0;
+	virtual bool run() = 0;
 
 	const std::string & getName() const {
 		return name;
@@ -33,9 +33,47 @@ public:
 	}
 };
 
-class TestCase
+class TestCaseFindBase : public TestCaseBase
 {
+protected:
+	const std::wstring testdata;
 
+public:
+	TestCaseFindBase( const std::string & name )
+	: TestCaseBase( name ),
+	  testdata (L"aaaa 1\n"
+	 			 "bbbb 2\n"
+	 			 "cccc 3\n"
+	 			 "dddd 4\n"
+	 			 "eeee 5\n"
+	 			 "ffff 6\n" )
+	{
+
+	}
+
+};
+
+class TestCaseFindNext1 : public TestCaseFindBase
+{
+public:
+	TestCaseFindNext1()
+	: TestCaseFindBase( "find_next_x_elements() first line" )
+	{}
+
+	bool run() override
+	{
+		auto p = find_next_x_elements( testdata, L'\n', 0, 1 );
+
+		std::wstring data_result( testdata.begin(), p );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"aaaa 1\n" ) {
+			return true;
+		}
+
+		return false;
+	}
 };
 
 int main( int argc, char **argv )
@@ -82,7 +120,7 @@ int main( int argc, char **argv )
 
 		std::vector<std::shared_ptr<TestCaseBase>> test_cases;
 
-		test_cases.push_back( std::make_shared<TestCaseCppTpaLoad1>() );
+		test_cases.push_back( std::make_shared<TestCaseFindNext1>() );
 
 		ColBuilder col;
 
@@ -113,7 +151,7 @@ int main( int argc, char **argv )
 					 expected_result = "exception";
 				}
 
-				if( test->run( fac, tid ) ) {
+				if( test->run() ) {
 					result = "true";
 				} else {
 					result = "false";

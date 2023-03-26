@@ -122,6 +122,7 @@ static void usage( const std::string & prog )
 
 int main(int argc, char **argv)
 {
+#if 0
 	std::wstring testdata =
 			L"line 1\n"
 			L"line 2\n"
@@ -155,7 +156,7 @@ int main(int argc, char **argv)
 	std::wcout << Tools::wformat( L"after:  '%s'\n", after );
 
 	return 1;
-
+#endif
 	setlocale( LC_ALL, "" );
 
 	Arg::Arg arg( argc, argv );

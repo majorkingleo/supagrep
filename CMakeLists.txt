@@ -133,7 +133,8 @@ target_link_libraries( supagrep PRIVATE cpputilsformat )
 
 if (WIN32)
     target_link_libraries( supagrep PRIVATE iconv )
-    set(CMAKE_EXE_LINKER_FLAGS  "-mwindows")
+    target_link_libraries( supagrep PRIVATE -mwindows )
+    #set(CMAKE_EXE_LINKER_FLAGS  "-mwindows")
 endif (WIN32)
 
 if (WIN32)
@@ -175,6 +176,11 @@ target_link_libraries( testsupagrep PRIVATE common )
 target_link_libraries( testsupagrep PRIVATE cpputilsio )
 target_link_libraries( testsupagrep PRIVATE cpputilsshared )
 target_link_libraries( testsupagrep PRIVATE cpputilsformat )
+
+if (WIN32)
+    target_link_libraries( testsupagrep PRIVATE iconv )
+endif (WIN32)
+
 
 target_include_directories( testsupagrep PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cpputils/cpputilsshared/cpputilsformat/>
