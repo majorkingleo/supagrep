@@ -76,6 +76,76 @@ public:
 	}
 };
 
+class TestCaseFindNext2 : public TestCaseFindBase
+{
+public:
+	TestCaseFindNext2()
+	: TestCaseFindBase( "find_next_x_elements() first 2 lines" )
+	{}
+
+	bool run() override
+	{
+		auto p = find_next_x_elements( testdata, L'\n', 0, 2 );
+
+		std::wstring data_result( testdata.begin(), p );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"aaaa 1\n"
+							"bbbb 2\n" ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+class TestCaseFindNext3 : public TestCaseFindBase
+{
+public:
+	TestCaseFindNext3()
+	: TestCaseFindBase( "find_prev_x_elements() first line" )
+	{}
+
+	bool run() override
+	{
+		auto p = find_prev_x_elements( testdata, L'\n', 14, 3 );
+
+		std::wstring data_result( p, testdata.begin() + 14 );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"aaaa 1\n"
+							"bbbb 2\n" ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+class TestCaseGetLinesBefore : public TestCaseFindBase
+{
+public:
+	TestCaseGetLinesBefore()
+	: TestCaseFindBase( "get_lines_before_line_at_pos(1)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = get_lines_before_line_at_pos( testdata, 14, 3 );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"aaaa 1\n"
+							"bbbb 2\n" ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
 int main( int argc, char **argv )
 {
 	ColoredOutput co;
@@ -117,10 +187,12 @@ int main( int argc, char **argv )
 	}
 
 	try {
-
 		std::vector<std::shared_ptr<TestCaseBase>> test_cases;
 
 		test_cases.push_back( std::make_shared<TestCaseFindNext1>() );
+		test_cases.push_back( std::make_shared<TestCaseFindNext2>() );
+		test_cases.push_back( std::make_shared<TestCaseFindNext3>() );
+		test_cases.push_back( std::make_shared<TestCaseGetLinesBefore>() );
 
 		ColBuilder col;
 
@@ -174,12 +246,13 @@ int main( int argc, char **argv )
 			col.addColData( COL_RESULT, result );
 			col.addColData( COL_EXPTECTED, expected_result );
 			col.addColData( COL_TEST_RES, test_result );
+
 		}
 
 		std::cout << col.toString() << std::endl;
 
-	} catch( std::exception & error ) {
-		std::cout << error.what() << std::endl;
+	} catch( const std::exception & error ) {
+		std::cout << "Error: " << error.what() << std::endl;
 		return 1;
 	}
 

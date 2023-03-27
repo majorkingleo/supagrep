@@ -4,6 +4,7 @@
 #include <string>
 #include <ranges>
 #include <iostream>
+#include <debug.h>
 
 std::wstring getline( const std::wstring & s, std::wstring::size_type pos );
 
@@ -21,21 +22,24 @@ std::wstring get_lines_after_line_at_pos( const std::wstring & s, std::wstring::
 template <class view>
 auto find_next_x_elements( const view & s, const wchar_t what, std::wstring::size_type pos, int count )
 {
-	if( s[pos] == L'\n' ) {
+	if( s[pos] == what ) {
+		DEBUG( Tools::wformat( L"found '%c' incrementing pos %d", what, pos ));
 		pos++;
 	}
 
 	auto p = s.begin() + pos;
 
 	for( ; p != s.end() && count > 0; ) {
-		auto pp = std::ranges::find( p, s.end(), L'\n' );
+		auto pp = std::ranges::find( p, s.end(), what );
+
+		DEBUG( Tools::wformat( L"found: '%s' count: %d", std::wstring( p, pp ), count ) );
 
 		if( pp == s.end() ) {
-			return p;
+			return s.end();
 		}
 
 		p = ++pp;
-		std::wcout << L"p: " << *p << std::endl;
+		// std::wcout << L"p: " << *p << std::endl;
 		count--;
 	}
 
@@ -48,9 +52,13 @@ auto find_prev_x_elements( const view & s, const wchar_t what, std::wstring::siz
 	std::ranges::reverse_view vs(s);
 	auto p = find_next_x_elements( vs, what, s.size() - pos, count );
 
-	std::wcout << L"s.begin(): " << *s.begin() << L" distance: " << std::ranges::distance( vs.begin(), p ) << std::endl;
-	std::wcout << L"end: " << *(s.begin() + std::ranges::distance( vs.begin(), p )) << std::endl;
-	auto end = s.begin() + std::ranges::distance( vs.begin(), p );
+	std::wstring search_buf( vs.begin() + s.size() - pos, vs.end() );
+	std::wstring data_result( p, vs.end() );
+	DEBUG( Tools::wformat( L"s: '%s' w: '%s'", search_buf, data_result) );
+
+	// std::wcout << L"s.begin(): " << *s.begin() << L" distance: " << std::ranges::distance( vs.begin(), p ) << std::endl;
+	// std::wcout << L"end: " << *(s.begin() + std::ranges::distance( vs.begin(), p )) << std::endl;
+	auto end = s.begin() + std::ranges::distance( p, vs.end() );
 	return end;
 }
 
