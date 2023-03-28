@@ -102,18 +102,35 @@ std::wstring get_whole_line( const std::wstring & s, std::wstring::size_type pos
 
 std::wstring get_lines_before_line_at_pos( const std::wstring & s, std::wstring::size_type pos, int lines )
 {
+	if( s.empty() ) {
+		return std::wstring();
+	}
+
+	if( pos > s.size() ) {
+		pos = s.size() - 1;
+	}
+
+	if( s[pos] == L'\n' ) {
+		DEBUG( L"\\n detected" );
+		if( pos > 0 ) {
+			pos--;
+		} else {
+			return std::wstring();
+		}
+	}
+
 	pos = s.rfind( L'\n', pos );
 
 	if( pos == std::string::npos ) {
 		return std::wstring();
 	}
 
-	if( pos > 0 ) {
-		pos--;
+	auto start_it = find_prev_x_elements( s, L'\n', pos, lines );
+	if( *start_it == L'\n' ) {
+		start_it++;
 	}
 
-	auto start_it = find_prev_x_elements( s, L'\n', pos, lines );
-	return std::wstring( start_it, s.begin() + pos );
+	return std::wstring( start_it, s.begin() + pos + 1 );
 }
 
 std::wstring get_lines_after_line_at_pos( const std::wstring & s, std::wstring::size_type pos, int lines )

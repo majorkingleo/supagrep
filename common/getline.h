@@ -35,6 +35,7 @@ auto find_next_x_elements( const view & s, const wchar_t what, std::wstring::siz
 		DEBUG( Tools::wformat( L"found: '%s' count: %d", std::wstring( p, pp ), count ) );
 
 		if( pp == s.end() ) {
+			DEBUG( Tools::wformat( L"pp == end" ) );
 			return s.end();
 		}
 
@@ -50,11 +51,15 @@ template <class view>
 auto find_prev_x_elements( const view & s, const wchar_t what, std::wstring::size_type pos, int count )
 {
 	std::ranges::reverse_view vs(s);
-	auto p = find_next_x_elements( vs, what, s.size() - pos, count );
+	auto p = find_next_x_elements( vs, what, s.size() - pos - 1, count );
 
-	std::wstring search_buf( vs.begin() + s.size() - pos, vs.end() );
-	std::wstring data_result( p, vs.end() );
-	DEBUG( Tools::wformat( L"s: '%s' w: '%s'", search_buf, data_result) );
+	auto rbegin = vs.begin() + s.size() - pos - 1;
+	std::wstring search_buf( vs.begin() + s.size() - pos - 1, vs.end() );
+	std::wstring data_result( rbegin, p );
+	DEBUG( Tools::wformat( L"s: '%s' w: '%s' distance: %d",
+						   search_buf,
+						   data_result,
+						   std::ranges::distance( p, vs.end() )) );
 
 	// std::wcout << L"s.begin(): " << *s.begin() << L" distance: " << std::ranges::distance( vs.begin(), p ) << std::endl;
 	// std::wcout << L"end: " << *(s.begin() + std::ranges::distance( vs.begin(), p )) << std::endl;

@@ -124,21 +124,105 @@ public:
 	}
 };
 
-class TestCaseGetLinesBefore : public TestCaseFindBase
+class TestCaseGetLinesBefore1 : public TestCaseFindBase
 {
 public:
-	TestCaseGetLinesBefore()
+	TestCaseGetLinesBefore1()
 	: TestCaseFindBase( "get_lines_before_line_at_pos(1)" )
 	{}
 
 	bool run() override
 	{
-		std::wstring data_result = get_lines_before_line_at_pos( testdata, 14, 3 );
+		std::wstring data_result = get_lines_before_line_at_pos( testdata, 9, 3 );
 
 		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
-		if( data_result == L"aaaa 1\n"
-							"bbbb 2\n" ) {
+		if( data_result == L"aaaa 1\n" ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+class TestCaseGetLinesBefore2 : public TestCaseFindBase
+{
+public:
+	TestCaseGetLinesBefore2()
+	: TestCaseFindBase( "get_lines_before_line_at_pos(2)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = get_lines_before_line_at_pos( testdata, 13, 1 );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"aaaa 1\n" ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+
+class TestCaseGetLinesBefore3 : public TestCaseFindBase
+{
+public:
+	TestCaseGetLinesBefore3()
+	: TestCaseFindBase( "get_lines_before_line_at_pos(3)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = get_lines_before_line_at_pos( testdata, 6, 1 );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result.empty() ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+class TestCaseGetLinesBefore4 : public TestCaseFindBase
+{
+public:
+	TestCaseGetLinesBefore4()
+	: TestCaseFindBase( "get_lines_before_line_at_pos(4)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = get_lines_before_line_at_pos( testdata, 0, 1 );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result.empty() ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+class TestCaseGetLinesBefore5 : public TestCaseFindBase
+{
+public:
+	TestCaseGetLinesBefore5()
+	: TestCaseFindBase( "get_lines_before_line_at_pos(5)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = get_lines_before_line_at_pos( testdata, 100, 1 );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"eeee 5\n" ) {
 			return true;
 		}
 
@@ -192,7 +276,11 @@ int main( int argc, char **argv )
 		test_cases.push_back( std::make_shared<TestCaseFindNext1>() );
 		test_cases.push_back( std::make_shared<TestCaseFindNext2>() );
 		test_cases.push_back( std::make_shared<TestCaseFindNext3>() );
-		test_cases.push_back( std::make_shared<TestCaseGetLinesBefore>() );
+		test_cases.push_back( std::make_shared<TestCaseGetLinesBefore1>() );
+		test_cases.push_back( std::make_shared<TestCaseGetLinesBefore2>() );
+		test_cases.push_back( std::make_shared<TestCaseGetLinesBefore3>() );
+		test_cases.push_back( std::make_shared<TestCaseGetLinesBefore4>() );
+		test_cases.push_back( std::make_shared<TestCaseGetLinesBefore5>() );
 
 		ColBuilder col;
 
