@@ -230,6 +230,93 @@ public:
 	}
 };
 
+class TestCaseGetLinesAfter1 : public TestCaseFindBase
+{
+public:
+	TestCaseGetLinesAfter1()
+	: TestCaseFindBase( "get_lines_after_line_at_pos(1)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = get_lines_after_line_at_pos( testdata, 0, 1 );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"bbbb 2\n" ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+class TestCaseGetLinesAfter2 : public TestCaseFindBase
+{
+public:
+	TestCaseGetLinesAfter2()
+	: TestCaseFindBase( "get_lines_after_line_at_pos(2)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = get_lines_after_line_at_pos( testdata, 3, 1 );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"bbbb 2\n" ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+
+class TestCaseGetLinesAfter3 : public TestCaseFindBase
+{
+public:
+	TestCaseGetLinesAfter3()
+	: TestCaseFindBase( "get_lines_after_line_at_pos(3)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = get_lines_after_line_at_pos( testdata, 6, 1 );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"bbbb 2\n" ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+
+class TestCaseGetLinesAfter4 : public TestCaseFindBase
+{
+public:
+	TestCaseGetLinesAfter4()
+	: TestCaseFindBase( "get_lines_after_line_at_pos(4)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = get_lines_after_line_at_pos( testdata, 7, 2 );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"bbbb 2\n"
+							"cccc 3\n") {
+			return true;
+		}
+
+		return false;
+	}
+};
+
 int main( int argc, char **argv )
 {
 	ColoredOutput co;
@@ -281,6 +368,11 @@ int main( int argc, char **argv )
 		test_cases.push_back( std::make_shared<TestCaseGetLinesBefore3>() );
 		test_cases.push_back( std::make_shared<TestCaseGetLinesBefore4>() );
 		test_cases.push_back( std::make_shared<TestCaseGetLinesBefore5>() );
+
+		test_cases.push_back( std::make_shared<TestCaseGetLinesAfter1>() );
+		test_cases.push_back( std::make_shared<TestCaseGetLinesAfter2>() );
+		test_cases.push_back( std::make_shared<TestCaseGetLinesAfter3>() );
+		test_cases.push_back( std::make_shared<TestCaseGetLinesAfter4>() );
 
 		ColBuilder col;
 
