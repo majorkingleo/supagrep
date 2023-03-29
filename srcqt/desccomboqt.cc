@@ -7,6 +7,8 @@
 #include "desccomboqt.h"
 #include "debug.h"
 #include <format.h>
+#include <QLineEdit>
+#include <debug.h>
 
 using namespace Tools;
 
@@ -16,6 +18,7 @@ DescComboQt::DescComboQt(QWidget *parent)
 	setEditable(true);
 	connect( this, SIGNAL(activated(int)), this, SLOT(setFilePatternAsText(int)) );
 	connect( this, SIGNAL(currentIndexChanged(int)),this,SLOT(setFilePatternAsText(int)));
+	connect( lineEdit(), SIGNAL(returnPressed()), this,SLOT(editFinished()));
 }
 
 void DescComboQt::setFilePatternAsText(int index)
@@ -31,5 +34,10 @@ void DescComboQt::setFilePatternAsText(int index)
 			setEditText( QString::fromStdWString(*s) );
 		}
 	}
+}
+
+void DescComboQt::editFinished()
+{
+	emit returnPressed();
 }
 

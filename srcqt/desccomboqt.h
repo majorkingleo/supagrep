@@ -18,8 +18,12 @@ private:
 public:
 	explicit DescComboQt(QWidget *parent = 0);
 
+signals:
+	void returnPressed();
+
 private slots:
 	void setFilePatternAsText(int index);
+	void editFinished();
 };
 
 #endif /* SRCQT_DESCCOMBOQT_H_ */

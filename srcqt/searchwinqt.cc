@@ -41,6 +41,7 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 
 	cb_start_directory = new QComboBox();
 	cb_start_directory->setEditable( true );
+	// connect( cb_start_directory, SIGNAL( returnPressed() ),  this, SLOT(onSearch()) );
 	setupLayout->addWidget( cb_start_directory );
 
 	bt_search_dir = new QPushButton( u8"Search Directory");
@@ -50,6 +51,7 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 	setupLayout->addWidget( new QLabel( u8"Files:" ) );
 
 	cb_search_file_pattern = new DescComboQt();
+	connect( cb_search_file_pattern, SIGNAL( returnPressed() ),  this, SLOT(onSearch()) );
 	setupLayout->addWidget( cb_search_file_pattern );
 
 	setupLayout->addWidget( new QLabel( u8"Search criterias:" ) );
@@ -65,6 +67,7 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 	setupLayout->addWidget( new QLabel( u8"Search:" ) );
 
 	ef_search_term = new QLineEdit();
+	connect( ef_search_term, SIGNAL( returnPressed() ),  this, SLOT(onSearch()) );
 	setupLayout->addWidget( ef_search_term );
 
 	bt_search = new QPushButton( u8"Start" );
