@@ -94,7 +94,8 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 	setupLayout->addWidget( new HSeparatorQt() );
 
 	setupLayout->addWidget( new QLabel( wLCQ( L"State:" ) ) );
-	setupLayout->addWidget( new QProgressBar() );
+	pb_progress = new QProgressBar();
+	setupLayout->addWidget( pb_progress );
 
 	QSplitter *splitter = new QSplitter();
 	splitter->addWidget( setupFrame );
@@ -206,8 +207,6 @@ void SearchWinQt::onSearch()
 
 void SearchWinQt::onTimeout()
 {
-	// DEBUG( "onTimeout()" );
-
 	if( mt_running.get() ) {
 		cb_start_directory->setEnabled(false);
 		cb_search_file_pattern->setEnabled(false);
@@ -228,33 +227,25 @@ void SearchWinQt::onTimeout()
 
 		bt_search->setText( u8"Go" );
 
-		/*
-	pb_state->update();
 
-	pb_state->setTotal(mt_status_max.getAndClear());
-	pb_state->setProgress(mt_status_max.getAndClear());
-		 */
-		// DEBUG( format( "done: max: %d", mt_status_max.getAndClear()) );
+		if( mt_status_max.changed() ) {
+			pb_progress->setMaximum(mt_status_max.getAndClear());
+			pb_progress->setValue(mt_status_max.getAndClear());
+		}
 	}
 
-	if( mt_status_max.changed() )
-	{
-		// DEBUG( format( "Max Status: '%d'", mt_status.get() ) );
-		// pb_state->setTotal(mt_status_max.getAndClear());
+	if( mt_status_max.changed() ) {
+		pb_progress->setMaximum(mt_status_max.getAndClear());
 	}
 
-	if( mt_status.changed() )
-	{
-		// DEBUG( format( "Status: '%d'", mt_status.get() ) );
-		// pb_state->setProgress(mt_status.getAndClear());
+	if( mt_status.changed() ) {
+		pb_progress->setValue(mt_status.getAndClear());
 	}
 
-	if( mt_result.changed() )
-	{
+	if( mt_result.changed() ) {
 		std::list<Search::Result> & l = mt_result.access();
 
-		for( std::list<Search::Result>::iterator it = l.begin(); it != l.end(); it++ )
-		{
+		for( std::list<Search::Result>::iterator it = l.begin(); it != l.end(); it++ ) {
 			result->appendResult( *it, config->path );
 			DEBUG( wformat( L"Result: %s", it->file.wstring() ) );
 		}
@@ -264,8 +255,7 @@ void SearchWinQt::onTimeout()
 		mt_result.clear_and_free();
 	}
 
-	if( mt_runtime.changed() )
-	{
+	if( mt_runtime.changed() ) {
 		using namespace std::chrono_literals;
 
 		auto runtime = mt_runtime.getAndClear();
