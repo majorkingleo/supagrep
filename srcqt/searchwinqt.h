@@ -22,6 +22,7 @@ class QTimer;
 class ResultWinQt;
 class QSpinBox;
 class QProgressBar;
+class QLabel;
 
 class SearchWinQt : public QWidget, public WdgCommon
 {
@@ -39,6 +40,7 @@ private:
 	ResultWinQt 	*result;
 	QSpinBox		*bt_number_of_lines;
 	QProgressBar 	*pb_progress;
+	QLabel			*l_runtime;
 
 	Search::MTAccess<bool> mt_running;
 	Search::MTAccess<int>  mt_status;

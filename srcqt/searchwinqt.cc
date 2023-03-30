@@ -97,6 +97,10 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 	pb_progress = new QProgressBar();
 	setupLayout->addWidget( pb_progress );
 
+	l_runtime = new QLabel();
+	l_runtime->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+	setupLayout->addWidget( l_runtime );
+
 	QSplitter *splitter = new QSplitter();
 	splitter->addWidget( setupFrame );
 
@@ -261,7 +265,7 @@ void SearchWinQt::onTimeout()
 		auto runtime = mt_runtime.getAndClear();
 		double seconds = runtime / 1.0s;
 		DEBUG( format( "%3.3lf sec", seconds ) );
-		// l_runtime->setText( format( "%3.3lf sec", seconds ).c_str() );
+		l_runtime->setText( QString::fromStdWString( wformat( wLC(L"%3.3lf sec"), seconds ) ) );
 	}
 }
 
