@@ -27,8 +27,8 @@
 using namespace Tools;
 
 SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
-: main( main_ ),
-  QWidget(parent),
+: QWidget(parent),
+  WdgCommon(main_),
   config(0),
   tabidx(0)
 {
@@ -37,40 +37,40 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 
 	QVBoxLayout *setupLayout = new QVBoxLayout();
 	setupFrame->setLayout( setupLayout );
-	setupLayout->addWidget( new QLabel( u8"Path:" ) );
+	setupLayout->addWidget( new QLabel( wLCQ(L"Path:") ) );
 
 	cb_start_directory = new QComboBox();
 	cb_start_directory->setEditable( true );
 	// connect( cb_start_directory, SIGNAL( returnPressed() ),  this, SLOT(onSearch()) );
 	setupLayout->addWidget( cb_start_directory );
 
-	bt_search_dir = new QPushButton( u8"Search Directory");
+	bt_search_dir = new QPushButton( wLCQ( L"Search Directory") );
 	connect( bt_search_dir, SIGNAL(pressed()), this, SLOT(selectDirectory()) );
 	setupLayout->addWidget( bt_search_dir );
 
-	setupLayout->addWidget( new QLabel( u8"Files:" ) );
+	setupLayout->addWidget( new QLabel( wLCQ(L"Files:") ) );
 
 	cb_search_file_pattern = new DescComboQt();
 	connect( cb_search_file_pattern, SIGNAL( returnPressed() ),  this, SLOT(onSearch()) );
 	setupLayout->addWidget( cb_search_file_pattern );
 
-	setupLayout->addWidget( new QLabel( u8"Search criterias:" ) );
+	setupLayout->addWidget( new QLabel( wLCQ( L"Search criterias:")  ) );
 
-	cx_icase = new QCheckBox( u8"Case sensitive" );
+	cx_icase = new QCheckBox( wLCQ( L"Case sensitive" ) );
 	setupLayout->addWidget( cx_icase );
 
-	cx_regex = new QCheckBox( u8"Regular expresssion" );
+	cx_regex = new QCheckBox( wLCQ( L"Regular expresssion")  );
 	setupLayout->addWidget( cx_regex );
 
 	setupLayout->addWidget( new HSeparatorQt() );
 
-	setupLayout->addWidget( new QLabel( u8"Search:" ) );
+	setupLayout->addWidget( new QLabel( wLCQ( L"Search:") ) );
 
 	ef_search_term = new QLineEdit();
 	connect( ef_search_term, SIGNAL( returnPressed() ),  this, SLOT(onSearch()) );
 	setupLayout->addWidget( ef_search_term );
 
-	bt_search = new QPushButton( u8"Start" );
+	bt_search = new QPushButton( wLCQ( L"Start" ) );
 	connect( bt_search, SIGNAL(pressed()), this, SLOT(onSearch()) );
 	connect( this, SIGNAL(StartSearchNow()), this, SLOT(onSearch()) );
 	setupLayout->addWidget( bt_search );
@@ -78,7 +78,7 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 	setupLayout->addSpacing(10);
 
 	setupLayout->addWidget( new HSeparatorQt() );
-	setupLayout->addWidget( new QLabel( u8"Display options:" ) );
+	setupLayout->addWidget( new QLabel( wLCQ( L"Display options:") ) );
 
 	setupLayout->addWidget( new QLabel( QString::fromStdWString(wLC( L"Number of lines\naround the keyword" ) )) );
 	bt_number_of_lines = new QSpinBox();
@@ -90,10 +90,10 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 
 	setupLayout->addWidget( new HSeparatorQt() );
 
-	setupLayout->addWidget( new QCheckBox( u8"Highlight" ) );
+	setupLayout->addWidget( new QCheckBox( wLCQ( L"Highlight")  ) );
 	setupLayout->addWidget( new HSeparatorQt() );
 
-	setupLayout->addWidget( new QLabel( u8"State:" ) );
+	setupLayout->addWidget( new QLabel( wLCQ( L"State:" ) ) );
 	setupLayout->addWidget( new QProgressBar() );
 
 	QSplitter *splitter = new QSplitter();
@@ -275,17 +275,8 @@ void SearchWinQt::onTimeout()
 	}
 }
 
-std::wstring SearchWinQt::wLC( const std::wstring & s )
-{
-	return main->wLC( s );
-}
-
-const char* SearchWinQt::LC( const char  *msg )
-{
-	return main->LC( msg );
-}
-
 void SearchWinQt::onVisibleLinesChanged( int value )
 {
 	result->setVisibleLines( value );
 }
+

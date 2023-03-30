@@ -113,6 +113,8 @@ add_executable(supagrep
 	srcqt/desccomboqt.cc
 	srcqt/resultwinqt.h
 	srcqt/resultwinqt.cc
+	srcqt/WdgCommon.h
+	srcqt/WdgCommon.cc
 )
 
 target_include_directories(supagrep PUBLIC

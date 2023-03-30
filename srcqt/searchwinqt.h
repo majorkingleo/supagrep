@@ -11,6 +11,7 @@
 #include <qwidget.h>
 #include <qlineedit.h>
 #include <search.h>
+#include "WdgCommon.h"
 
 class DescComboQt;
 class MainWindowQt;
@@ -21,12 +22,10 @@ class QTimer;
 class ResultWinQt;
 class QSpinBox;
 
-class SearchWinQt : public QWidget
+class SearchWinQt : public QWidget, public WdgCommon
 {
 	Q_OBJECT
 private:
-
-	MainWindowQt *main;
 
 	QComboBox 	*cb_start_directory;
 	DescComboQt *cb_search_file_pattern;
@@ -58,9 +57,6 @@ public:
 	 void setTabIdx( int idx ) {
 		 tabidx = idx;
 	 }
-
-	 std::wstring wLC( const std::wstring & s );
-	 const char* LC( const char * msg );
 
 signals:
 	void StartSearchNow();

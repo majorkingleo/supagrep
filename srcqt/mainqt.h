@@ -32,6 +32,7 @@ public:
 
 	 std::wstring wLC( const std::wstring & s );
 	 const char* LC( const char * msg );
+	 QString wLCQ( const std::wstring & s );
 
 private slots:
 	 void newSearch();

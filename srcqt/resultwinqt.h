@@ -4,16 +4,17 @@
  *  Created on: 12.03.2023
  *      Author: martin
  */
-#include <qlistwidget.h>
-#include <search.h>
-#include <ResultWinCommon.h>
-
 #ifndef SRCQT_RESULTWINQT_H_
 #define SRCQT_RESULTWINQT_H_
 
+#include <qlistwidget.h>
+#include <search.h>
+#include <ResultWinCommon.h>
+#include "WdgCommon.h"
+
 class MainWindowQt;
 
-class ResultWinQt : public QListWidget, public ResultWinCommon
+class ResultWinQt : public QListWidget, public ResultWinCommon, public WdgCommon
 {
 	Q_OBJECT
 
@@ -36,7 +37,6 @@ private:
 	};
 
 private:
-	MainWindowQt *main;
 	QAction *actionOpenWidthDefaultApp;
 	QAction *actionCopyFileNameToClipboard;
 	std::list<Cmd> cmds;
@@ -60,9 +60,6 @@ protected:
 	Search::Result getCurrentSelectedResult();
 
 	void addCmd( const Cmd & cmd );
-
-	std::wstring wLC( const std::wstring & s );
-	const char* LC( const char * msg );
 
 private slots:
 	void openWidthDefaultApp();

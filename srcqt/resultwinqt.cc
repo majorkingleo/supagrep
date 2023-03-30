@@ -28,7 +28,7 @@ using namespace Tools;
 ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
  : QListWidget( parent ),
    ResultWinCommon(),
-   main( main_ )
+   WdgCommon(main_)
 {
 	actionOpenWidthDefaultApp = new QAction(this);
 	actionOpenWidthDefaultApp->setObjectName( u8"actionOpenWidthDefaultApp" );
@@ -179,16 +179,6 @@ void ResultWinQt::copyFileNameToClipboard()
 
 	QClipboard *clipboard = QGuiApplication::clipboard();
 	clipboard->setText( QString::fromStdWString( result.file.wstring() ) );
-}
-
-std::wstring ResultWinQt::wLC( const std::wstring & s )
-{
-	return main->wLC( s );
-}
-
-const char* ResultWinQt::LC( const char  *msg )
-{
-	return main->LC( msg );
 }
 
 void ResultWinQt::openWidthCmd()
