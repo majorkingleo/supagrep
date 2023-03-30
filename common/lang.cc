@@ -37,6 +37,8 @@ Lang::StaticText Lang::TransMsg[] = {
   { u8"de", u8"Start %s", u8"Starte %s" },
   { u8"de", u8"Open File with %s", u8"Öffne Datei mit %s" },
   { u8"de", u8"About SupaGrep", u8"Über SupaGrep" },
+  { u8"de", u8"State:", u8"Status:" },
+  { u8"de", u8"Search Directory", u8"Verzeichnis" },
   { u8"de",
 	u8"SupaGrep version " VERSION ",\n"
 	"Copyright (C) 2007 - 2023 by Martin Oberzalek kingleo@gmx.at\n"

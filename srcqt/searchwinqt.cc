@@ -56,10 +56,10 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 
 	setupLayout->addWidget( new QLabel( wLCQ( L"Search criterias:")  ) );
 
-	cx_icase = new QCheckBox( wLCQ( L"Case sensitive" ) );
+	cx_icase = new QCheckBox( wLCQ( L"Case Insensitive" ) );
 	setupLayout->addWidget( cx_icase );
 
-	cx_regex = new QCheckBox( wLCQ( L"Regular expresssion")  );
+	cx_regex = new QCheckBox( wLCQ( L"Regular Expresssion")  );
 	setupLayout->addWidget( cx_regex );
 
 	setupLayout->addWidget( new HSeparatorQt() );
@@ -78,7 +78,7 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 	setupLayout->addSpacing(10);
 
 	setupLayout->addWidget( new HSeparatorQt() );
-	setupLayout->addWidget( new QLabel( wLCQ( L"Display options:") ) );
+	setupLayout->addWidget( new QLabel( wLCQ( L"Result Options:") ) );
 
 	setupLayout->addWidget( new QLabel( QString::fromStdWString(wLC( L"Number of lines\naround the keyword" ) )) );
 	bt_number_of_lines = new QSpinBox();
@@ -90,7 +90,7 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 
 	setupLayout->addWidget( new HSeparatorQt() );
 
-	setupLayout->addWidget( new QCheckBox( wLCQ( L"Highlight")  ) );
+	setupLayout->addWidget( new QCheckBox( wLCQ( L"Highlight Keyword" )  ) );
 	setupLayout->addWidget( new HSeparatorQt() );
 
 	setupLayout->addWidget( new QLabel( wLCQ( L"State:" ) ) );
