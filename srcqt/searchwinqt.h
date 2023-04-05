@@ -41,6 +41,7 @@ private:
 	QSpinBox		*bt_number_of_lines;
 	QProgressBar 	*pb_progress;
 	QLabel			*l_runtime;
+	QCheckBox 		*cx_highlight;
 
 	Search::MTAccess<bool> mt_running;
 	Search::MTAccess<int>  mt_status;

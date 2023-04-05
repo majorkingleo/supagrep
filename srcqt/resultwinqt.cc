@@ -28,7 +28,8 @@ using namespace Tools;
 ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
  : QListWidget( parent ),
    ResultWinCommon(),
-   WdgCommon(main_)
+   WdgCommon(main_),
+   highlight_keyword( false )
 {
 	actionOpenWidthDefaultApp = new QAction(this);
 	actionOpenWidthDefaultApp->setObjectName( u8"actionOpenWidthDefaultApp" );
@@ -136,6 +137,33 @@ std::wstring ResultWinQt::hightLightFileNameAndLine( const std::wstring & file_n
 
 std::wstring ResultWinQt::highLightKeyWord( const std::wstring & line )
 {
+	if( highlight_keyword ) {
+
+		if( config->icase ) {
+			const std::wstring search_term_upper_case = toupper( config->search );
+			const std::wstring line_upper_case = toupper( line );
+
+			std::wstring result_line = line;
+
+			for( auto pos_start = line_upper_case.find( search_term_upper_case, 0 );
+				 pos_start != std::wstring::npos;
+				 pos_start = line_upper_case.find( search_term_upper_case, pos_start + 1 ) )
+			{
+				std::wstring pre = result_line.substr( 0, pos_start );
+				std::wstring word = result_line.substr( pos_start, pos_start + config->search.size() );
+				std::wstring post = result_line.substr( pos_start + config->search.size() );
+				result_line = pre + L"<b>" + word + L"</b>" + post;
+				DEBUG( result_line );
+			}
+
+			return result_line;
+
+		} else {
+			std::wstring & search_term = config->search;
+			return substitude( line, search_term, + L"<b>" + search_term + L"</b>" );
+		}
+	}
+
 	return line;
 }
 
@@ -208,6 +236,28 @@ void ResultWinQt::openWidthCmd()
 void ResultWinQt::setVisibleLines( int vl )
 {
   view_lines = vl;
+  QListWidget::clear();
+
+  for( result_list::iterator it = results.begin();
+	   it != results.end(); it++ )
+	{
+	  appendResult( it->result, it->path, false, &(*it) );
+	}
+}
+
+void ResultWinQt::hightLightKeyword( int state )
+{
+  bool highlight_keyword_new = false;
+  if( state == Qt::Checked ) {
+	  highlight_keyword_new = true;
+  }
+
+  if( highlight_keyword == highlight_keyword_new ) {
+	  return;
+  }
+
+  highlight_keyword = highlight_keyword_new;
+
   QListWidget::clear();
 
   for( result_list::iterator it = results.begin();

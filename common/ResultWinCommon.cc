@@ -70,11 +70,17 @@ void ResultWinCommon::appendResult( const Search::Result & result, const std::ws
 
 	if( line.find( L'\n' ) == std::wstring::npos ) {
 		line = strip( line );
+		line = highLightKeyWord( line );
 		append( hightLightFileNameAndLine( file_name, result.line ) + L" " + line, false, address );
 	} else {
 		append( hightLightFileNameAndLine( file_name, result.line), true, address );
 
 		std::vector<std::wstring> sl = split_simple( line, L"\n" );
+
+		for( std::wstring & s : sl ) {
+			s = highLightKeyWord( s );
+		}
+
 		append( sl, false, address );
 	}
 }

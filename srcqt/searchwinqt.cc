@@ -90,7 +90,9 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 
 	setupLayout->addWidget( new HSeparatorQt() );
 
-	setupLayout->addWidget( new QCheckBox( wLCQ( L"Highlight Keyword" )  ) );
+	cx_highlight = new QCheckBox( wLCQ( L"Highlight Keyword" )  );
+	setupLayout->addWidget( cx_highlight );
+
 	setupLayout->addWidget( new HSeparatorQt() );
 
 	setupLayout->addWidget( new QLabel( wLCQ( L"State:" ) ) );
@@ -106,6 +108,9 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 
 	result = new ResultWinQt( main );
 	splitter->addWidget( result );
+
+	connect( cx_highlight, SIGNAL( stateChanged(int) ), result, SLOT( hightLightKeyword(int) ) );
+	cx_highlight->setCheckState( Qt::Checked );
 
 	QHBoxLayout *mainLayout = new QHBoxLayout();
 	mainLayout->addWidget( splitter );
@@ -195,6 +200,7 @@ void SearchWinQt::onSearch()
 	config->path =  cb_start_directory->currentText().toStdWString();
 	config->search =  ef_search_term->text().toStdWString();
 
+	result->setConfig( config );
 	result->clear();
 
 	std::thread search_thread( [this]{

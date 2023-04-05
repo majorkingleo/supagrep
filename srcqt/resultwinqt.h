@@ -40,6 +40,8 @@ private:
 	QAction *actionOpenWidthDefaultApp;
 	QAction *actionCopyFileNameToClipboard;
 	std::list<Cmd> cmds;
+	bool highlight_keyword;
+	std::shared_ptr<Search::Config> config;
 
 public:
 	ResultWinQt( MainWindowQt *main, QWidget *parent = 0 );
@@ -49,6 +51,9 @@ public:
 	void clear() override;
 
 	void setVisibleLines( int vl );
+	void setConfig( std::shared_ptr<Search::Config> config_ ) {
+		config = config_;
+	}
 
 protected:
 	std::wstring highLightKeyWord( const std::wstring & line ) override;
@@ -60,6 +65,10 @@ protected:
 	Search::Result getCurrentSelectedResult();
 
 	void addCmd( const Cmd & cmd );
+
+public slots:
+	void hightLightKeyword( int state );
+
 
 private slots:
 	void openWidthDefaultApp();
