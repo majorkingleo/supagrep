@@ -308,8 +308,8 @@ public:
 
 		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
-		if( data_result == L"bbbb 2\n"
-							"cccc 3\n") {
+		if( data_result == L"cccc 3\n"
+							"dddd 4\n") {
 			return true;
 		}
 
