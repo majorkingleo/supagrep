@@ -5,6 +5,8 @@
 #include <arg.h>
 #include <OutDebug.h>
 #include <getline.h>
+#include <functional>
+#include <string_utils.h>
 
 using namespace Tools;
 
@@ -317,6 +319,60 @@ public:
 	}
 };
 
+class TestCaseFindAllOfBase : public TestCaseBase
+{
+protected:
+	const std::wstring testdata;
+
+public:
+	TestCaseFindAllOfBase( const std::string & name )
+	: TestCaseBase( name ),
+	  testdata (L"Hi I am Hi Boost Hi Library")
+	{
+
+	}
+
+	template<class container>
+	std::wstring v2s( const container & data ) {
+		return IterableToFormattedWString( data );
+	}
+};
+
+
+class TestCaseFindAllOf1 : public TestCaseFindAllOfBase
+{
+public:
+	TestCaseFindAllOf1()
+	: TestCaseFindAllOfBase( "find_all_of(1)" )
+	{}
+
+	bool run() override
+	{
+		std::vector<std::wstring::size_type> positions;
+		find_all_of( testdata, L"Hi",
+				[&positions]( auto pos ) {
+					positions.push_back( pos );
+					return true;
+				} );
+
+		std::wstring data_result = v2s( positions );
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"0, 8, 17") {
+			return true;
+		}
+
+		auto data2 = find_all_of<std::vector<std::wstring::size_type>>( testdata, L"Hi");
+
+		if( data2 == positions ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+
 int main( int argc, char **argv )
 {
 	ColoredOutput co;
@@ -373,6 +429,8 @@ int main( int argc, char **argv )
 		test_cases.push_back( std::make_shared<TestCaseGetLinesAfter2>() );
 		test_cases.push_back( std::make_shared<TestCaseGetLinesAfter3>() );
 		test_cases.push_back( std::make_shared<TestCaseGetLinesAfter4>() );
+
+		test_cases.push_back( std::make_shared<TestCaseFindAllOf1>() );
 
 		ColBuilder col;
 
