@@ -143,16 +143,20 @@ std::wstring ResultWinQt::highLightKeyWord( const std::wstring & line )
 			const std::wstring search_term_upper_case = toupper( config->search );
 			const std::wstring line_upper_case = toupper( line );
 
+			auto positions = find_all_of<std::vector<std::wstring::size_type>>( line_upper_case, search_term_upper_case );
 			std::wstring result_line = line;
 
-			for( auto pos_start = line_upper_case.find( search_term_upper_case, 0 );
-				 pos_start != std::wstring::npos;
-				 pos_start = line_upper_case.find( search_term_upper_case, pos_start + 1 ) )
-			{
-				std::wstring pre = result_line.substr( 0, pos_start );
-				std::wstring word = result_line.substr( pos_start, pos_start + config->search.size() );
-				std::wstring post = result_line.substr( pos_start + config->search.size() );
-				result_line = pre + L"<b>" + word + L"</b>" + post;
+			std::wstring::size_type pos_offset = 0;
+			const std::wstring HTML_B_OPEN = L"<b>";
+			const std::wstring HTML_B_CLOSE = L"</b>";
+
+			for( auto pos : positions ) {
+				pos += pos_offset;
+				std::wstring pre = result_line.substr( 0, pos );
+				std::wstring word = result_line.substr( pos, config->search.size() );
+				std::wstring post = result_line.substr( pos + config->search.size() );
+				result_line = pre + HTML_B_OPEN + word + HTML_B_CLOSE + post;
+				pos_offset += HTML_B_OPEN.size() + HTML_B_CLOSE.size();
 				DEBUG( result_line );
 			}
 
