@@ -57,10 +57,13 @@ void ResultWinCommon::appendResult( const Search::Result & result, const std::ws
 	}
 
 	auto file = result.file;
-	std::wstring line = getLineAtPos( result.file, result.pos, view_lines );
+	std::wstring line;
 
-	line = substitude( line, L"\t", L" " );
-	line = substitude( line, L"\r", L" " );
+	if( result.pos >= 0 ) {
+		line = getLineAtPos( result.file, result.pos, view_lines );
+		line = substitude( line, L"\t", L" " );
+		line = substitude( line, L"\r", L" " );
+	}
 
 	std::wstring file_name = file.wstring();
 
@@ -87,7 +90,11 @@ void ResultWinCommon::appendResult( const Search::Result & result, const std::ws
 
 std::wstring ResultWinCommon::hightLightFileNameAndLine( const std::wstring & file_name, long line_number )
 {
-	return  wformat( L"%s:%ld", file_name, line_number );
+	if( line_number >= 0 ) {
+		return  wformat( L"%s:%ld", file_name, line_number );
+	}
+
+	return file_name;
 }
 
 void ResultWinCommon::clear()

@@ -81,6 +81,9 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Eclipse" ) ),
 			L"eclipse.exe", L"--launcher.openFile %s:%d" ) );
 
+	addCmd( Cmd( wformat( wLC( L"Start %s" ), wLC( L"Notepad" ) ),
+			L"notepad.exe" ) );
+
 	// DEBUG( wformat( L"notpaged.exe: %s", QStandardPaths::findExecutable("notepad" ).toStdWString() ) );
 
 	connect(actionOpenWidthDefaultApp, SIGNAL (triggered()), this, SLOT (openWidthDefaultApp()));
@@ -132,7 +135,11 @@ void ResultWinQt::clear()
 
 std::wstring ResultWinQt::hightLightFileNameAndLine( const std::wstring & file_name, long line_number )
 {
-	return  wformat( L"<small>%s:%ld</small>", file_name, line_number );
+	if( line_number >= 0 ) {
+		return  wformat( L"<small>%s:%ld</small>", file_name, line_number );
+	}
+
+	return file_name;
 }
 
 std::wstring ResultWinQt::highLightKeyWord( const std::wstring & line )

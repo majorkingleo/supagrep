@@ -33,8 +33,7 @@ void Search::run()
 	  config->mt_status_max->set(files.size());
 	  DEBUG( wformat( L"Total files '%d'", files.size() ) );
 	  int count = 0;
-	  for( file_list::iterator it = files.begin(); it != files.end() && !config->mt_stop->get(); it++ )
-		{
+	  for( file_list::iterator it = files.begin(); it != files.end() && !config->mt_stop->get(); it++ ) {
 		  do_search( *it );
 
 		  count++;
@@ -114,16 +113,39 @@ void Search::do_search( const std::filesystem::path & file )
   std::wstring content;
   ReadFile read_file;
 
-  if( !read_file.read_file( file.string(), content ) ) {
-	  DEBUG( wformat( L"cannot open file: '%s'", file.wstring() ) );
-	  return;
-  }
+  if( config->search.empty() ) {
 
-  if( config->icase ) {
-	  DEBUG( lsearch );
-	  do_simple_search( tolower(content), lsearch, file );
+	  if( config->icase ) {
+
+		  const std::wstring lfile = tolower( file.filename().wstring() );
+
+		  if( lfile.find(lsearch) != std::wstring::npos ) {
+			  config->mt_result->access().push_back(Result( file ));
+			  config->mt_result->free();
+		  }
+
+	  } else {
+
+		  if( file.filename().wstring().find(config->search) != std::wstring::npos ) {
+			  config->mt_result->access().push_back(Result( file ));
+			  config->mt_result->free();
+		  }
+	  }
+
+
   } else {
-	  do_simple_search( content, config->search, file );
+
+	  if( !read_file.read_file( file.string(), content ) ) {
+		  DEBUG( wformat( L"cannot open file: '%s'", file.wstring() ) );
+		  return;
+	  }
+
+	  if( config->icase ) {
+		  DEBUG( lsearch );
+		  do_simple_search( tolower(content), lsearch, file );
+	  } else {
+		  do_simple_search( content, config->search, file );
+	  }
   }
 }
 

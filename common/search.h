@@ -92,7 +92,7 @@ class Search
 	long line;
 	long pos;
 
-	Result( const std::filesystem::path & file_, long line_, long pos_ )
+	Result( const std::filesystem::path & file_, long line_ = -1, long pos_ = -1 )
 	  : file( file_ ), line( line_ ), pos( pos_ )
 	{}
   };
