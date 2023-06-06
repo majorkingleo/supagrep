@@ -61,6 +61,8 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 			L"kwrite", L"--line %d %s" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"WinVi" ) ),
 			L"Winvi32.exe", L"+%d %s" ) );
+	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Notepad++" ) ),
+			L"notepad++.exe", L"-n%d %s" ) );
 
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Vi" ) ),
 			L"vi.exe", L"+%d %s" ) );
@@ -226,20 +228,22 @@ void ResultWinQt::openWidthCmd()
 	QVariant var = qaction->data();
 	Cmd *cmd = var.value<Cmd*>();
 
-	DEBUG( wformat( L"Open with: %s", cmd->exec ) );
-
 	Search::Result result = getCurrentSelectedResult();
 
 	std::vector<std::wstring> sArgs = split_and_strip_simple( cmd->open_cmd );
 
 	QStringList args;
+	std::wstring debug_args;
 
 	for( std::wstring & s : sArgs ) {
 		s = substitude( s, L"%d", std::to_wstring( result.line) );
 		s = substitude( s, L"%s", result.file.wstring() );
 
+		debug_args += s;
 		args << QString::fromStdWString( s );
 	}
+
+	DEBUG( wformat( L"Open with: %s %s", cmd->exec, debug_args ) );
 
 	QProcess::startDetached( QString::fromStdWString( cmd->exec ), args );
 }
