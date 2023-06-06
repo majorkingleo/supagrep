@@ -162,6 +162,10 @@ int main(int argc, char **argv)
 	if( o_debug.getState() )
 	{
 		Tools::x_debug = new OutDebug();
+	} else {
+#ifdef _WIN32
+		FreeConsole();
+#endif
 	}
 
 	QApplication app (argc, argv);
