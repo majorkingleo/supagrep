@@ -31,6 +31,7 @@ class ResultWin : public FXList, public ResultWinCommon
 	ID_OPEN_KATE,
 	ID_OPEN_KWRITE,
 	ID_OPEN_WINVI,
+	ID_OPEN_NOTEPADPP,
 	ID_OPEN_ECLIPSE,
     ID_CONSOLE,
 	ID_KONSOLE,

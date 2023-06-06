@@ -38,6 +38,7 @@ FXDEFMAP( ResultWin ) ResultWinMap[] = {
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_OPEN_ADIE, ResultWin::onOpenExec ),
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_OPEN_ADIE_WIN, ResultWin::onOpenExec ),
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_OPEN_WINVI, ResultWin::onOpenExec ),
+  FXMAPFUNC(SEL_COMMAND, ResultWin::ID_OPEN_NOTEPADPP, ResultWin::onOpenExec ),
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_OPEN_ECLIPSE, ResultWin::onOpenExec ),
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_CONSOLE, ResultWin::onOpenExec ),
   FXMAPFUNC(SEL_COMMAND, ResultWin::ID_KONSOLE, ResultWin::onOpenExec ),
@@ -98,6 +99,9 @@ ResultWin::ResultWin( Main *main_,
   add_cmd( Cmd( ID_OPEN_WINVI, 
 				format( LC( "Open File with %s" ), LC( "WinVi" ) ),
 				"Winvi32.exe", "winvi32 +%d %s" ) );
+  add_cmd( Cmd( ID_OPEN_WINVI,
+				format( LC( "Open File with %s" ), LC( "Notepad++" ) ),
+				"notepad++.exe", "notepad++ -n%d %s" ) );
 
   add_cmd( Cmd( ID_OPEN_VI, 
 				format( LC( "Open File with %s" ), LC( "Vi" ) ),
