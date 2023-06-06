@@ -161,11 +161,11 @@ int main(int argc, char **argv)
 
 	if( o_debug.getState() )
 	{
-		Tools::x_debug = new OutDebug();
-	} else {
 #ifdef _WIN32
-		FreeConsole();
+		AllocConsole();
+		freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
 #endif
+		Tools::x_debug = new OutDebug();
 	}
 
 	QApplication app (argc, argv);
