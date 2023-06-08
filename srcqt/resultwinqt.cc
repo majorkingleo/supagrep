@@ -144,6 +144,65 @@ std::wstring ResultWinQt::hightLightFileNameAndLine( const std::wstring & file_n
 	return file_name;
 }
 
+
+class HtmlOrPlainText
+{
+public:
+	struct HTML
+	{
+		std::wstring text;
+	};
+
+	struct PLAIN
+	{
+		std::wstring text;
+	};
+
+private:
+	std::wstring plain_text;
+	std::wstring html_text;
+	bool html_text_encoded;
+
+public:
+	HtmlOrPlainText( const PLAIN & plain )
+	: plain_text( plain.text ),
+	  html_text_encoded( false )
+	{}
+
+	HtmlOrPlainText( const HTML & html )
+	: html_text( html.text ),
+	  html_text_encoded( true )
+	{}
+
+	const std::wstring & getPlainText() const {
+		return plain_text;
+	}
+
+	std::wstring & getPlainText() {
+		return plain_text;
+	}
+
+	std::wstring & getHtmlText()
+	{
+		if( !html_text_encoded ) {
+			html_text = encodeHtmlEntities( plain_text );
+			html_text_encoded = true;
+		}
+
+		return html_text;
+	}
+
+private:
+	std::wstring encodeHtmlEntities( const std::wstring & line )
+	{
+		auto res = substitude( line, L"<", L"&lt;" );
+		res = substitude( res, L">", L"&gt;" );
+
+		return res;
+	}
+};
+
+
 std::wstring ResultWinQt::highLightKeyWord( const std::wstring & line )
 {
 	if( highlight_keyword ) {
@@ -159,21 +218,40 @@ std::wstring ResultWinQt::highLightKeyWord( const std::wstring & line )
 			const std::wstring HTML_B_OPEN = L"<b>";
 			const std::wstring HTML_B_CLOSE = L"</b>";
 
+			std::vector<HtmlOrPlainText> parts;
+			std::wstring post;
+
 			for( auto pos : positions ) {
-				pos += pos_offset;
+				pos -= pos_offset;
 				std::wstring pre = result_line.substr( 0, pos );
 				std::wstring word = result_line.substr( pos, config->search.size() );
-				std::wstring post = result_line.substr( pos + config->search.size() );
-				result_line = pre + HTML_B_OPEN + word + HTML_B_CLOSE + post;
-				pos_offset += HTML_B_OPEN.size() + HTML_B_CLOSE.size();
+				post = result_line.substr( pos + config->search.size() );
+
+				parts.push_back( HtmlOrPlainText(HtmlOrPlainText::PLAIN{ pre }) );
+				parts.push_back( HtmlOrPlainText(HtmlOrPlainText::HTML{ HTML_B_OPEN }) );
+				parts.push_back( HtmlOrPlainText(HtmlOrPlainText::PLAIN{ word }) );
+				parts.push_back( HtmlOrPlainText(HtmlOrPlainText::PLAIN{ HTML_B_CLOSE }) );
+
+				result_line = post;
+				pos_offset += pos;
 				DEBUG( result_line );
 			}
+
+			parts.push_back( HtmlOrPlainText(HtmlOrPlainText::PLAIN{ post }) );
+
+			result_line.clear();
+
+			for( auto & part : parts ) {
+				result_line += part.getHtmlText();
+			}
+
+			DEBUG( result_line );
 
 			return result_line;
 
 		} else {
 			std::wstring & search_term = config->search;
-			return substitude( line, search_term, + L"<b>" + search_term + L"</b>" );
+			return substitude( line, search_term, L"<b>" + search_term + L"</b>" );
 		}
 	}
 
