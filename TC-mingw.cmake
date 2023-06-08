@@ -7,7 +7,7 @@ set(CMAKE_CXX_COMPILER  x86_64-w64-mingw32-g++)
 
 # where is the target environment located
 set(CMAKE_FIND_ROOT_PATH  /usr/x86_64-w64-mingw32/sys-root
-	/cygdrive/c/Qt/6.4.2/mingw_64
+	/cygdrive/c/Qt/6.4.3/mingw_64
 )
 
 # adjust the default behavior of the FIND_XXX() commands:

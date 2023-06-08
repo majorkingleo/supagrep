@@ -1,6 +1,6 @@
 #/usr/bin/bash
 
-QTDIR=/cygdrive/c/Qt/6.4.2/mingw_64
+QTDIR=/cygdrive/c/Qt/6.4.3/mingw_64
 
 cmake  -DCMAKE_TOOLCHAIN_FILE=TC-mingw.cmake .
 for JSON in `find CMakeFiles -name "*.json"` ; do
