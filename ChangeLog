@@ -1,3 +1,352 @@
+commit 4324a456c419b57d35e9dff074559cea76f4ff91
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Mar 25 19:30:00 2023 +0100
+
+    Fixed format
+
+commit 286f850decf345ce1a99cdb086eebcc27c2b1f29
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Mar 25 19:07:58 2023 +0100
+
+    Fixed open command
+
+commit bc885ac34ef6307eb1c2b1287bacbfd2f5e9755c
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Mar 25 18:04:53 2023 +0100
+
+    Added editors you may wan't to open with.
+    
+    not finished yet
+
+commit 5fb6084212d1fb7343e94695e27b1719e9137ac4
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Mar 25 15:41:00 2023 +0100
+
+    Compile forward and addpath only on WIN32 platform
+
+commit c4a313afbbdf570592a88bf396cc9ed531eb7e9c
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Mon Mar 20 21:56:13 2023 +0100
+
+    Fixed FOX build
+
+commit df827c7c394f8f6675c3f8af4e17d55812577aeb
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Mon Mar 20 21:27:10 2023 +0100
+
+    Copy filename to clipboard
+
+commit d3602e4f8941bd5fa94d7f7cb69af0ab90213b27
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Mon Mar 20 19:47:41 2023 +0100
+
+    Open file with default app
+
+commit f6702509b6f61fc5d7607ddb915e65a268306f38
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Mon Mar 20 19:14:46 2023 +0100
+
+    Preparation for context menu
+
+commit 89c18fbf187b1660d40f13125c5bf576a8813ac4
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Mon Mar 20 18:49:29 2023 +0100
+
+    Added addpath and forward to target list
+
+commit 47d65704c36badb96517c6e96da1c7684174ec20
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Mar 19 20:51:20 2023 +0100
+
+    switch to shared_ptr for Result::Config
+
+commit 8fdd657781a6c5119d6c9806d15819b0ded4cc56
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Mar 19 18:05:31 2023 +0100
+
+    First step to hightlight stuff in result win
+
+commit c696d799e6237231ad2a61f246f17427ee7ea393
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Mar 19 16:08:33 2023 +0100
+
+    Display search result in Qt gui
+
+commit 27e4349505d5c52addf21ddde1db0f73c6fb3762
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Mar 19 15:53:36 2023 +0100
+
+    Moved appendItem to ResultWinCommon class
+
+commit ac6f1a62c7db0c7000668ac23b8d821ac3e105be
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Mar 19 15:30:03 2023 +0100
+
+    Moved stuff into ResultWinCommon class
+
+commit 1684c33f9067c71d01be923f1e1d107bd0c9855b
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Mar 18 22:04:04 2023 +0100
+
+    Added get_whole_line from replace
+
+commit 5e24aaf06a166a5a9a4cd954c43fc604faa43eff
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Mar 18 22:00:26 2023 +0100
+
+    Show some results
+
+commit f67fd615d26547d01e44b52c49586adf0d379c3b
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sat Mar 18 22:00:04 2023 +0100
+
+    Added getline from replace
+
+commit ee869b9d470cc395dd1124c491bfefd5961a1c70
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 15 20:31:03 2023 +0100
+
+    New version (minor changes)
+
+commit 98aee7a8cc808b25b08343eab15b2495ec4645c4
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 15 20:26:56 2023 +0100
+
+    fixed permissions
+
+commit a8a7fd740eb1fdb2c8100fc795593c5585a3c3af
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 15 20:26:45 2023 +0100
+
+    use bugfixed cpputils
+
+commit ca6508df28e14faadfe7ab624d44f857cb2ebe7e
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Mar 12 19:25:38 2023 +0100
+
+    Added ResultWinQt
+
+commit 82637af4beaf6fe719cd713dd8a9847024302f12
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Thu Mar 9 20:47:54 2023 +0100
+
+    Integration of search thread, start and stops a search
+
+commit 08fa46aa59561c7d03cb2a3f059c2203e99e5f1c
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Thu Mar 9 20:46:42 2023 +0100
+
+    Bugfix when setCurrentIndex() is called
+
+commit c80e72c2e9636f2e636cf8a8291e25b9ab4085eb
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Thu Mar 9 08:29:38 2023 +0100
+
+    prefill config from command line
+
+commit c068d1e1734d817ec8f028d7e9c41f2736c8a07d
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Thu Mar 9 08:29:14 2023 +0100
+
+    commented out unused libraries
+
+commit 34e42bc92048f4f8f451753ba81af676f141f2db
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 8 21:15:08 2023 +0100
+
+    Unified command line parsing
+    
+    also some WIN32 fixes
+
+commit 8f25dc46f473c2fa42990fea6835f601339bd0b8
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 8 19:09:11 2023 +0100
+
+    integrated command line parsing to mainqt window
+
+commit 771aa011ac6efbd94d52c08b9fce170520c4c75b
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 8 18:39:31 2023 +0100
+
+    Added DescComboQt widget for pre defined file search patterns
+
+commit c9f7df7f59476fc91256555ab9d4be104123fee4
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 8 17:42:44 2023 +0100
+
+    Use bigfixed version (toupper)
+
+commit 375614c5071d2550409ef9beed9c7dba938a80da
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 8 17:42:25 2023 +0100
+
+    moved Search class to common lib
+
+commit c9f3c8030b04c139d6794d1aec20ed4d77cb72f8
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 8 15:47:41 2023 +0100
+
+    remove FXString from Search class
+
+commit f615d77660563d1e961dd2be4d784afa490293c3
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 8 15:27:28 2023 +0100
+
+    switched to std::filesystem::path
+
+commit 5cf9f2c23a3e795b300725a0e3a3cea0ddcf5045
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 8 10:18:44 2023 +0100
+
+    switched to std::chrono
+
+commit ee77c4ab31c5adb90bbb663a76e5ea9f42b6ec60
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 8 09:13:45 2023 +0100
+
+    switched to c++ thread
+
+commit 5140d036dcb53418eba6a5846fa9893a73cdb129
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 8 08:45:26 2023 +0100
+
+    Switched to std::mutex
+
+commit 42027adc2b51a692a52e90fa2b78dc26c497893b
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Mar 5 18:39:53 2023 +0100
+
+    Fixed bug in FOX version
+
+commit 3a4b39f6f5232754cb4e6ae94e64882bd74c5012
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Fri Mar 3 23:28:01 2023 +0100
+
+    Added script to crosscompile in a cygwin environment
+    
+    where cmake is the one shipped with cygwin
+
+commit adf476aefeeb98e6a956d5827ad40323c8d1a699
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Fri Mar 3 23:27:16 2023 +0100
+
+    Fixed text encoding for windows
+
+commit 0767612eb899392023b4e23df4089a5b9c8e4f29
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 1 12:53:37 2023 +0100
+
+    use updated utf8_utils
+
+commit b1feff452cd0c97314c65ce3d52d2091dd8e9a48
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 1 12:51:32 2023 +0100
+
+    move setup.cc to common lib
+
+commit 82006371e5eb9bdf6e95f9ef9504a9950e38326a
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 1 10:09:18 2023 +0100
+
+    set a defined encoding for translations
+
+commit 49f38cdb09f0fcdae92fb11a4b48a6ca4bbbdde2
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Wed Mar 1 09:35:29 2023 +0100
+
+    moved lang.h into common directory
+    
+    both with cmake and automake
+
+commit 99f290a4fcbb7967209d14a324d6f010a361ba1b
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Tue Feb 28 13:46:07 2023 +0100
+
+    Implementan OpenDiretory Dialog
+
+commit 19b8e18194c954ea396b70ed4ea4a8d73955660d
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Tue Feb 28 09:24:45 2023 +0100
+
+    First layout that is similar to supgrep
+
+commit 33d57eed0907d24375d89bf76dd98c6aba54ffe4
+Author: Martin Oberzalek <martin.oberzalek@ssi-schaefer.com>
+Date:   Tue Feb 28 03:52:49 2023 +0100
+
+    QT base qui classes created
+
+commit 270c1a108a18af827a9a83283cdb718f88dacd09
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Feb 26 13:11:08 2023 +0100
+
+    added helper script for executing supagrep without installing it
+    
+    for development
+
+commit d5c591b480b0b8f30c0226577c30de22c90408f3
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Feb 26 13:09:22 2023 +0100
+
+    removed unused file adie.h which contains the adie icon
+
+commit 538f3da72e3bae63ebd7f6b5894231e3ad1e9338
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Thu Feb 23 22:54:14 2023 +0100
+
+    Make setup on Windows
+
+commit 29b328148c335a24304fa83f2cee6572e48d2357
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Mon Feb 20 00:21:49 2023 +0100
+
+    fixed missing header files
+
+commit 67dbd15f8310cced21b0a38a95c01f0dc83a78f0
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Mon Feb 20 00:15:19 2023 +0100
+
+    theme.h,cpp is now in cpputils/fox
+
+commit 1e07c14989fe1e96700311a449d209d214fdbbc8
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Mon Feb 20 00:06:51 2023 +0100
+
+    Fixed locale bug in cpputils
+
+commit e5d5c8fef566d1aecade7376e28199837dbe2193
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Feb 19 23:54:01 2023 +0100
+
+    Fixed progress bar (stays blank)
+
+commit ee3a39f5cc39c9777ffdb45134982c5e0b7d9a64
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Feb 19 23:52:45 2023 +0100
+
+    Add eclipse to open commands
+
+commit c7239f8a621838aadc2e6d16682936db6645c3d3
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Feb 19 22:29:32 2023 +0100
+
+    Fixed bugs in cpputils
+
+commit d779295e7fad825d03df5fa601e02c1803299f3c
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Feb 19 22:11:58 2023 +0100
+
+    Fixed crash when starting with command line option, but without a search
+    string
+
+commit 017238ad6042dd829a2fa884f7a311f1f70b1bc2
+Author: Martin Oberzalek <kingleo@gmx.at>
+Date:   Sun Feb 19 22:00:23 2023 +0100
+
+    Fixed Copy to Clippboard bug
+    
+    seems to be a FOX-1.7 diff
+
 commit 92bc430351960623457986549517fd28895ce985
 Author: Martin Oberzalek <kingleo@gmx.at>
 Date:   Sat Feb 18 23:31:32 2023 +0100
