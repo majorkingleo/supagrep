@@ -8,10 +8,16 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
+DLLS="libbz2-1.dll  libFOX-1.7-0.dll  libgcc_s_seh-1.dll  libjpeg-8.dll  libpng16-16.dll  libstdc++-6.dll  libwinpthread-1.dll  libz.dll"
+
 cd "$DIR"
 
 ( cd dist && for i in *.dll ; do cp -u /usr/x86_64-w64-mingw32/sys-root/mingw/bin/$i . ; done )
-( cd dist && cp -u /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll . )
+
+for DLL in ${DLLS} ; do
+	( cd dist && cp -u /usr/x86_64-w64-mingw32/sys-root/mingw/bin/${DLL} . )
+done
+
 ( cd dist && cp -u ../supagrep.exe . )
 ( cd dist && cp -u ../addpath.exe . )
 ( cd dist && cp -u ../forward.exe qc.exe )

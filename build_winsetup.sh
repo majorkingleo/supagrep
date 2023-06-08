@@ -8,11 +8,16 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
+DLLS="libbz2-1.dll  libFOX-1.7-0.dll  libgcc_s_seh-1.dll  libjpeg-8.dll  libpng16-16.dll  libstdc++-6.dll  libwinpthread-1.dll  libz.dll"
+
 cd "$DIR"
 
 if ! test -d dist ; then
 	mkdir dist
-	( cd dist && cp -u /usr/x86_64-w64-mingw32/sys-root/mingw/bin/*.dll . )
+
+	for DLL in ${DLLS} ; do
+    	( cd dist && cp -u /usr/x86_64-w64-mingw32/sys-root/mingw/bin/${DLL} . )
+	done
 	( cd dist && ln -s ../supagrep.exe . )
 	( cd dist && ln -s ../addpath.exe . )
 	( cd dist && ln -s ../forward.exe qc.exe )
@@ -21,7 +26,7 @@ if ! test -d dist ; then
 	( cd dist && ln -s ../forward.exe qrc.exe )
 else
 # update dll
-	( cd dist && for i in *.dll ; do cp -u /usr/x86_64-w64-mingw32/sys-root/mingw/bin/$i . ; done )
+	( cd dist && for i in ${DLLS} ; do cp -u /usr/x86_64-w64-mingw32/sys-root/mingw/bin/$i . ; done )
 fi
 
 strip supagrep.exe
