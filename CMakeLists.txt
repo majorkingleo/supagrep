@@ -94,6 +94,8 @@ add_library(common STATIC
 	common/getline.cc
 	common/ResultWinCommon.h
 	common/ResultWinCommon.cc
+	common/HighLightKeyWord.h
+	common/HighLightKeyWord.cc
 )
 
 target_include_directories(common PUBLIC

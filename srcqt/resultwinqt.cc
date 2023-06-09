@@ -22,6 +22,7 @@
 #include <QStandardPaths>
 #include <QProcess>
 #include <string_utils.h>
+#include <HighLightKeyWord.h>
 
 using namespace Tools;
 
@@ -145,117 +146,13 @@ std::wstring ResultWinQt::hightLightFileNameAndLine( const std::wstring & file_n
 }
 
 
-class HtmlOrPlainText
-{
-public:
-	struct HTML
-	{
-		std::wstring text;
-	};
-
-	struct PLAIN
-	{
-		std::wstring text;
-	};
-
-private:
-	std::wstring plain_text;
-	std::wstring html_text;
-	bool html_text_encoded;
-
-public:
-	HtmlOrPlainText( const PLAIN & plain )
-	: plain_text( plain.text ),
-	  html_text_encoded( false )
-	{}
-
-	HtmlOrPlainText( const HTML & html )
-	: html_text( html.text ),
-	  html_text_encoded( true )
-	{}
-
-	const std::wstring & getPlainText() const {
-		return plain_text;
-	}
-
-	std::wstring & getPlainText() {
-		return plain_text;
-	}
-
-	std::wstring & getHtmlText()
-	{
-		if( !html_text_encoded ) {
-			html_text = encodeHtmlEntities( plain_text );
-			html_text_encoded = true;
-		}
-
-		return html_text;
-	}
-
-private:
-	std::wstring encodeHtmlEntities( const std::wstring & line )
-	{
-		auto res = substitude( line, L"<", L"&lt;" );
-		res = substitude( res, L">", L"&gt;" );
-
-		return res;
-	}
-};
-
-
 std::wstring ResultWinQt::highLightKeyWord( const std::wstring & line )
 {
 	if( highlight_keyword ) {
-
-		if( config->icase ) {
-			const std::wstring search_term_upper_case = toupper( config->search );
-			const std::wstring line_upper_case = toupper( line );
-
-			auto positions = find_all_of<std::vector<std::wstring::size_type>>( line_upper_case, search_term_upper_case );
-			std::wstring result_line = line;
-
-			std::wstring::size_type pos_offset = 0;
-			const std::wstring HTML_B_OPEN = L"<b>";
-			const std::wstring HTML_B_CLOSE = L"</b>";
-
-			std::vector<HtmlOrPlainText> parts;
-			std::wstring post;
-
-			for( auto pos : positions ) {
-				pos -= pos_offset;
-				std::wstring pre = result_line.substr( 0, pos );
-				std::wstring word = result_line.substr( pos, config->search.size() );
-				post = result_line.substr( pos + config->search.size() );
-
-				parts.push_back( HtmlOrPlainText(HtmlOrPlainText::PLAIN{ pre }) );
-				parts.push_back( HtmlOrPlainText(HtmlOrPlainText::HTML{ HTML_B_OPEN }) );
-				parts.push_back( HtmlOrPlainText(HtmlOrPlainText::PLAIN{ word }) );
-				parts.push_back( HtmlOrPlainText(HtmlOrPlainText::PLAIN{ HTML_B_CLOSE }) );
-
-				result_line = post;
-				pos_offset += pos;
-				DEBUG( result_line );
-			}
-
-			parts.push_back( HtmlOrPlainText(HtmlOrPlainText::PLAIN{ post }) );
-
-			result_line.clear();
-
-			for( auto & part : parts ) {
-				result_line += part.getHtmlText();
-			}
-
-			DEBUG( result_line );
-
-			return result_line;
-
-		} else {
-			std::wstring & search_term = config->search;
-			return substitude( line, search_term, L"<b>" + search_term + L"</b>" );
-		}
+		return ::highLightKeyWord( line, config->search, config->icase );
 	}
 
-	return line;
+	return encodeHtmlEntities(line);
 }
 
 void ResultWinQt::contextMenuEvent(QContextMenuEvent *event)

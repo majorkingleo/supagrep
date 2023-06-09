@@ -7,6 +7,7 @@
 #include <getline.h>
 #include <functional>
 #include <string_utils.h>
+#include <HighLightKeyWord.h>
 
 using namespace Tools;
 
@@ -372,6 +373,89 @@ public:
 	}
 };
 
+class TestCaseHighLightKeyWord1 : public TestCaseFindBase
+{
+public:
+	TestCaseHighLightKeyWord1()
+	: TestCaseFindBase( "HighLightKeyWord(1)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = highLightKeyWord( L"#include <debug.h>", L"debug" );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"#include &lt;<b>debug</b>.h&gt;" ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+class TestCaseHighLightKeyWord2 : public TestCaseFindBase
+{
+public:
+	TestCaseHighLightKeyWord2()
+	: TestCaseFindBase( "HighLightKeyWord(2)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = highLightKeyWord( L"#include <debug.h>", L"Debug", true );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"#include &lt;<b>debug</b>.h&gt;" ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+class TestCaseHighLightKeyWord3 : public TestCaseFindBase
+{
+public:
+	TestCaseHighLightKeyWord3()
+	: TestCaseFindBase( "HighLightKeyWord(3)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = highLightKeyWord( L"#include <debug.h> // include debug", L"debug" );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"#include &lt;<b>debug</b>.h&gt; // include <b>debug</b>" ) {
+			return true;
+		}
+
+		return false;
+	}
+};
+
+class TestCaseHighLightKeyWord4 : public TestCaseFindBase
+{
+public:
+	TestCaseHighLightKeyWord4()
+	: TestCaseFindBase( "HighLightKeyWord(4)" )
+	{}
+
+	bool run() override
+	{
+		std::wstring data_result = highLightKeyWord( L"debug", L"debug" );
+
+		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+
+		if( data_result == L"<b>debug</b>" ) {
+			return true;
+		}
+
+		return false;
+	}
+};
 
 int main( int argc, char **argv )
 {
@@ -431,6 +515,11 @@ int main( int argc, char **argv )
 		test_cases.push_back( std::make_shared<TestCaseGetLinesAfter4>() );
 
 		test_cases.push_back( std::make_shared<TestCaseFindAllOf1>() );
+
+		test_cases.push_back( std::make_shared<TestCaseHighLightKeyWord1>() );
+		test_cases.push_back( std::make_shared<TestCaseHighLightKeyWord2>() );
+		test_cases.push_back( std::make_shared<TestCaseHighLightKeyWord3>() );
+		test_cases.push_back( std::make_shared<TestCaseHighLightKeyWord4>() );
 
 		ColBuilder col;
 

@@ -125,7 +125,9 @@ common_libcommon_a_SOURCES=\
 	common/getline.h \
 	common/getline.cc \
 	common/ResultWinCommon.h \
-	common/ResultWinCommon.cc
+	common/ResultWinCommon.cc \
+	common/HighLightKeyWord.h \
+	common/HighLightKeyWord.cc
 
 supagrep_LDADD = cpputils/io/libcpputilsio.a \
 				 cpputils/cpputilsshared/libcpputilsshared.a \
