@@ -117,6 +117,8 @@ add_executable(supagrep
 	srcqt/resultwinqt.cc
 	srcqt/WdgCommon.h
 	srcqt/WdgCommon.cc
+	srcqt/ResentEntriesComboQt.h
+	srcqt/ResentEntriesComboQt.cc
 )
 
 target_include_directories(supagrep PUBLIC

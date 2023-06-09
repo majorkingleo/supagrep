@@ -23,25 +23,26 @@ class ResultWinQt;
 class QSpinBox;
 class QProgressBar;
 class QLabel;
+class ResentEntriesComboQt;
 
 class SearchWinQt : public QWidget, public WdgCommon
 {
 	Q_OBJECT
 private:
 
-	QComboBox 		*cb_start_directory;
-	DescComboQt 	*cb_search_file_pattern;
-	QLineEdit 		*ef_search_term;
-	QCheckBox 		*cx_icase;
-	QCheckBox 		*cx_regex;
-	QPushButton 	*bt_search;
-	QTimer 			*timer;
-	QPushButton		*bt_search_dir;
-	ResultWinQt 	*result;
-	QSpinBox		*bt_number_of_lines;
-	QProgressBar 	*pb_progress;
-	QLabel			*l_runtime;
-	QCheckBox 		*cx_highlight;
+	ResentEntriesComboQt	*cb_start_directory;
+	DescComboQt 			*cb_search_file_pattern;
+	QLineEdit 				*ef_search_term;
+	QCheckBox 				*cx_icase;
+	QCheckBox 				*cx_regex;
+	QPushButton 			*bt_search;
+	QTimer 					*timer;
+	QPushButton				*bt_search_dir;
+	ResultWinQt 			*result;
+	QSpinBox				*bt_number_of_lines;
+	QProgressBar 			*pb_progress;
+	QLabel					*l_runtime;
+	QCheckBox 				*cx_highlight;
 
 	Search::MTAccess<bool> mt_running;
 	Search::MTAccess<int>  mt_status;

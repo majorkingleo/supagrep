@@ -170,6 +170,10 @@ int main(int argc, char **argv)
 
 	QApplication app (argc, argv);
 
+	QCoreApplication::setOrganizationName("RedeyeLabs");
+	QCoreApplication::setOrganizationDomain("borger.co.at");
+	QCoreApplication::setApplicationName("Supagrep");
+
 	MainWindowQt mainwindow( argc, argv);
 
 	mainwindow.resize(800,300);

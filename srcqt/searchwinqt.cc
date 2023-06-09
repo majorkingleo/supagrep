@@ -23,6 +23,7 @@
 #include <format.h>
 #include <debug.h>
 #include "resultwinqt.h"
+#include "ResentEntriesComboQt.h"
 
 using namespace Tools;
 
@@ -39,7 +40,7 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 	setupFrame->setLayout( setupLayout );
 	setupLayout->addWidget( new QLabel( wLCQ(L"Path:") ) );
 
-	cb_start_directory = new QComboBox();
+	cb_start_directory = new ResentEntriesComboQt( L"cb_start_directory" );
 	cb_start_directory->setEditable( true );
 	// connect( cb_start_directory, SIGNAL( returnPressed() ),  this, SLOT(onSearch()) );
 	setupLayout->addWidget( cb_start_directory );
@@ -142,6 +143,7 @@ void SearchWinQt::selectDirectory()
 									   cb_start_directory->currentText() );
 
 	cb_start_directory->setEditText( text );
+	cb_start_directory->insertItemAtFirst( text );
 }
 
 void SearchWinQt::startwith( const Search::Config & conf )
@@ -151,7 +153,7 @@ void SearchWinQt::startwith( const Search::Config & conf )
 	cx_regex->setCheckState( conf.regex ? Qt::Checked : Qt::Unchecked );
 	cb_search_file_pattern->setEditText( QString::fromStdWString( conf.pattern ) );
 	cb_start_directory->setEditText( QString::fromStdWString( conf.path ) );
-	cb_start_directory->insertItem( 0, QString::fromStdWString( conf.path ) );
+	cb_start_directory->insertItemAtFirst( QString::fromStdWString( conf.path ) );
 
 	emit StartSearchNow();
 }
@@ -187,7 +189,11 @@ void SearchWinQt::onSearch()
 	config->mt_runtime = &mt_runtime;
 
 	if( cb_start_directory->currentText().isEmpty() ) {
-		cb_start_directory->setEditText( QString::fromStdWString(std::filesystem::current_path().wstring()) );
+
+		auto path = QString::fromStdWString(std::filesystem::current_path().wstring());
+
+		cb_start_directory->setEditText( path );
+		cb_start_directory->insertItemAtFirst( path );
 	}
 
 	if( cb_search_file_pattern->currentText().isEmpty() ) {
