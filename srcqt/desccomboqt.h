@@ -1,10 +1,8 @@
 /*
- * desccomboqt.h
- *
- *  Created on: 08.03.2023
- *      Author: martin
+/**
+ * ComboBox with description
+ * @author Copyright (c) 2023 Martin Oberzalek
  */
-
 #ifndef SRCQT_DESCCOMBOQT_H_
 #define SRCQT_DESCCOMBOQT_H_
 

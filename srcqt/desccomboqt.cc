@@ -1,14 +1,11 @@
-/*
- * desccomboqt.cc
- *
- *  Created on: 08.03.2023
- *      Author: martin
+/**
+ * ComboBox with description
+ * @author Copyright (c) 2023 Martin Oberzalek
  */
 #include "desccomboqt.h"
 #include "debug.h"
 #include <format.h>
 #include <QLineEdit>
-#include <debug.h>
 
 using namespace Tools;
 
