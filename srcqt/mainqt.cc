@@ -176,5 +176,22 @@ int main(int argc, char **argv)
 	mainwindow.move(200,200);
 	mainwindow.show();
 
-	return app.exec();
+	int ret = 0;
+
+	try {
+		ret = app.exec();
+
+	} catch( const std::exception & error ) {
+		std::wcerr << L"Error: " << error.what() << std::endl;
+#ifdef _WIN32
+		system("pause");
+#endif
+	} catch( ... ) {
+		std::wcerr << L"UnknownError" << std::endl;
+#ifdef _WIN32
+		system("pause");
+#endif
+	}
+
+	return ret;
 }
