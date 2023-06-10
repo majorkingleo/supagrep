@@ -41,9 +41,7 @@ Source: dist\qrc.exe; DestDir: {app}; Flags: ignoreversion
 Source: dist\qch.exe; DestDir: {app}; Flags: ignoreversion
 Source: dist\qh.exe; DestDir: {app}; Flags: ignoreversion
 Source: dist\qc.exe; DestDir: {app}; Flags: ignoreversion
-Source: addon\WinVi32.exe; DestDir: {app}; Flags: ignoreversion
-Source: addon\Adie.stx; DestDir: {app}; Flags: ignoreversion
-Source: addon\adie.exe; DestDir: {app}; Flags: ignoreversion
+Source: addon\*; DestDir: {app}; Flags: ignoreversion
 Source: COPYING; DestDir: {app}; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: addpath.exe; DestDir: {app}; Tasks: ; Languages: ; Flags: ignoreversion
