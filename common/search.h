@@ -140,6 +140,7 @@ class Search
   std::vector<std::string> pattern_list;
   std::chrono::time_point<std::chrono::system_clock> start_time;
   std::wstring lsearch;
+  std::vector<std::wregex> regex_pattern_list;
 
  public:
   Search( std::shared_ptr<Config> config );

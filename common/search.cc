@@ -9,6 +9,7 @@
 #include <string_utils.h>
 
 using namespace Tools;
+using namespace std::chrono_literals;
 
 Search::Search( std::shared_ptr<Config> config_ )
   : config( config_ )
@@ -23,6 +24,7 @@ void Search::run()
   start_time = std::chrono::system_clock::now();
   files.clear();
   pattern_list.clear();
+  regex_pattern_list.clear();
 
   if( find_files( config->path ) )
 	{
@@ -31,13 +33,23 @@ void Search::run()
 	  }
 
 	  config->mt_status_max->set(files.size());
-	  DEBUG( wformat( L"Total files '%d'", files.size() ) );
+
+	  auto duration_file_search = std::chrono::system_clock::now().time_since_epoch()
+									  - start_time.time_since_epoch();
+	  double seconds = duration_file_search / 1.0s;
+
+	  DEBUG( wformat( L"Total files '%d' duration: %3.3lf sec",
+			  	  	    files.size(),
+						seconds ) );
+
 	  int count = 0;
 	  for( file_list::iterator it = files.begin(); it != files.end() && !config->mt_stop->get(); it++ ) {
-		  do_search( *it );
 
 		  count++;
-		  // DEBUG( wformat( L"%d Searching in file: '%s'", count, DetectLocale::in2w(it->text()) ) );
+		  DEBUG( wformat( L"%d Searching in file: '%s'", count, it->filename().wstring() ) );
+
+		  do_search( *it );
+
 		  config->mt_status->set(count);
 		}
 	}
@@ -45,6 +57,8 @@ void Search::run()
   auto duration = std::chrono::system_clock::now().time_since_epoch() - start_time.time_since_epoch();
   config->mt_runtime->set(std::chrono::duration_cast<std::chrono::milliseconds>(duration));
   config->mt_running->set(false);
+
+  DEBUG( L"search thread done" );
 }
 
 bool Search::find_files( const std::filesystem::path & path )
@@ -96,7 +110,11 @@ bool Search::match_file_type( const std::filesystem::path & file )
 {
   std::wstring file_name = file.wstring();
 
-  for( std::wregex & regex : build_pattern_list( config->pattern ) ) {
+  if( regex_pattern_list.empty() ) {
+	  regex_pattern_list = build_pattern_list( config->pattern );
+  }
+
+  for( std::wregex & regex : regex_pattern_list ) {
 
 	  bool ret = std::regex_match( file_name, regex );
 
