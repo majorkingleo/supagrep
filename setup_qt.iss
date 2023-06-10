@@ -61,3 +61,9 @@ Filename: {app}\{#MyAppExeName}; Description: {cm:LaunchProgram,{#MyAppName}}; F
 
 [UninstallRun]
 Filename: {app}\AddPath.exe; Parameters: -r {app}; WorkingDir: {app}
+
+[Registry]
+Root: HKCU; Subkey: "SOFTWARE\RedeyeLabs\Supagrep"; Permissions: users-modify; \
+Flags: uninsdeletekey createvalueifdoesntexist; ValueType: string; \
+ValueName: "InstallDir"; ValueData: {app}
+

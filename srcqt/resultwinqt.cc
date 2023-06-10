@@ -23,6 +23,7 @@
 #include <QProcess>
 #include <string_utils.h>
 #include <HighLightKeyWord.h>
+#include <QSettings>
 
 using namespace Tools;
 
@@ -65,6 +66,18 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Notepad++" ) ),
 			L"notepad++.exe", L"-n%d %s" ) );
 
+
+	QSettings settings;
+	const std::wstring install_dir = settings.value( "InstallDir", "" ).toString().toStdWString();
+	const std::wstring vbs_open_script = wformat( L"%s\\open-in-msvs.vbs", install_dir );
+
+	if( std::filesystem::exists( vbs_open_script ) ) {
+		addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Visual Studio" ) ),
+					L"WScript.exe", wformat( L"%s %s %d 0", vbs_open_script ) ) );
+	} else {
+		DEBUG( wformat( L"file %s not found", vbs_open_script ));
+	}
+
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Vi" ) ),
 			L"vi.exe", L"+%d %s" ) );
 
@@ -79,13 +92,13 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 			L"gnome-terminal" ) );
 
 	addCmd( Cmd( wformat( wLC( L"Start %s" ), wLC( L"Console" ) ),
-			L"cmd.exe" ) );
+			L"cmd.exe", L"/K start cmd.exe /K cd %p" ) );
 
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Eclipse" ) ),
 			L"eclipse.exe", L"--launcher.openFile %s:%d" ) );
 
 	addCmd( Cmd( wformat( wLC( L"Start %s" ), wLC( L"Notepad" ) ),
-			L"notepad.exe" ) );
+			L"notepad.exe", L"%s" ) );
 
 	// DEBUG( wformat( L"notpaged.exe: %s", QStandardPaths::findExecutable("notepad" ).toStdWString() ) );
 
@@ -96,8 +109,11 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 void ResultWinQt::addCmd( const Cmd & cmd )
 {
   if( QStandardPaths::findExecutable( QString::fromStdWString( cmd.exec ) ).isEmpty() ) {
+	  DEBUG( wformat( L"couldn't find app: %s", cmd.exec ) );
 	  return;
   }
+
+  DEBUG( wformat( L"found app: %s", cmd.exec ) );
 
   cmds.push_back( cmd );
   Cmd *cmd_ptr = &(*cmds.rbegin());
@@ -214,7 +230,11 @@ void ResultWinQt::openWidthCmd()
 		s = substitude( s, L"%d", std::to_wstring( result.line) );
 		s = substitude( s, L"%s", result.file.wstring() );
 
-		debug_args += s;
+		std::wstring path = result.file.parent_path().wstring();
+
+		s = substitude( s, L"%p", path );
+
+		debug_args += L"'" + s + L"' ";
 		args << QString::fromStdWString( s );
 	}
 
