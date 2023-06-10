@@ -42,29 +42,27 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 	actionCopyFileNameToClipboard->setText( u8"Copy Filename" );
 
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"GVim" ) ),
-			L"gvim", L"+%d %s" ) );
+			L"gvim", L"+%d \"%s\"" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"KVim" ) ),
-			L"kvim", L"+%d %s" ) );
+			L"kvim", L"+%d \"%s\"" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Emacs" ) ),
-			L"emacs", L"+%d %s" ) );
+			L"emacs", L"+%d \"%s\"" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Emacs Client" ) ),
-			L"emacsclient", L"+%d %s" ) );
+			L"emacsclient", L"+%d \"%s\"" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"XEmacs" ) ),
-			L"xemacs", L"+%d %s" ) );
+			L"xemacs", L"+%d \"%s\"" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"XEmacs Client" ) ),
-			L"xemacsclient", L"+%d %s" ) );
+			L"xemacsclient", L"+%d \"%s\"" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Kate" ) ),
-			L"kate", L"--line %d %s" ) );
+			L"kate", L"--line %d \"%s\"" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Adie" ) ),
-			L"adie", L"--line %d %s" ) );
-	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Adie" ) ),
-			L"adie.exe", L"--line %d %s" ) );
+			L"adie.exe", L"--line %d \"%s\"" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Kwrite" ) ),
-			L"kwrite", L"--line %d %s" ) );
+			L"kwrite", L"--line %d \"%s\"" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"WinVi" ) ),
-			L"Winvi32.exe", L"+%d %s" ) );
+			L"Winvi32.exe", L"+%d \"%s\"" ) );
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Notepad++" ) ),
-			L"notepad++.exe", L"-n%d %s" ) );
+			L"notepad++.exe", L"-n%d \"%s\"" ) );
 
 
 	QSettings settings;
@@ -73,13 +71,13 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 
 	if( std::filesystem::exists( vbs_open_script ) ) {
 		addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Visual Studio" ) ),
-					L"WScript.exe", wformat( L"%s %s %d 0", vbs_open_script ) ) );
+					L"WScript.exe", wformat( L"%s %s %d 0", L'"' + vbs_open_script + L'"' ) ) );
 	} else {
 		DEBUG( wformat( L"file %s not found", vbs_open_script ));
 	}
 
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Vi" ) ),
-			L"vi.exe", L"+%d %s" ) );
+			L"vi.exe", L"+%d \"%s\"" ) );
 
 
 	addCmd( Cmd( wformat( wLC( L"Start %s" ), wLC( L"XTerm" ) ),
@@ -92,10 +90,10 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 			L"gnome-terminal" ) );
 
 	addCmd( Cmd( wformat( wLC( L"Start %s" ), wLC( L"Console" ) ),
-			L"cmd.exe", L"/K start cmd.exe /K cd %p" ) );
+			L"cmd.exe", L"/K start cmd.exe /K cd \"%p\"" ) );
 
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Eclipse" ) ),
-			L"eclipse.exe", L"--launcher.openFile %s:%d" ) );
+			L"eclipse.exe", L"--launcher.openFile \"%s\":%d" ) );
 
 	addCmd( Cmd( wformat( wLC( L"Start %s" ), wLC( L"Notepad" ) ),
 			L"notepad.exe", L"%s" ) );
@@ -221,12 +219,13 @@ void ResultWinQt::openWidthCmd()
 
 	Search::Result result = getCurrentSelectedResult();
 
-	std::vector<std::wstring> sArgs = split_and_strip_simple( cmd->open_cmd );
+	std::vector<std::wstring> sArgs = split_safe( cmd->open_cmd );
 
 	QStringList args;
 	std::wstring debug_args;
 
 	for( std::wstring & s : sArgs ) {
+		s = strip( s, L"\"" );
 		s = substitude( s, L"%d", std::to_wstring( result.line) );
 		s = substitude( s, L"%s", result.file.wstring() );
 
