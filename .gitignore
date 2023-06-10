@@ -6,7 +6,10 @@
 .dirstamp
 Makefile
 supagrep
-*.exe
+supagrep.exe
+testsupagrep.exe
+forward.exe
+addpath.exe
 
 # http://www.gnu.org/software/automake
 
