@@ -148,7 +148,7 @@ std::wstring ResultWinQt::hightLightFileNameAndLine( const std::wstring & file_n
 
 std::wstring ResultWinQt::highLightKeyWord( const std::wstring & line )
 {
-	if( highlight_keyword ) {
+	if( highlight_keyword && !config->search.empty() ) {
 		return ::highLightKeyWord( line, config->search, config->icase );
 	}
 
