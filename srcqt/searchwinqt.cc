@@ -24,6 +24,8 @@
 #include <debug.h>
 #include "resultwinqt.h"
 #include "ResentEntriesComboQt.h"
+#include <QSettings>
+#include "VSplitterWithFixedParts.h"
 
 using namespace Tools;
 
@@ -33,6 +35,7 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
   config(0),
   tabidx(0)
 {
+	QSettings settings;
 	QFrame *setupFrame = new QFrame();
 	//setupFrame->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
@@ -104,11 +107,12 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 	l_runtime->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 	setupLayout->addWidget( l_runtime );
 
-	QSplitter *splitter = new QSplitter();
+	splitter = new VSplitterWithFixedParts();
 	splitter->addWidget( setupFrame );
 
 	result = new ResultWinQt( main );
 	splitter->addWidget( result );
+	splitter->restoreState(settings.value(CONFIG_SEARCH_WIN_SPLITTER_SIZE).toByteArray());
 
 	connect( cx_highlight, SIGNAL( stateChanged(int) ), result, SLOT( hightLightKeyword(int) ) );
 	cx_highlight->setCheckState( Qt::Checked );
@@ -134,6 +138,8 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 SearchWinQt::~SearchWinQt()
 {
 	timer->stop();
+	QSettings settings;
+	settings.setValue(CONFIG_SEARCH_WIN_SPLITTER_SIZE,splitter->saveState());
 }
 
 void SearchWinQt::selectDirectory()

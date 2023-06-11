@@ -24,11 +24,14 @@ class QSpinBox;
 class QProgressBar;
 class QLabel;
 class ResentEntriesComboQt;
+class QSplitter;
 
 class SearchWinQt : public QWidget, public WdgCommon
 {
 	Q_OBJECT
 private:
+
+	static constexpr const char* CONFIG_SEARCH_WIN_SPLITTER_SIZE = "SearchWin/splitterSizes";
 
 	ResentEntriesComboQt	*cb_start_directory;
 	DescComboQt 			*cb_search_file_pattern;
@@ -43,6 +46,7 @@ private:
 	QProgressBar 			*pb_progress;
 	QLabel					*l_runtime;
 	QCheckBox 				*cx_highlight;
+	QSplitter 				*splitter;
 
 	Search::MTAccess<bool> mt_running;
 	Search::MTAccess<int>  mt_status;

@@ -119,6 +119,8 @@ add_executable(supagrep
 	srcqt/WdgCommon.cc
 	srcqt/ResentEntriesComboQt.h
 	srcqt/ResentEntriesComboQt.cc
+	srcqt/VSplitterWithFixedParts.h
+	srcqt/VSplitterWithFixedParts.cc
 )
 
 target_include_directories(supagrep PUBLIC
