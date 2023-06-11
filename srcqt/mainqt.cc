@@ -186,7 +186,7 @@ int main(int argc, char **argv)
 
 	MainWindowQt mainwindow( argc, argv);
 
-	mainwindow.move(200,200);
+	//mainwindow.move(200,200);
 	mainwindow.show();
 
 	int ret = 0;
