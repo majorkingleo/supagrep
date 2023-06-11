@@ -74,6 +74,11 @@ bool Search::find_files( const std::filesystem::path & path )
 	  return false;
   }
   
+  // avoid recursion
+  if( std::filesystem::is_symlink(path) ) {
+	  return false;
+  }
+
   for( const auto & entry : std::filesystem::directory_iterator(path) ) {
 	  if( std::filesystem::is_directory(entry.status()) ) {
 		  find_files( std::filesystem::path(entry) );
@@ -246,7 +251,7 @@ Search::Config Search::getConfFromCommandLine( int argc, const char *const*argv 
 
 	auto unescape_minus = [&conf]( auto & arg ) {
 		if( arg.starts_with( LR"(\-)" ) ) {
-			arg.substr( 1 );
+			arg = arg.substr( 1 );
 		}
 	};
 
