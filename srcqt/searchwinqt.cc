@@ -112,6 +112,8 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 
 	result = new ResultWinQt( main );
 	splitter->addWidget( result );
+	splitter->setCollapsible(0, false);
+	splitter->setCollapsible(1, false);
 	splitter->restoreState(settings.value(CONFIG_SEARCH_WIN_SPLITTER_SIZE).toByteArray());
 
 	connect( cx_highlight, SIGNAL( stateChanged(int) ), result, SLOT( hightLightKeyword(int) ) );
