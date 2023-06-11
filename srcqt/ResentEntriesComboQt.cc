@@ -25,7 +25,7 @@ ResentEntriesComboQt::~ResentEntriesComboQt()
 
 	for( unsigned index = 0; index < count(); index++ ) {
 		auto val = itemText(index);
-		settings.setValue( getKeyName(index), val );
+		settings.setValue( QString::fromWCharArray(getKeyName(index).c_str()), val );
 	}
 }
 
@@ -56,7 +56,7 @@ void ResentEntriesComboQt::insertItemAtFirst( const QString &text)
 
 	unsigned count = 0;
 	for( auto val : entries_to_store ) {
-		settings.setValue( getKeyName(count++), val );
+		settings.setValue( QString::fromWCharArray(getKeyName(count++).c_str()), val );
 		// DEBUG( wformat( L"%s=%s", getKeyName(count),  val.toStdWString() ) );
 
 		if( count > max_entries ) {
@@ -77,7 +77,7 @@ void ResentEntriesComboQt::load()
 
 	for( unsigned i = 0; i < max_entries; i++ )
 	{
-		auto val = settings.value( getKeyName(i), QString() ).toString();
+		auto val = settings.value( QString::fromWCharArray(getKeyName(i).c_str()), QString() ).toString();
 
 		if( val.isEmpty() ) {
 			continue;
