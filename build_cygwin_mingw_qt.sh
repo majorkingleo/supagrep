@@ -12,5 +12,11 @@ sed -s "s|QTDIR|${QTDIR}|" mymoc.sh_ > mymoc.sh && chmod a+x mymoc.sh
 make -j8
 mkdir dist
 cp -u supagrep.exe dist
-cp -u ${QTDIR}/bin/*.dll dist
+
+DLLS="Qt6Widgets.dll Qt6Gui.dll Qt6Core.dll"
+
+for DLL in ${DLLS} ; do 
+	cp -u "${QTDIR}/bin/${DLL}" dist
+done
+
 mkdir -p dist/plugins/platforms/ && cp -a ${QTDIR}/plugins/platforms/*.dll dist/plugins/platforms/
