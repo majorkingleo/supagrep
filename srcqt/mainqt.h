@@ -18,6 +18,8 @@ class MainWindowQt : public QMainWindow
 {
 	 Q_OBJECT
 private:
+	 static constexpr const char* CONFIG_MAIN_WIN_GEOMETRY = "MainWin/Geometry";
+
 	 QTabWidget *tabs;
 
 	  Lang lang;
@@ -25,6 +27,7 @@ private:
 
 public:
 	 explicit MainWindowQt( int argc, char **argv, QWidget *parent = 0);
+	 ~MainWindowQt();
 
 	 Setup & getSetup() { return setup; }
 

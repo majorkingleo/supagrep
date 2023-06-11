@@ -12,6 +12,7 @@
 #include <debug.h>
 #include "OutDebug.h"
 #include <getline.h>
+#include <QSettings>
 
 using namespace Tools;
 
@@ -20,6 +21,7 @@ MainWindowQt::MainWindowQt( int argc, char **argv, QWidget *parent)
   lang(),
   setup( &lang )
 {
+	QSettings settings;
 	QAction *actionNewSearch;
 	QAction *actionQuit;
 
@@ -72,6 +74,14 @@ MainWindowQt::MainWindowQt( int argc, char **argv, QWidget *parent)
     } else {
     	newSearch();
     }
+
+    restoreGeometry(settings.value(CONFIG_MAIN_WIN_GEOMETRY).toByteArray());
+}
+
+MainWindowQt::~MainWindowQt()
+{
+	QSettings settings;
+	settings.setValue(CONFIG_MAIN_WIN_GEOMETRY, saveGeometry() );
 }
 
 void MainWindowQt::newSearch()
@@ -176,7 +186,6 @@ int main(int argc, char **argv)
 
 	MainWindowQt mainwindow( argc, argv);
 
-	mainwindow.resize(800,300);
 	mainwindow.move(200,200);
 	mainwindow.show();
 
