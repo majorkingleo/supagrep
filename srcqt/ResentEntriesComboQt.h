@@ -16,6 +16,7 @@ private:
 
 public:
 	explicit ResentEntriesComboQt(const std::wstring & name, unsigned max_entries = 10, QWidget *parent = 0);
+	~ResentEntriesComboQt();
 
 	void insertItemAtFirst( const QString &text);
 

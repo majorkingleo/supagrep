@@ -19,6 +19,15 @@ ResentEntriesComboQt::ResentEntriesComboQt(const std::wstring & name_, unsigned 
 	load();
 }
 
+ResentEntriesComboQt::~ResentEntriesComboQt()
+{
+	QSettings settings;
+
+	for( unsigned index = 0; index < count(); index++ ) {
+		auto val = itemText(index);
+		settings.setValue( getKeyName(index), val );
+	}
+}
 
 void ResentEntriesComboQt::insertItemAtFirst( const QString &text)
 {
@@ -78,7 +87,7 @@ void ResentEntriesComboQt::load()
 			continue;
 		}
 
-		// DEBUG( wformat( L"Loading %s=%s", getKeyName(i),  val.toStdWString() ) );
+		DEBUG( wformat( L"Loading %s=%s", getKeyName(i),  val.toStdWString() ) );
 
 		s_entries.insert(val);
 
