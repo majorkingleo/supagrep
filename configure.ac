@@ -32,7 +32,7 @@ AC_DEFUN([LD_FLAGS_CHECK],
 ])
 
 
-AC_INIT(supagrep, 1.0.2)
+AC_INIT(supagrep, 1.0.3)
 AM_INIT_AUTOMAKE([subdir-objects -Wall])
 
 
