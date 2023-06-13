@@ -7,6 +7,7 @@
 #include <filesystem>
 #include "read_file.h"
 #include <string_utils.h>
+#include <unistd.h>
 
 using namespace Tools;
 using namespace std::chrono_literals;
@@ -63,6 +64,8 @@ void Search::run()
 
 bool Search::find_files( const std::filesystem::path & path )
 {
+  namespace fs = std::filesystem;
+
   if( config->mt_stop->get() ) {
 	return false;
   }
@@ -78,17 +81,64 @@ bool Search::find_files( const std::filesystem::path & path )
   if( std::filesystem::is_symlink(path) ) {
 	  return false;
   }
-
-  for( const auto & entry : std::filesystem::directory_iterator(path) ) {
-	  if( std::filesystem::is_directory(entry.status()) ) {
-		  find_files( std::filesystem::path(entry) );
-	  }
-
-	  if( match_file_type( entry.path().filename() ) ) {
-		  files.push_back( entry.path() );
-	  }
+#if 0
+#ifdef _WIN32
+  if( _waccess(path.c_str(), 04 ) != 0 ) {
+	  return false;
   }
-  
+#else
+  if( access(path.c_str(), R_OK, W_OK | X_OK ) != 0 ) {
+	  return false;
+  }
+#endif
+#endif
+
+#if 1
+  try {
+	  for( const auto & entry : fs::directory_iterator(path) ) {
+		  if( fs::is_directory(entry.status()) ) {
+			  find_files( fs::path(entry) );
+		  }
+
+		  if( match_file_type( entry.path().filename() ) ) {
+			  files.push_back( entry.path() );
+		  }
+	  }
+  } catch( const std::filesystem::filesystem_error & error ) {
+	  // It seems that we cannot fix this by using _waccess() simple opening these
+	  // dead symlinks fails
+
+	  /*  Error accessing file or directory: "C:/Users/Martin Oberzalek\\SendTo".
+	   *   Error: filesystem error: directory iterator cannot open directory:
+	   *   Invalid argument [C:/Users/Martin Oberzalek\SendTo]
+	   */
+	  DEBUG( wformat( L"Error accessing file or directory: %s. Error: %s", path, error.what()) );
+	  return false;
+  }
+#else
+  try {
+	  for (const fs::directory_entry & entry
+			  : fs::recursive_directory_iterator(path, fs::directory_options::skip_permission_denied ) ) {
+		  if( config->mt_stop->get() ) {
+			  break;
+		  }
+
+		  if( match_file_type( entry.path().filename() ) ) {
+			  files.push_back( entry.path() );
+		  }
+	  }
+  } catch( const std::filesystem::filesystem_error & error ) {
+	  // It seems that we cannot fix this by using _waccess() simple opening these
+	  // dead symlinks fails
+
+	  /*  Error accessing file or directory: "C:/Users/Martin Oberzalek\\SendTo".
+	   *   Error: filesystem error: directory iterator cannot open directory:
+	   *   Invalid argument [C:/Users/Martin Oberzalek\SendTo]
+	   */
+	  DEBUG( wformat( L"Error accessing file or directory: %s. Error: %s", path, error.what()) );
+	  return false;
+  }
+#endif
   return true;
 }
 
