@@ -34,14 +34,14 @@ MainWindowQt::MainWindowQt( int argc, char **argv, QWidget *parent)
 	actionQuit->setText( u8"Quit") ;
 
 	QMenuBar *menuBar = new QMenuBar(this);
-	QMenu *menuGame = new QMenu(menuBar);
-	menuGame->setTitle( u8"Program" );
+	QMenu *menuProgram = new QMenu(menuBar);
+	menuProgram->setTitle( u8"Program" );
 	setMenuBar(menuBar);
 
-	menuBar->addAction(menuGame->menuAction());
+	menuBar->addAction(menuProgram->menuAction());
 
-	menuGame->addAction(actionNewSearch);
-	menuGame->addAction(actionQuit);
+	menuProgram->addAction(actionNewSearch);
+	menuProgram->addAction(actionQuit);
 
 	new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_T), this, SLOT(newSearch()));
 
@@ -179,6 +179,10 @@ int main(int argc, char **argv)
 	}
 
 	QApplication app (argc, argv);
+
+	auto font = app.font();
+	font.setPointSize(10);
+	app.setFont(font);
 
 	QCoreApplication::setOrganizationName("RedeyeLabs");
 	QCoreApplication::setOrganizationDomain("borger.co.at");
