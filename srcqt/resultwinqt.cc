@@ -33,6 +33,8 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
    WdgCommon(main_),
    highlight_keyword( false )
 {
+	//setStyleSheet( "font:11pt;" );
+
 	actionOpenWidthDefaultApp = new QAction(this);
 	actionOpenWidthDefaultApp->setObjectName( u8"actionOpenWidthDefaultApp" );
 	actionOpenWidthDefaultApp->setText( u8"Open with default App" );
@@ -153,7 +155,7 @@ void ResultWinQt::clear()
 std::wstring ResultWinQt::hightLightFileNameAndLine( const std::wstring & file_name, long line_number )
 {
 	if( line_number >= 0 ) {
-		return  wformat( L"<small>%s:%ld</small>", file_name, line_number );
+		return  wformat( L"<i style=\"color: grey;\">%s:%ld</i> ", file_name, line_number );
 	}
 
 	return file_name;
