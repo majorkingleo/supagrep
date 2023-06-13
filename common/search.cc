@@ -266,7 +266,7 @@ Search::Config Search::getConfFromCommandLine( int argc, const char *const*argv 
 		conf.pattern = L"*.c,*.cpp,*.cc";
 		args.erase(it_first);
 	} else if( icase_cmp( *it_first, L"qh" ) ) {
-		conf.pattern = L"*.h,*.hh";
+		conf.pattern = L"*.h,*.hh,*.hpp";
 		args.erase(it_first);
 	} else if( icase_cmp( *it_first, L"qch" ) ) {
 		conf.pattern = L"*.h,*.hh,*.c,*.cpp,*.cc";
