@@ -40,6 +40,8 @@ public:
 private slots:
 	 void newSearch();
 	 void closeSearch(int idx);
+	 void settingsEditors();
+	 void settingsFont();
 
 private:
 	 void newSearch( const Search::Config *conf );

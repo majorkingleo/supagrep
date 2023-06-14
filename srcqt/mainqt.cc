@@ -27,15 +27,15 @@ MainWindowQt::MainWindowQt( int argc, char **argv, QWidget *parent)
 
 	actionNewSearch = new QAction(this);
 	actionNewSearch->setObjectName( u8"actionNewSearch" );
-	actionNewSearch->setText( u8"New Search" );
+	actionNewSearch->setText( wLCQ(L"&New Search") );
 
 	actionQuit = new QAction(this);
 	actionQuit->setObjectName( u8"actionQuit" );
-	actionQuit->setText( u8"Quit") ;
+	actionQuit->setText( wLCQ(L"&Quit") ) ;
 
 	QMenuBar *menuBar = new QMenuBar(this);
 	QMenu *menuProgram = new QMenu(menuBar);
-	menuProgram->setTitle( u8"Program" );
+	menuProgram->setTitle( wLCQ(L"&Program") );
 	setMenuBar(menuBar);
 
 	menuBar->addAction(menuProgram->menuAction());
@@ -43,10 +43,32 @@ MainWindowQt::MainWindowQt( int argc, char **argv, QWidget *parent)
 	menuProgram->addAction(actionNewSearch);
 	menuProgram->addAction(actionQuit);
 
+
+	QMenu *menuSettings = new QMenu(menuBar);
+	menuSettings->setTitle( wLCQ(L"&Settings") );
+
+	menuBar->addAction(menuSettings->menuAction());
+
+
+	QAction *actionEditors = new QAction(this);
+	actionEditors->setObjectName( u8"actionEditors" );
+	actionEditors->setText( wLCQ(L"&Editors") ) ;
+
+	menuSettings->addAction(actionEditors);
+
+
+	QAction *actionFont = new QAction(this);
+	actionFont->setObjectName( u8"actionFont" );
+	actionFont->setText( wLCQ(L"&Font") ) ;
+
+	menuSettings->addAction(actionFont);
+
 	new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_T), this, SLOT(newSearch()));
 
 	connect(actionQuit, SIGNAL (triggered()), QApplication::instance(), SLOT (quit()));
 	connect(actionNewSearch, SIGNAL (triggered()), this, SLOT (newSearch()));
+	connect(actionEditors, SIGNAL (triggered()), this, SLOT (settingsEditors()));
+	connect(actionFont, SIGNAL (triggered()), this, SLOT (settingsFont()));
 
 
     auto *f = new QFrame();
@@ -126,6 +148,16 @@ const char* MainWindowQt::LC( const char * msg )
 QString MainWindowQt::wLCQ( const std::wstring & s )
 {
 	return QString::fromStdWString( lang.wLC( s ) );
+}
+
+void MainWindowQt::settingsEditors()
+{
+
+}
+
+void MainWindowQt::settingsFont()
+{
+
 }
 
 static void usage( const std::string & prog )

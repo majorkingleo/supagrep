@@ -31,6 +31,7 @@ Lang::StaticText Lang::TransMsg[] = {
   { u8"de", u8"&New Search", u8"&Neue Suche" },
   { u8"de", u8"&Settings", u8"&Einstellungen" },
   { u8"de", u8"&Quit the application", u8"&Programm Beenden" },
+  { u8"de", u8"&Quit", u8"&Programm Beenden" },
   { u8"de", u8"&Program", u8"&Programm" },
   { u8"de", u8"&About SupaGrep...", u8"&Über SupaGrep" },
   { u8"de", u8"&Help", u8"&Hilfe" },
@@ -54,6 +55,8 @@ Lang::StaticText Lang::TransMsg[] = {
 	"Sie können dieses Programm unter einigen Bedingung, die sie bitte\n"
 	"der beiliegenden Datei COPYING entnehmen, weiter vertrieben."
   },
+  { u8"de", u8"&Editors", u8"&Editoren" },
+  { u8"de", u8"&Font", u8"&Schriftart" },
   { NULL, NULL, NULL },
 };
 
