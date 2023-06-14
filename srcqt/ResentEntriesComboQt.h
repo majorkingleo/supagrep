@@ -20,6 +20,12 @@ public:
 
 	void insertItemAtFirst( const QString &text);
 
+signals:
+	void returnPressed();
+
+private slots:
+	void editFinished();
+
 private:
 
 	std::wstring getKeyName( int index );

@@ -70,7 +70,7 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 
 	setupLayout->addWidget( new QLabel( wLCQ( L"Search:") ) );
 
-	ef_search_term = new QLineEdit();
+	ef_search_term = new ResentEntriesComboQt( L"ef_search_term" );
 	connect( ef_search_term, SIGNAL( returnPressed() ),  this, SLOT(onSearch()) );
 	setupLayout->addWidget( ef_search_term );
 
@@ -156,7 +156,7 @@ void SearchWinQt::selectDirectory()
 
 void SearchWinQt::startwith( const Search::Config & conf )
 {
-	ef_search_term->setText( QString::fromStdWString(conf.search) );
+	ef_search_term->lineEdit()->setText( QString::fromStdWString(conf.search) );
 	cx_icase->setCheckState( conf.icase ? Qt::Checked : Qt::Unchecked );
 	cx_regex->setCheckState( conf.regex ? Qt::Checked : Qt::Unchecked );
 	cb_search_file_pattern->setEditText( QString::fromStdWString( conf.pattern ) );
@@ -212,7 +212,7 @@ void SearchWinQt::onSearch()
 	config->icase = cx_icase->checkState() == Qt::Checked ? true : false;
 	config->pattern = cb_search_file_pattern->currentText().toStdWString();
 	config->path =  cb_start_directory->currentText().toStdWString();
-	config->search =  ef_search_term->text().toStdWString();
+	config->search =  ef_search_term->lineEdit()->text().toStdWString();
 
 	result->setConfig( config );
 	result->clear();

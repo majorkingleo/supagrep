@@ -35,7 +35,7 @@ private:
 
 	ResentEntriesComboQt	*cb_start_directory;
 	DescComboQt 			*cb_search_file_pattern;
-	QLineEdit 				*ef_search_term;
+	ResentEntriesComboQt	*ef_search_term;
 	QCheckBox 				*cx_icase;
 	QCheckBox 				*cx_regex;
 	QPushButton 			*bt_search;

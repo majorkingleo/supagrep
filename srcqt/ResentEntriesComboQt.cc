@@ -5,6 +5,7 @@
 #include "ResentEntriesComboQt.h"
 #include "debug.h"
 #include <QSettings>
+#include <QLineEdit>
 #include <set>
 #include "utf8_util.h"
 
@@ -15,8 +16,10 @@ ResentEntriesComboQt::ResentEntriesComboQt(const std::wstring & name_, unsigned 
   name(name_),
   max_entries(max_entries_)
 {
-
 	load();
+
+	setEditable(true);
+	connect( lineEdit(), &QLineEdit::returnPressed, this, &ResentEntriesComboQt::editFinished);
 }
 
 ResentEntriesComboQt::~ResentEntriesComboQt()
@@ -93,4 +96,10 @@ void ResentEntriesComboQt::load()
 
 		QComboBox::insertItem( i, val );
 	}
+}
+
+void ResentEntriesComboQt::editFinished()
+{
+	DEBUG( L"return pressed" );
+	emit returnPressed();
 }
