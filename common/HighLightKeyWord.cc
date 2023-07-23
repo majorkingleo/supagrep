@@ -3,7 +3,6 @@
  * @author Copyright (c) 2023 Martin Oberzalek
  */
 #include "HighLightKeyWord.h"
-#include "debug.h"
 #include <string_utils.h>
 
 using namespace Tools;

@@ -3,7 +3,7 @@
  * @author Copyright (c) 2023 Martin Oberzalek
  */
 #include "ResentEntriesComboQt.h"
-#include "debug.h"
+#include <CpputilsDebug.h>
 #include <QSettings>
 #include <QLineEdit>
 #include <set>

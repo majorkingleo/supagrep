@@ -9,7 +9,7 @@
 #include "searchwinqt.h"
 #include <arg.h>
 #include <iostream>
-#include <debug.h>
+#include <CpputilsDebug.h>
 #include "OutDebug.h"
 #include <getline.h>
 #include <QSettings>

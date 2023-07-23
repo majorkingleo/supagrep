@@ -21,7 +21,7 @@
 #include <thread>
 #include "mainqt.h"
 #include <format.h>
-#include <debug.h>
+#include <CpputilsDebug.h>
 #include "resultwinqt.h"
 #include "ResentEntriesComboQt.h"
 #include <QSettings>

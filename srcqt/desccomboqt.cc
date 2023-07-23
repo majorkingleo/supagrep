@@ -3,7 +3,7 @@
  * @author Copyright (c) 2023 Martin Oberzalek
  */
 #include "desccomboqt.h"
-#include "debug.h"
+#include <CpputilsDebug.h>
 #include <format.h>
 #include <QLineEdit>
 

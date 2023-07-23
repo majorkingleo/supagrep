@@ -14,8 +14,8 @@ add_compile_definitions( VERSION="${PROJECT_VERSION}" )
 add_library(cpputilsio STATIC 
 	cpputils/io/ColoredOutput.h
 	cpputils/io/ColoredOutput.cc
-	cpputils/io/debug.cc
-	cpputils/io/debug.h
+	cpputils/io/CpputilsDebug.cc
+	cpputils/io/CpputilsDebug.h
 	cpputils/io/DetectLocale.h
 	cpputils/io/DetectLocale.cc
 	cpputils/io/OutDebug.h

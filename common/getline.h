@@ -4,7 +4,7 @@
 #include <string>
 #include <ranges>
 #include <iostream>
-#include <debug.h>
+#include <CpputilsDebug.h>
 
 std::wstring getline( const std::wstring & s, std::wstring::size_type pos );
 

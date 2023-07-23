@@ -2,12 +2,12 @@
 #include "string_utils.h"
 #include <format.h>
 #include <DetectLocale.h>
-#include <debug.h>
 #include <utf8_util.h>
 #include <filesystem>
 #include "read_file.h"
 #include <string_utils.h>
 #include <unistd.h>
+#include <CpputilsDebug.h>
 
 using namespace Tools;
 using namespace std::chrono_literals;

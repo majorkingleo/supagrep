@@ -4,7 +4,6 @@
  *  Created on: 19.03.2023
  *      Author: martin
  */
-#include <debug.h>
 #include "ResultWinCommon.h"
 #include <read_file.h>
 #include "getline.h"

@@ -13,12 +13,12 @@
 #include "mainqt.h"
 #include <format.h>
 #include <qlabel.h>
-#include <debug.h>
+#include <CpputilsDebug.h>
 #include <qmenu.h>
 #include <QContextMenuEvent>
 #include <QClipboard>
 #include <QGuiApplication>
-#include <debug.h>
+#include <CpputilsDebug.h>
 #include <QStandardPaths>
 #include <QProcess>
 #include <string_utils.h>

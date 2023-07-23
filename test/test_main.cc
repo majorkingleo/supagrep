@@ -1,6 +1,6 @@
 #include <memory>
 #include <ColoredOutput.h>
-#include <debug.h>
+#include <CpputilsDebug.h>
 #include "ColBuilder.h"
 #include <arg.h>
 #include <OutDebug.h>
