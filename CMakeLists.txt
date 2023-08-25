@@ -77,6 +77,7 @@ add_library(cpputilsshared STATIC
 		cpputils/cpputilsshared/utf8_util.cc
 		cpputils/cpputilsshared/xml.h
 		cpputils/cpputilsshared/xml.cc
+		cpputils/cpputilsshared/FastDelivery.h
 )
 		
 target_include_directories(cpputilsshared PUBLIC
@@ -97,6 +98,8 @@ add_library(common STATIC
 	common/ResultWinCommon.cc
 	common/HighLightKeyWord.h
 	common/HighLightKeyWord.cc
+	common/AsyncOutDebug.h
+	common/AsyncOutDebug.cc
 )
 
 target_include_directories(common PUBLIC

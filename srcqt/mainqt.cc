@@ -13,7 +13,10 @@
 #include "OutDebug.h"
 #include <getline.h>
 #include <QSettings>
+#include "AsyncOutDebug.h"
+#include <chrono>
 
+using namespace std::chrono_literals;
 using namespace Tools;
 
 MainWindowQt::MainWindowQt( int argc, char **argv, QWidget *parent)
@@ -166,7 +169,6 @@ static void usage( const std::string & prog )
 			<< prog << " SEARCH PATTERN\n";
 }
 
-
 int main(int argc, char **argv)
 {
 	setlocale( LC_ALL, "" );
@@ -207,7 +209,22 @@ int main(int argc, char **argv)
 		AllocConsole();
 		freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
 #endif
-		Tools::x_debug = new OutDebug();
+		// Tools::x_debug = new OutDebug();
+
+		auto log_frontend = new AsyncOut::Debug();
+
+		Tools::x_debug = log_frontend;
+
+		std::thread( []( auto log_frontend ) {
+			AsyncOut::Logger backend;
+			log_frontend->subscribe(&backend);
+
+			while( true ) {
+				backend.log();
+				backend.wait();
+				//std::this_thread::sleep_for(200ms);
+			}
+		}, log_frontend ).detach();
 	}
 
 	QApplication app (argc, argv);
