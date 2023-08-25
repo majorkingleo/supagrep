@@ -31,6 +31,8 @@ public:
 	void deliver( const value_type & msg );
 
 	void log();
+
+	// wait for data
 	void wait();
 
 protected:
