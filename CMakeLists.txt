@@ -100,6 +100,8 @@ add_library(common STATIC
 	common/HighLightKeyWord.cc
 	common/AsyncOutDebug.h
 	common/AsyncOutDebug.cc
+	common/SearchWorker.h
+	common/SearchWorker.cc
 )
 
 target_include_directories(common PUBLIC

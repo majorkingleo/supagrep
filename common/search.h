@@ -152,10 +152,14 @@ class Search
  protected:
   bool find_files( const std::filesystem::path & path );
   bool match_file_type( const std::filesystem::path & file );
+
+  void do_filename_search( const std::filesystem::path & file );
+
   void do_search( const std::filesystem::path & file );
+
   void do_simple_search( const std::wstring & s,
-						 const std::wstring & search_term,
-						 const std::filesystem::path & file );
+  						 const std::wstring & search_term,
+  						 const std::filesystem::path & file );
 
   std::vector<std::wregex> build_pattern_list( const std::wstring & pattern );
 };

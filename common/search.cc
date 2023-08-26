@@ -8,6 +8,8 @@
 #include <string_utils.h>
 #include <unistd.h>
 #include <CpputilsDebug.h>
+#include "SearchWorker.h"
+#include <thread>
 
 using namespace Tools;
 using namespace std::chrono_literals;
@@ -43,16 +45,44 @@ void Search::run()
 			  	  	    files.size(),
 						seconds ) );
 
-	  int count = 0;
-	  for( file_list::iterator it = files.begin(); it != files.end() && !config->mt_stop->get(); it++ ) {
+	  if( config->search.empty() ) {
+		  for( file_list::iterator it = files.begin(); it != files.end() && !config->mt_stop->get(); it++ ) {
+			  do_filename_search( *it );
+		  }
+	  } else {
+		  SearchWorkerMain swm;
 
-		  count++;
-		  DEBUG( wformat( L"%d Searching in file: '%s'", count, it->filename().wstring() ) );
+		  int count = 0;
+		  for( file_list::iterator it = files.begin(); it != files.end() && !config->mt_stop->get(); it++ ) {
 
-		  do_search( *it );
+			  count++;
+			  DEBUG( wformat( L"%d Searching in file: '%s'", count, it->filename().wstring() ) );
 
-		  config->mt_status->set(count);
-		}
+			  swm.add( std::make_shared<SearchWorkerMain::Data>(*it, config->search) );
+			  // do_search( *it );
+
+
+			  config->mt_status->set(count);
+		  }
+
+		  swm.run_workers();
+
+		  while( !swm.finished() ) {
+			  auto data =swm.pop_result();
+
+			  if( data ) {
+				if( config->icase ) {
+					DEBUG( lsearch );
+					do_simple_search( tolower((*data)->data), lsearch, (*data)->file );
+				} else {
+					do_simple_search( (*data)->data, (*data)->search_term, (*data)->file );
+				}
+			  } else {
+				  DEBUG( "I have to wait for the result" );
+				  std::this_thread::sleep_for(100ms);
+			  }
+		  }
+	  }
 	}
 
   auto duration = std::chrono::system_clock::now().time_since_epoch() - start_time.time_since_epoch();
@@ -98,9 +128,7 @@ bool Search::find_files( const std::filesystem::path & path )
 	  for( const auto & entry : fs::directory_iterator(path) ) {
 		  if( fs::is_directory(entry.status()) ) {
 			  find_files( fs::path(entry) );
-		  }
-
-		  if( match_file_type( entry.path().filename() ) ) {
+		  } else if( match_file_type( entry.path().filename() ) ) {
 			  files.push_back( entry.path() );
 		  }
 	  }
@@ -163,7 +191,16 @@ std::vector<std::wregex> Search::build_pattern_list( const std::wstring & patter
 
 bool Search::match_file_type( const std::filesystem::path & file )
 {
-  std::wstring file_name = file.wstring();
+  std::wstring file_name;
+
+  try {
+	  file_name = file.wstring();
+  } catch( const std::exception & error ) {
+	  DEBUG( Tools::format( "Error when trying to math file name '%s' error: '%s'",
+			  file.string(),
+			  error.what() ) );
+	  return false;
+  }
 
   if( regex_pattern_list.empty() ) {
 	  regex_pattern_list = build_pattern_list( config->pattern );
@@ -181,45 +218,42 @@ bool Search::match_file_type( const std::filesystem::path & file )
   return false;
 }
 
+void Search::do_filename_search( const std::filesystem::path & file )
+{
+	if( config->icase ) {
+
+		const std::wstring lfile = tolower( file.filename().wstring() );
+
+		if( lfile.find(lsearch) != std::wstring::npos ) {
+			config->mt_result->access().push_back(Result( file ));
+			config->mt_result->free();
+		}
+
+	} else {
+
+		if( file.filename().wstring().find(config->search) != std::wstring::npos ) {
+			config->mt_result->access().push_back(Result( file ));
+			config->mt_result->free();
+		}
+	}
+}
+
 void Search::do_search( const std::filesystem::path & file )
 {
-  std::wstring content;
-  ReadFile read_file;
+	std::wstring content;
+	ReadFile read_file;
 
-  if( config->search.empty() ) {
+	if( !read_file.read_file( file.string(), content ) ) {
+		DEBUG( wformat( L"cannot open file: '%s'", file.wstring() ) );
+		return;
+	}
 
-	  if( config->icase ) {
-
-		  const std::wstring lfile = tolower( file.filename().wstring() );
-
-		  if( lfile.find(lsearch) != std::wstring::npos ) {
-			  config->mt_result->access().push_back(Result( file ));
-			  config->mt_result->free();
-		  }
-
-	  } else {
-
-		  if( file.filename().wstring().find(config->search) != std::wstring::npos ) {
-			  config->mt_result->access().push_back(Result( file ));
-			  config->mt_result->free();
-		  }
-	  }
-
-
-  } else {
-
-	  if( !read_file.read_file( file.string(), content ) ) {
-		  DEBUG( wformat( L"cannot open file: '%s'", file.wstring() ) );
-		  return;
-	  }
-
-	  if( config->icase ) {
-		  DEBUG( lsearch );
-		  do_simple_search( tolower(content), lsearch, file );
-	  } else {
-		  do_simple_search( content, config->search, file );
-	  }
-  }
+	if( config->icase ) {
+		DEBUG( lsearch );
+		do_simple_search( tolower(content), lsearch, file );
+	} else {
+		do_simple_search( content, config->search, file );
+	}
 }
 
 void Search::do_simple_search( const std::wstring & s,
