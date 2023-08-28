@@ -25,7 +25,7 @@ class Logger : public Tools::FastDelivery::PublisherNode<Data>, public Tools::Ou
 {
 	std::list<value_type> messages;
 	std::mutex m_messages;
-	std::recursive_mutex m_worktodo;
+	std::mutex m_worktodo;
 public:
 
 	// called async from Debug publisher.
