@@ -53,7 +53,7 @@ public:
 
 	/**
 	 * returns true if all data put in queue where preoceeded
-	 * and result quque is empty
+	 * and the result queue is empty
 	 */
 	bool finished() {
 		std::lock_guard<std::mutex> mf(m_finished_queue);
@@ -66,6 +66,11 @@ public:
 		}
 
 		return false;
+	}
+
+	unsigned getFinishedCount() {
+		std::lock_guard<std::mutex> mf(m_finished_queue);
+		return finished_queue_counter;
 	}
 };
 

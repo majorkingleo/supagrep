@@ -54,7 +54,7 @@ void AsyncOut::Logger::log()
 
 	for( const auto & m : all_messages ) {
 		if( print_line_and_file_info ) {
-			std::string file_name = std::filesystem::path(m.file).filename();
+			std::string file_name = std::filesystem::path(m.file).filename().string();
 			std::cout << color_output( m.color, file_name );
 			std::cout << ':' << m.line
 					  << " ";

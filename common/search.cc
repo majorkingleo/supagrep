@@ -60,12 +60,11 @@ void Search::run()
 
 			  swm.add( std::make_shared<SearchWorkerMain::Data>(*it, config->search) );
 			  // do_search( *it );
-
-
-			  config->mt_status->set(count);
 		  }
 
 		  swm.run_workers();
+
+		  unsigned finished_counter = 0;
 
 		  while( !swm.finished() ) {
 			  auto data =swm.pop_result();
@@ -81,7 +80,12 @@ void Search::run()
 				  DEBUG( "I have to wait for the result" );
 				  std::this_thread::sleep_for(100ms);
 			  }
+
+
+			  config->mt_status->set(++finished_counter);
 		  }
+
+		  config->mt_status->set(swm.getFinishedCount());
 	  }
 	}
 
