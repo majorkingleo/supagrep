@@ -71,3 +71,5 @@ CMakeFiles
 cmake_install.cmake
 dist
 mymoc.sh
+
+*.patch
