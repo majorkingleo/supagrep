@@ -66,8 +66,8 @@ void Search::run()
 
 		  unsigned finished_counter = 0;
 
-		  while( !swm.finished() ) {
-			  auto data =swm.pop_result();
+		  while( !swm.finished() && !config->mt_stop->get() ) {
+			  auto data = swm.pop_result();
 
 			  if( data ) {
 				if( config->icase ) {
@@ -85,7 +85,9 @@ void Search::run()
 			  config->mt_status->set(++finished_counter);
 		  }
 
-		  config->mt_status->set(swm.getFinishedCount());
+		  if( !config->mt_stop->get() ) {
+			  config->mt_status->set(swm.getFinishedCount());
+		  }
 	  }
 	}
 
