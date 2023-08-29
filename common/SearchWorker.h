@@ -44,13 +44,13 @@ private:
 
 public:
 
+	// data added by caller
 	void add( std::shared_ptr<Data> data );
-	std::optional<std::shared_ptr<Data>> pop();
-	void found_result( std::shared_ptr<Data> data );
+
+	// caller starts workers
 	void run_workers();
 
 	std::optional<std::shared_ptr<Data>> pop_result();
-
 	/**
 	 * returns true if all data put in queue where preoceeded
 	 * and the result queue is empty
@@ -72,5 +72,12 @@ public:
 		std::lock_guard<std::mutex> mf(m_finished_queue);
 		return finished_queue_counter;
 	}
+
+
+	// SearchWorker gets data
+	std::optional<std::shared_ptr<Data>> pop();
+
+	// Search Wroker places the resulting data here
+	void found_result( std::shared_ptr<Data> data );
 };
 
