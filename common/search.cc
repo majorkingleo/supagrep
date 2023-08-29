@@ -89,6 +89,8 @@ void Search::run()
 		  if( !config->mt_stop->get() ) {
 			  config->mt_status->set(swm.getFinishedCount());
 		  }
+
+		  swm.stop();
 	  }
 	}
 

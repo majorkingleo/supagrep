@@ -12,6 +12,7 @@
 #include <read_file.h>
 #include <memory>
 #include <atomic>
+#include <thread>
 
 class SearchWorkerMain;
 
@@ -44,7 +45,10 @@ private:
 	unsigned finished_queue_counter = 0;
 	std::atomic<bool> all_data_added = false;
 
+	std::list<std::thread*> workers;
+
 public:
+	~SearchWorkerMain();
 
 	// data added by caller
 	void add( std::shared_ptr<Data> data );
@@ -55,6 +59,10 @@ public:
 	void finished_adding_data() {
 		all_data_added = true;
 	}
+
+	// calls finished_adding_data and waits for all workers
+	// this function is also called from destructor
+	void stop();
 
 	std::optional<std::shared_ptr<Data>> pop_result();
 	/**

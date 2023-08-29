@@ -32,6 +32,21 @@ void SearchWorker::run()
 	}
 }
 
+SearchWorkerMain::~SearchWorkerMain()
+{
+	stop();
+}
+
+void SearchWorkerMain::stop()
+{
+	finished_adding_data();
+	for( auto thread : workers ) {
+		thread->join();
+		delete thread;
+	}
+
+	workers.clear();
+}
 
 void SearchWorkerMain::add( std::shared_ptr<Data> data )
 {
@@ -64,10 +79,13 @@ void SearchWorkerMain::found_result( std::shared_ptr<Data> data )
 void SearchWorkerMain::run_workers()
 {
 	for( unsigned i = 0; i < std::thread::hardware_concurrency(); i++ ) {
-		std::thread([]( auto main ) {
+		auto thread = new std::thread([]( auto main ) {
 			SearchWorker sw(*main);
 			sw.run();
-		}, this).detach();
+		}, this);
+
+		workers.push_back( thread );
+
 		DEBUG( wformat( L"started worker thread %d", i+1 ) );
 	}
 }

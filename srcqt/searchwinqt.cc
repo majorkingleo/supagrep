@@ -267,7 +267,9 @@ void SearchWinQt::onTimeout()
 	}
 
 	if( mt_result.changed() ) {
+		DEBUG( L"trying to get result" );
 		std::list<Search::Result> & l = mt_result.access();
+		DEBUG( wformat( L"got access appending %d data", l.size() ) );
 
 		for( std::list<Search::Result>::iterator it = l.begin(); it != l.end(); it++ ) {
 			result->appendResult( *it, config->path );
