@@ -51,6 +51,7 @@ void Search::run()
 		  }
 	  } else {
 		  SearchWorkerMain swm;
+		  swm.run_workers();
 
 		  int count = 0;
 		  for( file_list::iterator it = files.begin(); it != files.end() && !config->mt_stop->get(); it++ ) {
@@ -62,7 +63,7 @@ void Search::run()
 			  // do_search( *it );
 		  }
 
-		  swm.run_workers();
+		  swm.finished_adding_data();
 
 		  unsigned finished_counter = 0;
 

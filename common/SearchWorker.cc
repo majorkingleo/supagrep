@@ -6,7 +6,9 @@
 #include <thread>
 #include <CpputilsDebug.h>
 #include <format.h>
+#include <chrono>
 
+using namespace std::chrono_literals;
 using namespace Tools;
 
 SearchWorker::SearchWorker( SearchWorkerMain & main_ )
@@ -18,10 +20,15 @@ SearchWorker::SearchWorker( SearchWorkerMain & main_ )
 void SearchWorker::run()
 {
 	for( std::optional<std::shared_ptr<SearchWorkerMain::Data>> o_data = main.pop();
-	     o_data;
+	     main.should_i_wait_for_additional_data() || o_data;
 	     o_data = main.pop() ) {
-		read_file.read_file( (*o_data)->file.string(), (*o_data)->data );
-		main.found_result(*o_data);
+
+		if( o_data ) {
+			read_file.read_file( (*o_data)->file.string(), (*o_data)->data );
+			main.found_result(*o_data);
+		} else {
+			std::this_thread::sleep_for(100ms);
+		}
 	}
 }
 

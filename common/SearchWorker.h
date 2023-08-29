@@ -11,6 +11,7 @@
 #include <optional>
 #include <read_file.h>
 #include <memory>
+#include <atomic>
 
 class SearchWorkerMain;
 
@@ -41,6 +42,7 @@ private:
 	std::list<std::shared_ptr<Data>> finished_queue;
 	unsigned input_queue_counter = 0;
 	unsigned finished_queue_counter = 0;
+	std::atomic<bool> all_data_added = false;
 
 public:
 
@@ -49,6 +51,10 @@ public:
 
 	// caller starts workers
 	void run_workers();
+
+	void finished_adding_data() {
+		all_data_added = true;
+	}
 
 	std::optional<std::shared_ptr<Data>> pop_result();
 	/**
@@ -79,5 +85,9 @@ public:
 
 	// Search Wroker places the resulting data here
 	void found_result( std::shared_ptr<Data> data );
+
+	bool should_i_wait_for_additional_data() {
+		return !all_data_added;
+	}
 };
 
