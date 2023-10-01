@@ -5,6 +5,7 @@
 #include <ranges>
 #include <iostream>
 #include <CpputilsDebug.h>
+#include <format.h>
 
 std::wstring getline( const std::wstring & s, std::wstring::size_type pos );
 
@@ -23,7 +24,7 @@ template <class view>
 auto find_next_x_elements( const view & s, const wchar_t what, std::wstring::size_type pos, int count )
 {
 	if( s[pos] == what ) {
-		DEBUG( Tools::wformat( L"found '%c' incrementing pos %d", what, pos ));
+		CPPDEBUG( Tools::wformat( L"found '%c' incrementing pos %d", what, pos ));
 		pos++;
 	}
 
@@ -32,10 +33,10 @@ auto find_next_x_elements( const view & s, const wchar_t what, std::wstring::siz
 	for( ; p != s.end() && count > 0; ) {
 		auto pp = std::ranges::find( p, s.end(), what );
 
-		DEBUG( Tools::wformat( L"found: '%s' count: %d", std::wstring( p, pp ), count ) );
+		CPPDEBUG( Tools::wformat( L"found: '%s' count: %d", std::wstring( p, pp ), count ) );
 
 		if( pp == s.end() ) {
-			DEBUG( Tools::wformat( L"pp == end" ) );
+			CPPDEBUG( Tools::wformat( L"pp == end" ) );
 			return s.end();
 		}
 
@@ -56,7 +57,7 @@ auto find_prev_x_elements( const view & s, const wchar_t what, std::wstring::siz
 	auto rbegin = vs.begin() + s.size() - pos - 1;
 	std::wstring search_buf( vs.begin() + s.size() - pos - 1, vs.end() );
 	std::wstring data_result( rbegin, p );
-	DEBUG( Tools::wformat( L"s: '%s' w: '%s' distance: %d",
+	CPPDEBUG( Tools::wformat( L"s: '%s' w: '%s' distance: %d",
 						   search_buf,
 						   data_result,
 						   std::ranges::distance( p, vs.end() )) );

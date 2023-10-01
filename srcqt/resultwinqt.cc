@@ -75,7 +75,7 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 		addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Visual Studio" ) ),
 					L"WScript.exe", wformat( L"%s %s %d 0", L'"' + vbs_open_script + L'"' ) ) );
 	} else {
-		DEBUG( wformat( L"file %s not found", vbs_open_script ));
+		CPPDEBUG( wformat( L"file %s not found", vbs_open_script ));
 	}
 
 	addCmd( Cmd( wformat( wLC( L"Open File with %s" ), wLC( L"Vi" ) ),
@@ -100,7 +100,7 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 	addCmd( Cmd( wformat( wLC( L"Start %s" ), wLC( L"Notepad" ) ),
 			L"notepad.exe", L"%s" ) );
 
-	// DEBUG( wformat( L"notpaged.exe: %s", QStandardPaths::findExecutable("notepad" ).toStdWString() ) );
+	// CPPDEBUG( wformat( L"notpaged.exe: %s", QStandardPaths::findExecutable("notepad" ).toStdWString() ) );
 
 	connect(actionOpenWidthDefaultApp, SIGNAL (triggered()), this, SLOT (openWidthDefaultApp()));
 	connect(actionCopyFileNameToClipboard, SIGNAL (triggered()), this, SLOT (copyFileNameToClipboard()));
@@ -109,11 +109,11 @@ ResultWinQt::ResultWinQt( MainWindowQt *main_, QWidget *parent )
 void ResultWinQt::addCmd( const Cmd & cmd )
 {
   if( QStandardPaths::findExecutable( QString::fromStdWString( cmd.exec ) ).isEmpty() ) {
-	  DEBUG( wformat( L"couldn't find app: %s", cmd.exec ) );
+	  CPPDEBUG( wformat( L"couldn't find app: %s", cmd.exec ) );
 	  return;
   }
 
-  DEBUG( wformat( L"found app: %s", cmd.exec ) );
+  CPPDEBUG( wformat( L"found app: %s", cmd.exec ) );
 
   cmds.push_back( cmd );
   Cmd *cmd_ptr = &(*cmds.rbegin());
@@ -123,7 +123,7 @@ void ResultWinQt::addCmd( const Cmd & cmd )
   action->setObjectName( QString::fromStdWString(cmd_ptr->exec) );
   action->setText( QString::fromStdWString( cmd_ptr->name ) );
 
-  // DEBUG( wformat( L"adding editor app: %s", cmd_ptr->name ) );
+  // CPPDEBUG( wformat( L"adding editor app: %s", cmd_ptr->name ) );
 
   action->setData( QVariant::fromValue( cmd_ptr ) );
   connect(action, SIGNAL (triggered()), this, SLOT (openWidthCmd()));
@@ -239,7 +239,7 @@ void ResultWinQt::openWidthCmd()
 		args << QString::fromStdWString( s );
 	}
 
-	DEBUG( wformat( L"Open with: %s %s", cmd->exec, debug_args ) );
+	CPPDEBUG( wformat( L"Open with: %s %s", cmd->exec, debug_args ) );
 
 	QProcess::startDetached( QString::fromStdWString( cmd->exec ), args );
 }

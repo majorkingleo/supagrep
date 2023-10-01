@@ -8,6 +8,7 @@
 #include <QLineEdit>
 #include <set>
 #include "utf8_util.h"
+#include <format.h>
 
 using namespace Tools;
 
@@ -90,7 +91,7 @@ void ResentEntriesComboQt::load()
 			continue;
 		}
 
-		DEBUG( wformat( L"Loading %s=%s", getKeyName(i),  val.toStdWString() ) );
+		CPPDEBUG( wformat( L"Loading %s=%s", getKeyName(i),  val.toStdWString() ) );
 
 		s_entries.insert(val);
 
@@ -100,6 +101,6 @@ void ResentEntriesComboQt::load()
 
 void ResentEntriesComboQt::editFinished()
 {
-	DEBUG( L"return pressed" );
+	CPPDEBUG( L"return pressed" );
 	emit returnPressed();
 }

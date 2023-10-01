@@ -86,7 +86,7 @@ void SearchWorkerMain::run_workers()
 
 		workers.push_back( thread );
 
-		DEBUG( wformat( L"started worker thread %d", i+1 ) );
+		CPPDEBUG( wformat( L"started worker thread %d", i+1 ) );
 	}
 }
 

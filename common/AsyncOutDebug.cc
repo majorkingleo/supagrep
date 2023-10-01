@@ -4,6 +4,7 @@
  */
 #include "AsyncOutDebug.h"
 #include <filesystem>
+#include <iostream>
 
 using namespace Tools;
 using namespace AsyncOut;

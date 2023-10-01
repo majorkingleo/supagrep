@@ -111,7 +111,7 @@ std::wstring get_lines_before_line_at_pos( const std::wstring & s, std::wstring:
 	}
 
 	if( s[pos] == L'\n' ) {
-		DEBUG( L"\\n detected" );
+		CPPDEBUG( L"\\n detected" );
 		if( pos > 0 ) {
 			pos--;
 		} else {

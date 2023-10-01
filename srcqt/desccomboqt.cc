@@ -20,14 +20,14 @@ DescComboQt::DescComboQt(QWidget *parent)
 
 void DescComboQt::setFilePatternAsText(int index)
 {
-	DEBUG( wformat(L"activated: %d", index) );
+	CPPDEBUG( wformat(L"activated: %d", index) );
 
 	if( index >= 0 ) {
 		QVariant qv = itemData( index );
 		std::wstring *s = qv.value<std::wstring*>();
 
 		if( s ) {
-			DEBUG( wformat( L"search Text: %s", *s ) );
+			CPPDEBUG( wformat( L"search Text: %s", *s ) );
 			setEditText( QString::fromStdWString(*s) );
 		}
 	}

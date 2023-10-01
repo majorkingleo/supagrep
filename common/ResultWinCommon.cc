@@ -30,7 +30,7 @@ std::wstring ResultWinCommon::getLineAtPos( const std::filesystem::path & file, 
 	std::wstring content;
 
 	if( !read.read_file( file.string(), content ) ) {
-		DEBUG( wformat( L"Cannot read file '%s'", file.wstring() ));
+		CPPDEBUG( wformat( L"Cannot read file '%s'", file.wstring() ));
 		return content;
 	}
 
@@ -43,7 +43,7 @@ std::wstring ResultWinCommon::getLineAtPos( const std::filesystem::path & file, 
 		line += L'\n' + get_lines_after_line_at_pos( content, pos, lines_before_and_after );
 	}
 
-	DEBUG( wformat( L"Line: '%s'", line ) );
+	CPPDEBUG( wformat( L"Line: '%s'", line ) );
 
 	return line;
 }

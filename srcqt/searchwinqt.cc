@@ -128,7 +128,7 @@ SearchWinQt::SearchWinQt( MainWindowQt *main_, QWidget *parent )
 			it != main->getSetup().config.file_pattern.end();
 			it++ )
 	{
-		DEBUG( wformat( L"descr: '%s'; pattern: '%s'", it->descr, it->entry) );
+		CPPDEBUG( wformat( L"descr: '%s'; pattern: '%s'", it->descr, it->entry) );
 		cb_search_file_pattern->addItem( QString::fromStdWString(it->descr), QVariant::fromValue(&it->entry) );
 	}
 
@@ -168,7 +168,7 @@ void SearchWinQt::startwith( const Search::Config & conf )
 
 void SearchWinQt::onSearch()
 {
-	DEBUG( "onSearch()" );
+	CPPDEBUG( "onSearch()" );
 
 	if( config ) {
 		if( mt_running.get() == true ) {
@@ -267,13 +267,13 @@ void SearchWinQt::onTimeout()
 	}
 
 	if( mt_result.changed() ) {
-		DEBUG( L"trying to get result" );
+		CPPDEBUG( L"trying to get result" );
 		std::list<Search::Result> & l = mt_result.access();
-		DEBUG( wformat( L"got access appending %d data", l.size() ) );
+		CPPDEBUG( wformat( L"got access appending %d data", l.size() ) );
 
 		for( std::list<Search::Result>::iterator it = l.begin(); it != l.end(); it++ ) {
 			result->appendResult( *it, config->path );
-			DEBUG( wformat( L"Result: %s", it->file.wstring() ) );
+			CPPDEBUG( wformat( L"Result: %s", it->file.wstring() ) );
 		}
 
 		l.clear();
@@ -286,7 +286,7 @@ void SearchWinQt::onTimeout()
 
 		auto runtime = mt_runtime.getAndClear();
 		double seconds = runtime / 1.0s;
-		DEBUG( format( "%3.3lf sec", seconds ) );
+		CPPDEBUG( format( "%3.3lf sec", seconds ) );
 		l_runtime->setText( QString::fromStdWString( wformat( wLC(L"%3.3lf sec"), seconds ) ) );
 	}
 }

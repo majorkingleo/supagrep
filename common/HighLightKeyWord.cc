@@ -67,7 +67,7 @@ std::wstring encodeHtmlEntities( const std::wstring & line )
 
 std::wstring highLightKeyWord( const std::wstring & line, const std::wstring & search_term, bool ignore_case )
 {
-	// DEBUG( line );
+	// CPPDEBUG( line );
 
 	using POSITIONS = std::vector<std::wstring::size_type>;
 	POSITIONS positions;
@@ -103,7 +103,7 @@ std::wstring highLightKeyWord( const std::wstring & line, const std::wstring & s
 
 		result_line = post;
 		pos_offset += pos + word.size();
-		// DEBUG( result_line );
+		// CPPDEBUG( result_line );
 	}
 
 	parts.push_back( HtmlOrPlainText(HtmlOrPlainText::PLAIN{ post }) );
@@ -114,7 +114,7 @@ std::wstring highLightKeyWord( const std::wstring & line, const std::wstring & s
 		result_line += part.getHtmlText();
 	}
 
-	// DEBUG( result_line );
+	// CPPDEBUG( result_line );
 
 	return result_line;
 }

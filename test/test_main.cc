@@ -69,7 +69,7 @@ public:
 
 		std::wstring data_result( testdata.begin(), p );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"aaaa 1\n" ) {
 			return true;
@@ -92,7 +92,7 @@ public:
 
 		std::wstring data_result( testdata.begin(), p );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"aaaa 1\n"
 							"bbbb 2\n" ) {
@@ -116,7 +116,7 @@ public:
 
 		std::wstring data_result( p, testdata.begin() + 14 );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"aaaa 1\n"
 							"bbbb 2\n" ) {
@@ -138,7 +138,7 @@ public:
 	{
 		std::wstring data_result = get_lines_before_line_at_pos( testdata, 9, 3 );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"aaaa 1\n" ) {
 			return true;
@@ -159,7 +159,7 @@ public:
 	{
 		std::wstring data_result = get_lines_before_line_at_pos( testdata, 13, 1 );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"aaaa 1\n" ) {
 			return true;
@@ -181,7 +181,7 @@ public:
 	{
 		std::wstring data_result = get_lines_before_line_at_pos( testdata, 6, 1 );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result.empty() ) {
 			return true;
@@ -202,7 +202,7 @@ public:
 	{
 		std::wstring data_result = get_lines_before_line_at_pos( testdata, 0, 1 );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result.empty() ) {
 			return true;
@@ -223,7 +223,7 @@ public:
 	{
 		std::wstring data_result = get_lines_before_line_at_pos( testdata, 100, 1 );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"eeee 5\n" ) {
 			return true;
@@ -244,7 +244,7 @@ public:
 	{
 		std::wstring data_result = get_lines_after_line_at_pos( testdata, 0, 1 );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"bbbb 2\n" ) {
 			return true;
@@ -265,7 +265,7 @@ public:
 	{
 		std::wstring data_result = get_lines_after_line_at_pos( testdata, 3, 1 );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"bbbb 2\n" ) {
 			return true;
@@ -287,7 +287,7 @@ public:
 	{
 		std::wstring data_result = get_lines_after_line_at_pos( testdata, 6, 1 );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"bbbb 2\n" ) {
 			return true;
@@ -309,7 +309,7 @@ public:
 	{
 		std::wstring data_result = get_lines_after_line_at_pos( testdata, 7, 2 );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"cccc 3\n"
 							"dddd 4\n") {
@@ -357,7 +357,7 @@ public:
 				} );
 
 		std::wstring data_result = v2s( positions );
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"0, 8, 17") {
 			return true;
@@ -384,7 +384,7 @@ public:
 	{
 		std::wstring data_result = highLightKeyWord( L"#include <debug.h>", L"debug" );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"#include &lt;<b>debug</b>.h&gt;" ) {
 			return true;
@@ -405,7 +405,7 @@ public:
 	{
 		std::wstring data_result = highLightKeyWord( L"#include <debug.h>", L"Debug", true );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"#include &lt;<b>debug</b>.h&gt;" ) {
 			return true;
@@ -426,7 +426,7 @@ public:
 	{
 		std::wstring data_result = highLightKeyWord( L"#include <debug.h> // include debug", L"debug" );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"#include &lt;<b>debug</b>.h&gt; // include <b>debug</b>" ) {
 			return true;
@@ -447,7 +447,7 @@ public:
 	{
 		std::wstring data_result = highLightKeyWord( L"debug", L"debug" );
 
-		DEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
+		CPPDEBUG( Tools::wformat( L"Result: '%s'", data_result ) );
 
 		if( data_result == L"<b>debug</b>" ) {
 			return true;
@@ -535,7 +535,7 @@ int main( int argc, char **argv )
 
 			idx++;
 
-			DEBUG( format( "run test: %s", test->getName() ) );
+			CPPDEBUG( format( "run test: %s", test->getName() ) );
 
 			col.addColData( COL_IDX, format( "% 2d", idx ) );
 			col.addColData( COL_NAME, test->getName() );
@@ -558,10 +558,10 @@ int main( int argc, char **argv )
 
 			} catch( const std::exception & error ) {
 				result = "exception";
-				DEBUG( format( "Error: %s", error.what() ));
+				CPPDEBUG( format( "Error: %s", error.what() ));
 			} catch( ... ) {
 				result = "exception";
-				DEBUG( "Error" );
+				CPPDEBUG( "Error" );
 			}
 
 			if( result != expected_result ) {

@@ -17,7 +17,7 @@ using namespace std::chrono_literals;
 Search::Search( std::shared_ptr<Config> config_ )
   : config( config_ )
 {
-  DEBUG( wformat( L"Search with config: %s", config ) );
+  CPPDEBUG( wformat( L"Search with config: %s", config ) );
   config->mt_status->set(0);
 }
 
@@ -41,7 +41,7 @@ void Search::run()
 									  - start_time.time_since_epoch();
 	  double seconds = duration_file_search / 1.0s;
 
-	  DEBUG( wformat( L"Total files '%d' duration: %3.3lf sec",
+	  CPPDEBUG( wformat( L"Total files '%d' duration: %3.3lf sec",
 			  	  	    files.size(),
 						seconds ) );
 
@@ -57,7 +57,7 @@ void Search::run()
 		  for( file_list::iterator it = files.begin(); it != files.end() && !config->mt_stop->get(); it++ ) {
 
 			  count++;
-			  DEBUG( wformat( L"%d Searching in file: '%s'", count, it->filename().wstring() ) );
+			  CPPDEBUG( wformat( L"%d Searching in file: '%s'", count, it->filename().wstring() ) );
 
 			  swm.add( std::make_shared<SearchWorkerMain::Data>(*it, config->search) );
 			  // do_search( *it );
@@ -72,13 +72,13 @@ void Search::run()
 
 			  if( data ) {
 				if( config->icase ) {
-					DEBUG( lsearch );
+					CPPDEBUG( lsearch );
 					do_simple_search( tolower((*data)->data), lsearch, (*data)->file );
 				} else {
 					do_simple_search( (*data)->data, (*data)->search_term, (*data)->file );
 				}
 			  } else {
-				  DEBUG( "I have to wait for the result" );
+				  CPPDEBUG( "I have to wait for the result" );
 				  std::this_thread::sleep_for(100ms);
 			  }
 
@@ -98,7 +98,7 @@ void Search::run()
   config->mt_runtime->set(std::chrono::duration_cast<std::chrono::milliseconds>(duration));
   config->mt_running->set(false);
 
-  DEBUG( L"search thread done" );
+  CPPDEBUG( L"search thread done" );
 }
 
 bool Search::find_files( const std::filesystem::path & path )
@@ -110,7 +110,7 @@ bool Search::find_files( const std::filesystem::path & path )
   }
 
   // printf( "%s\n", path.text() );
-  // DEBUG( wformat(L"path: '%s'", DetectLocale::in2w( path.text() ) ) );
+  // CPPDEBUG( wformat(L"path: '%s'", DetectLocale::in2w( path.text() ) ) );
 
   if( !std::filesystem::is_directory(path) ) {
 	  return false;
@@ -149,7 +149,7 @@ bool Search::find_files( const std::filesystem::path & path )
 	   *   Error: filesystem error: directory iterator cannot open directory:
 	   *   Invalid argument [C:/Users/Martin Oberzalek\SendTo]
 	   */
-	  DEBUG( wformat( L"Error accessing file or directory: %s. Error: %s", path, error.what()) );
+	  CPPDEBUG( wformat( L"Error accessing file or directory: %s. Error: %s", path, error.what()) );
 	  return false;
   }
 #else
@@ -172,7 +172,7 @@ bool Search::find_files( const std::filesystem::path & path )
 	   *   Error: filesystem error: directory iterator cannot open directory:
 	   *   Invalid argument [C:/Users/Martin Oberzalek\SendTo]
 	   */
-	  DEBUG( wformat( L"Error accessing file or directory: %s. Error: %s", path, error.what()) );
+	  CPPDEBUG( wformat( L"Error accessing file or directory: %s. Error: %s", path, error.what()) );
 	  return false;
   }
 #endif
@@ -205,7 +205,7 @@ bool Search::match_file_type( const std::filesystem::path & file )
   try {
 	  file_name = file.wstring();
   } catch( const std::exception & error ) {
-	  DEBUG( Tools::format( "Error when trying to math file name '%s' error: '%s'",
+	  CPPDEBUG( Tools::format( "Error when trying to math file name '%s' error: '%s'",
 			  file.string(),
 			  error.what() ) );
 	  return false;
@@ -253,12 +253,12 @@ void Search::do_search( const std::filesystem::path & file )
 	ReadFile read_file;
 
 	if( !read_file.read_file( file.string(), content ) ) {
-		DEBUG( wformat( L"cannot open file: '%s'", file.wstring() ) );
+		CPPDEBUG( wformat( L"cannot open file: '%s'", file.wstring() ) );
 		return;
 	}
 
 	if( config->icase ) {
-		DEBUG( lsearch );
+		CPPDEBUG( lsearch );
 		do_simple_search( tolower(content), lsearch, file );
 	} else {
 		do_simple_search( content, config->search, file );
